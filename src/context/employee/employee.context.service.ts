@@ -466,6 +466,9 @@ export class EmployeeContextService {
             // 3단계: 부서 간 관계 설정
             await this.부서_관계를_설정한다(allDepartments, departmentIdMapping);
 
+            // 4단계: 외부 시스템에 없는 부서 삭제
+            await this.외부_시스템에_없는_부서를_삭제한다(allDepartments);
+
             this.logger.log(
                 `부서 및 직원 배치 정보 동기화 완료: 총 ${departmentHierarchy.totalDepartments}개 부서, ${departmentHierarchy.totalEmployees}명 직원`,
             );
@@ -572,6 +575,45 @@ export class EmployeeContextService {
             } catch (error) {
                 this.logger.error(`부서 관계 설정 실패: ${dept.departmentName}`, error);
             }
+        }
+    }
+
+    /**
+     * 외부 시스템에 없는 부서를 삭제합니다
+     */
+    private async 외부_시스템에_없는_부서를_삭제한다(externalDepartments: any[]): Promise<void> {
+        try {
+            // 외부 시스템의 부서 코드 목록 수집
+            const externalDepartmentCodes = new Set(externalDepartments.map((dept) => dept.departmentCode));
+
+            // 현재 DB의 모든 부서 조회
+            const currentDepartments = await this.domainDepartmentService.findAll();
+
+            // 삭제할 부서 찾기 (외부 시스템에 없는 부서)
+            const departmentsToDelete = currentDepartments.filter(
+                (dept) => !externalDepartmentCodes.has(dept.departmentCode),
+            );
+
+            if (departmentsToDelete.length > 0) {
+                this.logger.log(`삭제할 부서 ${departmentsToDelete.length}개 발견`);
+
+                // 부서 삭제
+                for (const dept of departmentsToDelete) {
+                    try {
+                        await this.domainDepartmentService.delete(dept.id);
+                        this.logger.log(`부서 삭제 완료: ${dept.departmentName} (${dept.departmentCode})`);
+                    } catch (error) {
+                        this.logger.error(`부서 삭제 실패: ${dept.departmentName} (${dept.departmentCode})`, error);
+                    }
+                }
+
+                this.logger.log(`외부 시스템에 없는 부서 삭제 완료: ${departmentsToDelete.length}개`);
+            } else {
+                this.logger.log('삭제할 부서 없음');
+            }
+        } catch (error) {
+            this.logger.error('외부 시스템에 없는 부서 삭제 실패:', error);
+            throw error;
         }
     }
 

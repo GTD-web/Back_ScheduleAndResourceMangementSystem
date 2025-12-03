@@ -18227,6 +18227,7 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
             const allDepartments = this.모든_부서를_평면적으로_수집한다(departmentHierarchy.departments);
             const departmentIdMapping = await this.모든_부서를_저장한다(allDepartments);
             await this.부서_관계를_설정한다(allDepartments, departmentIdMapping);
+            await this.외부_시스템에_없는_부서를_삭제한다(allDepartments);
             this.logger.log(`부서 및 직원 배치 정보 동기화 완료: 총 ${departmentHierarchy.totalDepartments}개 부서, ${departmentHierarchy.totalEmployees}명 직원`);
             return departmentHierarchy;
         }
@@ -18302,6 +18303,33 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
             catch (error) {
                 this.logger.error(`부서 관계 설정 실패: ${dept.departmentName}`, error);
             }
+        }
+    }
+    async 외부_시스템에_없는_부서를_삭제한다(externalDepartments) {
+        try {
+            const externalDepartmentCodes = new Set(externalDepartments.map((dept) => dept.departmentCode));
+            const currentDepartments = await this.domainDepartmentService.findAll();
+            const departmentsToDelete = currentDepartments.filter((dept) => !externalDepartmentCodes.has(dept.departmentCode));
+            if (departmentsToDelete.length > 0) {
+                this.logger.log(`삭제할 부서 ${departmentsToDelete.length}개 발견`);
+                for (const dept of departmentsToDelete) {
+                    try {
+                        await this.domainDepartmentService.delete(dept.id);
+                        this.logger.log(`부서 삭제 완료: ${dept.departmentName} (${dept.departmentCode})`);
+                    }
+                    catch (error) {
+                        this.logger.error(`부서 삭제 실패: ${dept.departmentName} (${dept.departmentCode})`, error);
+                    }
+                }
+                this.logger.log(`외부 시스템에 없는 부서 삭제 완료: ${departmentsToDelete.length}개`);
+            }
+            else {
+                this.logger.log('삭제할 부서 없음');
+            }
+        }
+        catch (error) {
+            this.logger.error('외부 시스템에 없는 부서 삭제 실패:', error);
+            throw error;
         }
     }
     async 직원_배치_정보를_저장한다(departments) {
