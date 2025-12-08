@@ -24214,11 +24214,6 @@ let ScheduleQueryContextService = ScheduleQueryContextService_1 = class Schedule
         this.domainScheduleDepartmentService = domainScheduleDepartmentService;
         this.logger = new common_1.Logger(ScheduleQueryContextService_1.name);
     }
-    async onModuleInit() {
-        const data = await this.다가오는_일정을_조회한다();
-        console.log(data);
-        return;
-    }
     async 다가오는_일정을_조회한다() {
         const now = date_util_1.DateUtil.now().toDate();
         const candidateSchedules = await this.domainScheduleService.findAll({

@@ -53,11 +53,11 @@ export class ScheduleQueryContextService {
     ) {}
 
     // 테스트용
-    async onModuleInit(): Promise<void> {
-        const data = await this.다가오는_일정을_조회한다();
-        console.log(data);
-        return;
-    }
+    // async onModuleInit(): Promise<void> {
+    //     const data = await this.다가오는_일정을_조회한다();
+    //     console.log(data);
+    //     return;
+    // }
 
     async 다가오는_일정을_조회한다(): Promise<Schedule[]> {
         const now = DateUtil.now().toDate();
