@@ -139,6 +139,15 @@ export class NotificationManagementService {
         if (upcomingSchedules.length === 0) {
             return;
         }
+
+        // 다가오는_일정을_조회한다()에서 계산한 일치하는 beforeMinutes를 Map으로 보존
+        const matchedBeforeMinutesMap = new Map(
+            upcomingSchedules.map((schedule) => [
+                schedule.scheduleId,
+                schedule.notifyMinutesBeforeStart?.[0], // 일치한 알림 시간
+            ]),
+        );
+
         const scheduledInfos = await this.scheduleContextService.복수_일정과_관계정보들을_조회한다(
             upcomingSchedules.map((schedule) => schedule.scheduleId),
             {
@@ -150,11 +159,20 @@ export class NotificationManagementService {
 
         for (const scheduledInfo of scheduledInfos) {
             const { schedule, reservation, resource, participants } = scheduledInfo;
+
+            // Map에서 현재 시간과 일치한 알림 시간 가져오기
+            const matchedBeforeMinutes = matchedBeforeMinutesMap.get(schedule.scheduleId);
+
+            if (!matchedBeforeMinutes) {
+                // 일치하는 알림 시간이 없으면 건너뛰기 (정상적으로는 발생하지 않음)
+                continue;
+            }
+
             const notificationData: CreateNotificationDataDto = {
                 schedule: {
                     scheduleId: schedule.scheduleId,
                     scheduleTitle: schedule.title,
-                    beforeMinutes: schedule.notifyMinutesBeforeStart[0],
+                    beforeMinutes: matchedBeforeMinutes,
                     startDate: DateUtil.format(schedule.startDate, 'YYYY-MM-DD HH:mm'),
                     endDate: DateUtil.format(schedule.endDate, 'YYYY-MM-DD HH:mm'),
                 },

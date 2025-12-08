@@ -54,28 +54,20 @@ export class ScheduleQueryContextService {
 
     // 테스트용
     // async onModuleInit(): Promise<void> {
-    //     const data = await this.domainScheduleRelationService.findAll({
-    //         where: {
-    //             scheduleId: In([
-    //                 '6359b055-dbaf-4b82-ab12-47f673c7dccb', 'e270e05d-c75f-47de-a720-acf6a5273d11', '981ec9bd-e678-4804-9387-66d473092d24', 'e3a4739c-fdab-4c5c-b909-f50975617164', '63f8a234-8782-4faa-85d4-ba7077ee835b', '493a5008-55a0-4f72-98ae-75fc50cf4355', '036bbd29-0bf0-486d-a655-4c7d71b83df7', '6bd0a2ed-9883-499b-98cd-adca5758a10c', 'b6a72fc2-3014-4e04-b3e8-35a8fbbaae29', '75d7200a-fcfa-4917-b1d0-9f000789b1f9', '8d6dfb2f-7f43-42c1-bde7-42809a59adfb', 'e3ebd2e8-d34c-493b-a22c-ef8cb5dd55de', 'f854c700-9d25-4631-a3dc-4c144009c114', 'bfd6a727-8406-4135-a111-053d3fbc20a7', 'bca46ea3-dd40-4b95-b80d-989c23478a4c', 'e9ee893d-42af-4913-8978-6ae43dadc74d', '4792271d-8fb5-4a4c-8829-0d6df2e471ed', '50363491-659e-4433-a984-53950fd761d3', 'c65dd5a6-7999-4aff-98bf-d5a01535ddd6', '3acd7afb-fef4-4bb1-9dae-b7204aa59632', '3288635d-5802-46b4-bf66-ed79761ced92', 'ab776f9c-64fb-451a-844f-1c37594b49b7']),
-
-    //         }
-    //     });
-    //     const reservationIds = data.map((relation) => relation.reservationId);
-    //     const reservations = await this.domainReservationService.findByReservationIds(reservationIds);
-    //     const filteredReservations = reservations.filter((reservation) => reservation.resource.type === ResourceType.VEHICLE);
-    //     console.log(filteredReservations);
+    //     const data = await this.다가오는_일정을_조회한다();
+    //     console.log(data);
+    //     return;
     // }
 
     async 다가오는_일정을_조회한다(): Promise<Schedule[]> {
         const now = DateUtil.now().toDate();
-        const endOfDay = DateUtil.now().addMinutes(90).toDate();
+        // const endOfDay = DateUtil.now().addMinutes(1440).toDate();
 
         // 1. 기본 조건으로 후보 일정들을 먼저 조회
         const candidateSchedules = await this.domainScheduleService.findAll({
             where: {
                 notifyBeforeStart: true,
-                startDate: Between(now, endOfDay), // 미래 일정만
+                startDate: MoreThanOrEqual(now), // 미래 일정만
             },
         });
 
@@ -109,18 +101,17 @@ export class ScheduleQueryContextService {
                     ),
                 };
             });
-
             // 현재 시간이 알림 시간들 중 하나와 일치하는지 확인
-            const isMatch = notifyTimes.some(
+            const matchedNotifyTime = notifyTimes.find(
                 (notifyTime) => notifyTime.notifyTime.getTime() === currentMinute.getTime(),
             );
-            if (isMatch) {
-                schedule.notifyMinutesBeforeStart = [
-                    notifyTimes.find((notifyTime) => notifyTime.notifyTime.getTime() === currentMinute.getTime())
-                        ?.minutes,
-                ];
+            if (matchedNotifyTime) {
+                // 일치하는 알림 시간의 minutes만 설정
+                schedule.notifyMinutesBeforeStart = [matchedNotifyTime.minutes];
+                return true;
             }
-            return isMatch;
+
+            return false;
         });
     }
 

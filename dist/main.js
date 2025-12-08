@@ -7349,6 +7349,10 @@ let NotificationManagementService = class NotificationManagementService {
         if (upcomingSchedules.length === 0) {
             return;
         }
+        const matchedBeforeMinutesMap = new Map(upcomingSchedules.map((schedule) => [
+            schedule.scheduleId,
+            schedule.notifyMinutesBeforeStart?.[0],
+        ]));
         const scheduledInfos = await this.scheduleContextService.복수_일정과_관계정보들을_조회한다(upcomingSchedules.map((schedule) => schedule.scheduleId), {
             withReservation: true,
             withResource: true,
@@ -7356,11 +7360,15 @@ let NotificationManagementService = class NotificationManagementService {
         });
         for (const scheduledInfo of scheduledInfos) {
             const { schedule, reservation, resource, participants } = scheduledInfo;
+            const matchedBeforeMinutes = matchedBeforeMinutesMap.get(schedule.scheduleId);
+            if (!matchedBeforeMinutes) {
+                continue;
+            }
             const notificationData = {
                 schedule: {
                     scheduleId: schedule.scheduleId,
                     scheduleTitle: schedule.title,
-                    beforeMinutes: schedule.notifyMinutesBeforeStart[0],
+                    beforeMinutes: matchedBeforeMinutes,
                     startDate: date_util_1.DateUtil.format(schedule.startDate, 'YYYY-MM-DD HH:mm'),
                     endDate: date_util_1.DateUtil.format(schedule.endDate, 'YYYY-MM-DD HH:mm'),
                 },
@@ -24208,11 +24216,10 @@ let ScheduleQueryContextService = ScheduleQueryContextService_1 = class Schedule
     }
     async 다가오는_일정을_조회한다() {
         const now = date_util_1.DateUtil.now().toDate();
-        const endOfDay = date_util_1.DateUtil.now().addMinutes(90).toDate();
         const candidateSchedules = await this.domainScheduleService.findAll({
             where: {
                 notifyBeforeStart: true,
-                startDate: (0, typeorm_1.Between)(now, endOfDay),
+                startDate: (0, typeorm_1.MoreThanOrEqual)(now),
             },
         });
         const currentMinute = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0, 0);
@@ -24225,14 +24232,12 @@ let ScheduleQueryContextService = ScheduleQueryContextService_1 = class Schedule
                     notifyTime: new Date(notifyTime.getFullYear(), notifyTime.getMonth(), notifyTime.getDate(), notifyTime.getHours(), notifyTime.getMinutes(), 0, 0),
                 };
             });
-            const isMatch = notifyTimes.some((notifyTime) => notifyTime.notifyTime.getTime() === currentMinute.getTime());
-            if (isMatch) {
-                schedule.notifyMinutesBeforeStart = [
-                    notifyTimes.find((notifyTime) => notifyTime.notifyTime.getTime() === currentMinute.getTime())
-                        ?.minutes,
-                ];
+            const matchedNotifyTime = notifyTimes.find((notifyTime) => notifyTime.notifyTime.getTime() === currentMinute.getTime());
+            if (matchedNotifyTime) {
+                schedule.notifyMinutesBeforeStart = [matchedNotifyTime.minutes];
+                return true;
             }
-            return isMatch;
+            return false;
         });
     }
     async 일정과_관계정보들을_조회한다(scheduleId, option) {
