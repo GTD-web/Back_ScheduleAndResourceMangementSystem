@@ -1,9 +1,14 @@
 # compiled output
-# /dist
+/dist
 /node_modules
 /documents
 /senario
 # files
+
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # Logs
 logs
