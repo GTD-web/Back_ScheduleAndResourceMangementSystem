@@ -7,7 +7,7 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
-        "vercel-build": "npm run build && npm run migration:run",
+        "vercel-build": "npm run build",
         "format": "prettier --write \"src/**/*.ts\" \"libs/**/*.ts\"",
         "docker": "docker-compose -f docker-compose.yml up -d --build --force-recreate",
         "start": "nest start",
