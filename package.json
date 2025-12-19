@@ -63,9 +63,9 @@
         "pg": "^8.16.0",
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.2",
+        "tsconfig-paths": "^4.2.0",
         "typeorm": "^0.3.24",
-        "web-push": "^3.6.7",
-        "tsconfig-paths": "^4.2.0"
+        "web-push": "^3.6.7"
     },
     "devDependencies": {
         "@nestjs/cli": "^10.4.9",
@@ -93,7 +93,8 @@
         "ts-node": "^10.9.2",
         "typeorm-ts-node-commonjs": "^0.3.20",
         "typescript": "^5.8.3",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.0",
+        "webpack-node-externals": "^3.0.0"
     },
     "jest": {
         "moduleFileExtensions": [
