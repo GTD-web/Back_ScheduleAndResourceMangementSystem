@@ -1,3 +1,7 @@
+// TypeScript path alias를 런타임에 해석하기 위해 반드시 최상단에 추가
+import 'reflect-metadata';
+import 'tsconfig-paths/register';
+
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from '../src/app.module';

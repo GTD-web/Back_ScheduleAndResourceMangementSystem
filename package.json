@@ -64,7 +64,8 @@
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.2",
         "typeorm": "^0.3.24",
-        "web-push": "^3.6.7"
+        "web-push": "^3.6.7",
+        "tsconfig-paths": "^4.2.0"
     },
     "devDependencies": {
         "@nestjs/cli": "^10.4.9",
@@ -90,7 +91,6 @@
         "ts-jest": "^29.4.0",
         "ts-loader": "^9.5.2",
         "ts-node": "^10.9.2",
-        "tsconfig-paths": "^4.2.0",
         "typeorm-ts-node-commonjs": "^0.3.20",
         "typescript": "^5.8.3",
         "uuid": "^11.1.0"
