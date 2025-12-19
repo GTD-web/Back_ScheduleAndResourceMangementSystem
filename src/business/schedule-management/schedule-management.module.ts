@@ -7,7 +7,7 @@ import { ReservationContextModule } from '../../context/reservation/reservation.
 import { NotificationContextModule } from '../../context/notification/notification.context.module';
 import { FileContextModule } from '../../context/file/file.context.module';
 import { ProjectContextModule } from '../../context/project/project.context.module';
-import { EmployeeContextModule } from '@src/context/employee/employee.context.module';
+import { EmployeeContextModule } from '../../context/employee/employee.context.module';
 import { createSimpleScheduleTestData } from './test-data/schedule-test-data';
 
 @Module({

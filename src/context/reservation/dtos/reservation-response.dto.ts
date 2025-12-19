@@ -1,9 +1,9 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { Reservation } from '@libs/entities';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
-import { EmployeeResponseDto, ResourceResponseDto, ResponseNotificationDto } from '@resource/business.dto.index';
-import { DateUtil } from '@libs/utils/date.util';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { Reservation } from '../../../../libs/entities';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
+import { EmployeeResponseDto, ResourceResponseDto, ResponseNotificationDto } from '../../../business.dto.index';
+import { DateUtil } from '../../../../libs/utils/date.util';
 
 export class ReservationResponseDto {
     constructor(reservation?: Reservation) {

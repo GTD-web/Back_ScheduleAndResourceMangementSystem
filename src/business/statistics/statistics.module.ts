@@ -8,7 +8,7 @@ import {
     ResourceUsageStats,
     VehicleMaintenanceHistory,
     ConsumableMaintenanceStats,
-} from '@libs/entities';
+} from '../../../libs/entities';
 
 @Module({
     imports: [

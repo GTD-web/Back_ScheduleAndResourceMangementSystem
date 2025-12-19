@@ -2,8 +2,8 @@ import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, OneToOne } from '
 import { EmployeeNotification } from './employee-notification.entity';
 import { ReservationParticipant } from './reservation-participant.entity';
 import { ResourceManager } from './resource-manager.entity';
-import { Role } from '@libs/enums/role-type.enum';
-import { PushSubscriptionDto } from '@src/business.dto.index';
+import { Role } from '../enums/role-type.enum';
+import { PushSubscriptionDto } from '../../src/business.dto.index';
 import { DepartmentEmployee } from './department-employee.entity';
 
 @Entity('employees')

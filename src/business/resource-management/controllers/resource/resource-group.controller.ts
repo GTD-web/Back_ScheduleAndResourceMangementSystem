@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Delete, Body, Param, Patch, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiOkResponse } from '@nestjs/swagger';
 
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../../libs/enums/resource-type.enum';
 
 import { CreateResourceGroupDto } from '../../dtos/resource/create-resource.dto';
 import {

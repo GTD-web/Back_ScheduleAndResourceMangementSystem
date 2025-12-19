@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany, Exclusion } from 'typeorm';
 import { Resource } from './resource.entity';
 import { ReservationParticipant } from './reservation-participant.entity';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
+import { ReservationStatus } from '../enums/reservation-type.enum';
 import { ReservationVehicle } from './reservation-vehicle.entity';
 import { ScheduleRelation } from './schedule-relations.entity';
 

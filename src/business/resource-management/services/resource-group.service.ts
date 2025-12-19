@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 // Context Services
-import { ResourceGroupContextService } from '@src/context/resource/services/resource-group.context.service';
+import { ResourceGroupContextService } from '../../../context/resource/services/resource-group.context.service';
 
 // DTOs
 import { CreateResourceGroupDto } from '../dtos/resource/create-resource.dto';

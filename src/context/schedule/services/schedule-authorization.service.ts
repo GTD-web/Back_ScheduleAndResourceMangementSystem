@@ -1,10 +1,10 @@
 import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
-import { Employee } from '@libs/entities/employee.entity';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { ScheduleParticipant } from '@libs/entities/schedule-participant.entity';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
-import { DomainScheduleService } from '@src/domain/schedule/schedule.service';
-import { DomainScheduleParticipantService } from '@src/domain/schedule-participant/schedule-participant.service';
+import { Employee } from '../../../../libs/entities/employee.entity';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { ScheduleParticipant } from '../../../../libs/entities/schedule-participant.entity';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
+import { DomainScheduleService } from '../../../domain/schedule/schedule.service';
+import { DomainScheduleParticipantService } from '../../../domain/schedule-participant/schedule-participant.service';
 
 export enum ScheduleAction {
     VIEW = 'VIEW',

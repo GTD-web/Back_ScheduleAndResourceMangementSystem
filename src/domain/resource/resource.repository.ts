@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Resource } from '@libs/entities/resource.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { Resource } from '../../../libs/entities/resource.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainResourceRepository extends BaseRepository<Resource> {

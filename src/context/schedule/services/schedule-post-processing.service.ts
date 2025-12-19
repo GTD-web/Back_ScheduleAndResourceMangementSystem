@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DomainScheduleService } from '@src/domain/schedule/schedule.service';
-import { ScheduleStatus } from '@libs/enums/schedule-type.enum';
-import { DomainReservationService } from '@src/domain/reservation/reservation.service';
+import { DomainScheduleService } from '../../../domain/schedule/schedule.service';
+import { ScheduleStatus } from '../../../../libs/enums/schedule-type.enum';
+import { DomainReservationService } from '../../../domain/reservation/reservation.service';
 
 @Injectable()
 export class SchedulePostProcessingService {

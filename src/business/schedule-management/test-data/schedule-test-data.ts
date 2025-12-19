@@ -1,6 +1,6 @@
 import { ScheduleCreateRequestListDto, ScheduleCreateRequestDto } from '../dtos/schedule-create-request.dto';
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 /**
  * 일정 생성 테스트 데이터 생성 함수

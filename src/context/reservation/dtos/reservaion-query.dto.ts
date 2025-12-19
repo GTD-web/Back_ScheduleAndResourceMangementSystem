@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 import { IsBoolean, IsOptional } from 'class-validator';
 import { IsEnum } from 'class-validator';
 import { IsString } from 'class-validator';

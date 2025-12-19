@@ -1,21 +1,21 @@
 import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { DomainEmployeeService } from '@src/domain/employee/employee.service';
-import { DomainDepartmentService } from '@src/domain/department/department.service';
-import { DomainDepartmentEmployeeService } from '@src/domain/department-employee/department-employee.service';
-import { Role } from '@libs/enums/role-type.enum';
+import { DomainEmployeeService } from '../../domain/employee/employee.service';
+import { DomainDepartmentService } from '../../domain/department/department.service';
+import { DomainDepartmentEmployeeService } from '../../domain/department-employee/department-employee.service';
+import { Role } from '../../../libs/enums/role-type.enum';
 import { In, IsNull, Not, Raw } from 'typeorm';
-import { EmployeeResponseDto } from '@src/business/employee-management/dtos/employee-response.dto';
-import { EmplyeesByDepartmentResponseDto } from '@src/business/employee-management/dtos/employees-by-department-response.dto';
-import { UserResponseDto } from '@src/business/employee-management/dtos/user-response.dto';
-import { ChangeRoleDto } from '@src/business/employee-management/dtos/change-role.dto';
-import { UpdateNotificationSettingsDto } from '@src/business/employee-management/dtos/notification-settings.dto';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { EmployeeResponseDto } from '../../business/employee-management/dtos/employee-response.dto';
+import { EmplyeesByDepartmentResponseDto } from '../../business/employee-management/dtos/employees-by-department-response.dto';
+import { UserResponseDto } from '../../business/employee-management/dtos/user-response.dto';
+import { ChangeRoleDto } from '../../business/employee-management/dtos/change-role.dto';
+import { UpdateNotificationSettingsDto } from '../../business/employee-management/dtos/notification-settings.dto';
+import { ERROR_MESSAGE } from '../../../libs/constants/error-message';
 import * as bcrypt from 'bcryptjs';
 import axios from 'axios';
-import { Employee } from '@libs/entities/employee.entity';
-import { EmployeeMicroserviceAdapter } from '@src/domain/employee/adapters/employee-microservice.adapter';
-import { DepartmentMicroserviceAdapter } from '@src/domain/department/adapters/department-microservice.adapter';
-import { DepartmentHierarchyResponseDto } from '@src/domain/department/dtos/department-response.dto';
+import { Employee } from '../../../libs/entities/employee.entity';
+import { EmployeeMicroserviceAdapter } from '../../domain/employee/adapters/employee-microservice.adapter';
+import { DepartmentMicroserviceAdapter } from '../../domain/department/adapters/department-microservice.adapter';
+import { DepartmentHierarchyResponseDto } from '../../domain/department/dtos/department-response.dto';
 
 @Injectable()
 export class EmployeeContextService {

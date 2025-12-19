@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { File } from '@libs/entities/file.entity';
+import { File } from '../../../libs/entities/file.entity';
 import { DomainFileService } from './file.service';
 import { DomainFileRepository } from './file.repository';
 

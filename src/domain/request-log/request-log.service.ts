@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { BaseService } from '@libs/services/base.service';
-import { RequestLog, Environment } from '@libs/entities/request-log.entity';
+import { BaseService } from '../../../libs/services/base.service';
+import { RequestLog, Environment } from '../../../libs/entities/request-log.entity';
 import { DomainRequestLogRepository } from './request-log.repository';
 import { Between, FindManyOptions, Like, MoreThan } from 'typeorm';
 

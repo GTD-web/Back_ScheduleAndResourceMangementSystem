@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { DomainEmployeeModule } from '@src/domain/employee/employee.module';
+import { DomainEmployeeModule } from '../../domain/employee/employee.module';
 import { JwtStrategy } from '../../../libs/strategies/jwt.strategy';
 
 // Business Services

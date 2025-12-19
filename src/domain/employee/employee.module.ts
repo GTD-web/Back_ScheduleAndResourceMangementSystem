@@ -4,7 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { DomainEmployeeService } from './employee.service';
 import { DomainEmployeeRepository } from './employee.repository';
-import { Employee } from '@libs/entities/employee.entity';
+import { Employee } from '../../../libs/entities/employee.entity';
 import { EmployeeMicroserviceAdapter } from './adapters';
 
 @Module({

@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsArray, IsDateString } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { DateUtil } from '@libs/utils/date.util';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { DateUtil } from '../../../../libs/utils/date.util';
 
 export enum ReservationSortOrder {
     DESC = 'DESC', // 최신순

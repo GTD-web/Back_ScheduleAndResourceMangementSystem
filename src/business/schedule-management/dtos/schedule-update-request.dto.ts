@@ -1,4 +1,4 @@
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
     IsOptional,

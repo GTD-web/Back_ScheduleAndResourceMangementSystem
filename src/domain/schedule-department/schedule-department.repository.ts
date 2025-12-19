@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ScheduleDepartment } from '@libs/entities/schedule-department.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
+import { ScheduleDepartment } from '../../../libs/entities/schedule-department.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
 
 @Injectable()
 export class ScheduleDepartmentRepository extends BaseRepository<ScheduleDepartment> {

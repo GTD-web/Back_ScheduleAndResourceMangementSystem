@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainMeetingRoomInfoRepository } from './meeting-room-info.repository';
-import { BaseService } from '@libs/services/base.service';
-import { MeetingRoomInfo } from '@libs/entities/meeting-room-info.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { MeetingRoomInfo } from '../../../libs/entities/meeting-room-info.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainMeetingRoomInfoService extends BaseService<MeetingRoomInfo> {

@@ -1,29 +1,29 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { DomainReservationService } from '@src/domain/reservation/reservation.service';
-import { DomainResourceService } from '@src/domain/resource/resource.service';
-import { DomainNotificationService } from '@src/domain/notification/notification.service';
-import { DomainEmployeeNotificationService } from '@src/domain/employee-notification/employee-notification.service';
-import { DomainReservationVehicleService } from '@src/domain/reservation-vehicle/reservation-vehicle.service';
-import { DomainVehicleInfoService } from '@src/domain/vehicle-info/vehicle-info.service';
-import { DomainFileService } from '@src/domain/file/file.service';
+import { DomainReservationService } from '../../../domain/reservation/reservation.service';
+import { DomainResourceService } from '../../../domain/resource/resource.service';
+import { DomainNotificationService } from '../../../domain/notification/notification.service';
+import { DomainEmployeeNotificationService } from '../../../domain/employee-notification/employee-notification.service';
+import { DomainReservationVehicleService } from '../../../domain/reservation-vehicle/reservation-vehicle.service';
+import { DomainVehicleInfoService } from '../../../domain/vehicle-info/vehicle-info.service';
+import { DomainFileService } from '../../../domain/file/file.service';
 import { FileContextService } from '../../file/services/file.context.service';
 import { DataSource, QueryRunner } from 'typeorm';
-import { Employee, Reservation, ReservationVehicle } from '@libs/entities';
-import { PaginationData } from '@libs/dtos/pagination-response.dto';
-import { PaginationQueryDto } from '@libs/dtos/pagination-query.dto';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { DateUtil } from '@libs/utils/date.util';
+import { Employee, Reservation, ReservationVehicle } from '../../../../libs/entities';
+import { PaginationData } from '../../../../libs/dtos/pagination-response.dto';
+import { PaginationQueryDto } from '../../../../libs/dtos/pagination-query.dto';
+import { IRepositoryOptions } from '../../../../libs/interfaces/repository.interface';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { DateUtil } from '../../../../libs/utils/date.util';
 import { In, Raw, FindOptionsWhere, Between, MoreThan, LessThan, LessThanOrEqual, Not } from 'typeorm';
 
 import { CreateReservationDto } from '../dtos/create-reservation.dto';
 import { ReturnVehicleDto, UpdateReservationStatusDto } from '../dtos/update-reservation.dto';
-import { ReservationWithRelationsResponseDto } from '@src/business.dto.index';
+import { ReservationWithRelationsResponseDto } from '../../../business.dto.index';
 // import { ReservationWithRelationsResponseDto } from '../dtos/reservation-response.dto';
-import { ReservationResponseDto } from '@src/business.dto.index';
-import { DomainScheduleParticipantService } from '@src/domain/schedule-participant/schedule-participant.service';
+import { ReservationResponseDto } from '../../../business.dto.index';
+import { DomainScheduleParticipantService } from '../../../domain/schedule-participant/schedule-participant.service';
 
 @Injectable()
 export class ReservationContextService {

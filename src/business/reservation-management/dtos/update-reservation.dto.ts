@@ -13,12 +13,12 @@ import {
     Min,
     Max,
 } from 'class-validator';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { DateUtil } from '@libs/utils/date.util';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { DateUtil } from '../../../../libs/utils/date.util';
 import { Type } from 'class-transformer/types';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { ResourceLocation } from '@libs/entities/resource.entity';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { ResourceLocation } from '../../../../libs/entities/resource.entity';
 
 // 예약 제목 변경
 export class UpdateReservationTitleDto {

@@ -4,7 +4,7 @@ import { VehicleInfo } from './vehicle-info.entity';
 import { MeetingRoomInfo } from './meeting-room-info.entity';
 import { AccommodationInfo } from './accommodation-info.entity';
 import { Reservation } from './reservation.entity';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../enums/resource-type.enum';
 import { ResourceManager } from './resource-manager.entity';
 import { EquipmentInfo } from './equipment-info.entity';
 

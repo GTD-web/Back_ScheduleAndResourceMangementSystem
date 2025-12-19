@@ -11,9 +11,9 @@ import {
     ValidateNested,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { DateUtil } from '@libs/utils/date.util';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { DateUtil } from '../../../../libs/utils/date.util';
 
 /**
  * 일정 날짜 범위 DTO

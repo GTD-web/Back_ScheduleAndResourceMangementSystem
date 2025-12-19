@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsOptional, IsArray, IsDateString, IsEnum, Matches, Length } from 'class-validator';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
 
 export class CreateReservationDto {
     @ApiProperty()

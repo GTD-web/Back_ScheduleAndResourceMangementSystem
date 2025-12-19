@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { DomainReservationRepository } from './reservation.repository';
-import { BaseService } from '@libs/services/base.service';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { Reservation } from '../../../libs/entities/reservation.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 import { DeepPartial, In, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from 'typeorm';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { DateUtil } from '@libs/utils/date.util';
+import { ReservationStatus } from '../../../libs/enums/reservation-type.enum';
+import { ResourceType } from '../../../libs/enums/resource-type.enum';
+import { DateUtil } from '../../../libs/utils/date.util';
 
 @Injectable()
 export class DomainReservationService extends BaseService<Reservation> {

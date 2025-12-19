@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository, UpdateResult } from 'typeorm';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { Schedule } from '../../../libs/entities/schedule.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainScheduleRepository extends BaseRepository<Schedule> {

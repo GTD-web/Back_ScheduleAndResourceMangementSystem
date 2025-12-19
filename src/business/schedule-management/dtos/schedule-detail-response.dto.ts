@@ -1,18 +1,18 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { ScheduleStatus, ScheduleType } from '@libs/enums/schedule-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ReservationStatus, ParticipantsType } from '@libs/enums/reservation-type.enum';
-import { VehicleInfoResponseDto } from '@src/business/resource-management/dtos/vehicle/vehicle-response.dto';
-import { MeetingRoomInfoResponseDto } from '@src/business.dto.index';
-import { AccommodationInfoResponseDto } from '@src/business.dto.index';
-import { EquipmentInfoResponseDto } from '@src/business.dto.index';
-import { File } from '@libs/entities/file.entity';
-import { Resource } from '@libs/entities/resource.entity';
-import { Reservation } from '@libs/entities/reservation.entity';
+import { ScheduleStatus, ScheduleType } from '../../../../libs/enums/schedule-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ReservationStatus, ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
+import { VehicleInfoResponseDto } from '../../resource-management/dtos/vehicle/vehicle-response.dto';
+import { MeetingRoomInfoResponseDto } from '../../../business.dto.index';
+import { AccommodationInfoResponseDto } from '../../../business.dto.index';
+import { EquipmentInfoResponseDto } from '../../../business.dto.index';
+import { File } from '../../../../libs/entities/file.entity';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
 import {
     ProjectInfo,
     ScheduleParticipantsWithEmployee,
-} from '@src/context/schedule/services/schedule-query.context.service';
+} from '../../../context/schedule/services/schedule-query.context.service';
 
 export class ScheduleDetailProjectDto {
     @ApiProperty({

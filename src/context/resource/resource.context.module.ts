@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 
 // Domain Modules
-import { DomainResourceModule } from '@src/domain/resource/resource.module';
-import { DomainResourceGroupModule } from '@src/domain/resource-group/resource-group.module';
-import { DomainResourceManagerModule } from '@src/domain/resource-manager/resource-manager.module';
-import { DomainVehicleInfoModule } from '@src/domain/vehicle-info/vehicle-info.module';
-import { DomainMeetingRoomInfoModule } from '@src/domain/meeting-room-info/meeting-room-info.module';
-import { DomainAccommodationInfoModule } from '@src/domain/accommodation-info/accommodation-info.module';
-import { DomainEquipmentInfoModule } from '@src/domain/equipment-info/equipment-info.module';
-import { DomainFileModule } from '@src/domain/file/file.module';
-import { DomainConsumableModule } from '@src/domain/consumable/consumable.module';
-import { DomainMaintenanceModule } from '@src/domain/maintenance/maintenance.module';
-import { DomainReservationVehicleModule } from '@src/domain/reservation-vehicle/reservation-vehicle.module';
-import { DomainEmployeeModule } from '@src/domain/employee/employee.module';
+import { DomainResourceModule } from '../../domain/resource/resource.module';
+import { DomainResourceGroupModule } from '../../domain/resource-group/resource-group.module';
+import { DomainResourceManagerModule } from '../../domain/resource-manager/resource-manager.module';
+import { DomainVehicleInfoModule } from '../../domain/vehicle-info/vehicle-info.module';
+import { DomainMeetingRoomInfoModule } from '../../domain/meeting-room-info/meeting-room-info.module';
+import { DomainAccommodationInfoModule } from '../../domain/accommodation-info/accommodation-info.module';
+import { DomainEquipmentInfoModule } from '../../domain/equipment-info/equipment-info.module';
+import { DomainFileModule } from '../../domain/file/file.module';
+import { DomainConsumableModule } from '../../domain/consumable/consumable.module';
+import { DomainMaintenanceModule } from '../../domain/maintenance/maintenance.module';
+import { DomainReservationVehicleModule } from '../../domain/reservation-vehicle/reservation-vehicle.module';
+import { DomainEmployeeModule } from '../../domain/employee/employee.module';
 import { FileContextModule } from '../file/file.context.module';
 
 // Context Services

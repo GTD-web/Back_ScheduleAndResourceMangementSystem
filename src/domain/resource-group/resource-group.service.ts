@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainResourceGroupRepository } from './resource-group.repository';
-import { BaseService } from '@libs/services/base.service';
-import { ResourceGroup } from '@libs/entities/resource-group.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { BaseService } from '../../../libs/services/base.service';
+import { ResourceGroup } from '../../../libs/entities/resource-group.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
+import { ResourceType } from '../../../libs/enums/resource-type.enum';
 import { In, IsNull, Not } from 'typeorm';
 
 @Injectable()

@@ -1,20 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
 import { DataSource, In } from 'typeorm';
 
 // Domain Services
-import { DomainVehicleInfoService } from '@src/domain/vehicle-info/vehicle-info.service';
-import { DomainReservationVehicleService } from '@src/domain/reservation-vehicle/reservation-vehicle.service';
-import { ReservationVehicle } from '@libs/entities/reservation-vehicle.entity';
-import { DomainFileService } from '@src/domain/file/file.service';
-import { DomainConsumableService } from '@src/domain/consumable/consumable.service';
-import { Consumable } from '@libs/entities/consumable.entity';
-import { DomainEmployeeService } from '@src/domain/employee/employee.service';
+import { DomainVehicleInfoService } from '../../../domain/vehicle-info/vehicle-info.service';
+import { DomainReservationVehicleService } from '../../../domain/reservation-vehicle/reservation-vehicle.service';
+import { ReservationVehicle } from '../../../../libs/entities/reservation-vehicle.entity';
+import { DomainFileService } from '../../../domain/file/file.service';
+import { DomainConsumableService } from '../../../domain/consumable/consumable.service';
+import { Consumable } from '../../../../libs/entities/consumable.entity';
+import { DomainEmployeeService } from '../../../domain/employee/employee.service';
 import { FileContextService } from '../../file/services/file.context.service';
 
 // DTOs
-import { VehicleInfoResponseDto } from '@src/business/resource-management/dtos/vehicle/vehicle-response.dto';
-import { UpdateVehicleInfoDto } from '@src/business/resource-management/dtos/vehicle/update-vehicle-info.dto';
+import { VehicleInfoResponseDto } from '../../../business/resource-management/dtos/vehicle/vehicle-response.dto';
+import { UpdateVehicleInfoDto } from '../../../business/resource-management/dtos/vehicle/update-vehicle-info.dto';
 
 @Injectable()
 export class VehicleInfoContextService {

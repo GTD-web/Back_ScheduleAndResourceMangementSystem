@@ -1,23 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, IsNull } from 'typeorm';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 // Domain Services
-import { DomainResourceGroupService } from '@src/domain/resource-group/resource-group.service';
-import { DomainResourceService } from '@src/domain/resource/resource.service';
+import { DomainResourceGroupService } from '../../../domain/resource-group/resource-group.service';
+import { DomainResourceService } from '../../../domain/resource/resource.service';
 
 // DTOs
-import { CreateResourceGroupDto } from '@src/business/resource-management/dtos/resource/create-resource.dto';
+import { CreateResourceGroupDto } from '../../../business/resource-management/dtos/resource/create-resource.dto';
 import {
     ResourceGroupResponseDto,
     ResourceGroupWithResourcesResponseDto,
     ResourceSelectResponseDto,
-} from '@src/business/resource-management/dtos/resource/resource-response.dto';
+} from '../../../business/resource-management/dtos/resource/resource-response.dto';
 import {
     UpdateResourceGroupDto,
     UpdateResourceGroupOrdersDto,
-} from '@src/business/resource-management/dtos/resource/update-resource.dto';
+} from '../../../business/resource-management/dtos/resource/update-resource.dto';
 
 @Injectable()
 export class ResourceGroupContextService {

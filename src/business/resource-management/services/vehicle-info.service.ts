@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
 // Context Services
-import { VehicleInfoContextService } from '@src/context/resource/services/vehicle-info.context.service';
-import { FileContextService } from '@src/context/file/services/file.context.service';
+import { VehicleInfoContextService } from '../../../context/resource/services/vehicle-info.context.service';
+import { FileContextService } from '../../../context/file/services/file.context.service';
 
 // DTOs
 import { UpdateVehicleInfoDto } from '../dtos/vehicle/update-vehicle-info.dto';
 import { VehicleInfoResponseDto } from '../dtos/vehicle/vehicle-response.dto';
-import { ReturnVehicleDetailResponseDto, ReturnVehicleResponseDto } from '@src/business.dto.index';
+import { ReturnVehicleDetailResponseDto, ReturnVehicleResponseDto } from '../../../business.dto.index';
 
 @Injectable()
 export class VehicleInfoService {

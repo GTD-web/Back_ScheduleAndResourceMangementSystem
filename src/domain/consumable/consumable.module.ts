@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DomainConsumableService } from './consumable.service';
 import { DomainConsumableRepository } from './consumable.repository';
-import { Consumable } from '@libs/entities/consumable.entity';
+import { Consumable } from '../../../libs/entities/consumable.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Consumable])],

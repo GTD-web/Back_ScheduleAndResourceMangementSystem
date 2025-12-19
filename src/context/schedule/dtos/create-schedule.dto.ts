@@ -1,4 +1,4 @@
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
 
 export interface CreateScheduleDto {
     title: string;

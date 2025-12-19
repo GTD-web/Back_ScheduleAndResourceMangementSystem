@@ -1,14 +1,14 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
 
 // Domain Services
-import { DomainConsumableService } from '@src/domain/consumable/consumable.service';
-import { DomainVehicleInfoService } from '@src/domain/vehicle-info/vehicle-info.service';
+import { DomainConsumableService } from '../../../domain/consumable/consumable.service';
+import { DomainVehicleInfoService } from '../../../domain/vehicle-info/vehicle-info.service';
 
 // DTOs
-import { CreateConsumableDto } from '@src/business/resource-management/dtos/vehicle/create-vehicle-info.dto';
-import { UpdateConsumableDto } from '@src/business/resource-management/dtos/vehicle/update-vehicle-info.dto';
-import { ConsumableResponseDto } from '@src/business/resource-management/dtos/vehicle/vehicle-response.dto';
+import { CreateConsumableDto } from '../../../business/resource-management/dtos/vehicle/create-vehicle-info.dto';
+import { UpdateConsumableDto } from '../../../business/resource-management/dtos/vehicle/update-vehicle-info.dto';
+import { ConsumableResponseDto } from '../../../business/resource-management/dtos/vehicle/vehicle-response.dto';
 
 @Injectable()
 export class ConsumableContextService {

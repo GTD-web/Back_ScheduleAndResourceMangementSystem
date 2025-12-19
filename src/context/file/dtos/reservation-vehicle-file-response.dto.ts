@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { File } from '@libs/entities/file.entity';
+import { File } from '../../../../libs/entities/file.entity';
 
 export class ReservationVehicleFileResponseDto {
     @ApiProperty()

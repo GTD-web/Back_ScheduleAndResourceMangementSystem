@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainScheduleParticipantRepository } from './schedule-participant.repository';
-import { BaseService } from '@libs/services/base.service';
-import { ScheduleParticipant } from '@libs/entities/schedule-participant.entity';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
+import { BaseService } from '../../../libs/services/base.service';
+import { ScheduleParticipant } from '../../../libs/entities/schedule-participant.entity';
+import { ParticipantsType } from '../../../libs/enums/reservation-type.enum';
 import { In } from 'typeorm';
 
 @Injectable()

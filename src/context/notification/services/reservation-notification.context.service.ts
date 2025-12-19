@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NotificationContextService } from './notification.context.service';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { Resource } from '@libs/entities/resource.entity';
-import { DateUtil } from '@libs/utils/date.util';
-import { CreateNotificationDataDto } from '@src/context/notification/dtos/create-notification.dto';
-import { DomainEmployeeNotificationService } from '@src/domain/employee-notification/employee-notification.service';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { DateUtil } from '../../../../libs/utils/date.util';
+import { CreateNotificationDataDto } from '../dtos/create-notification.dto';
+import { DomainEmployeeNotificationService } from '../../../domain/employee-notification/employee-notification.service';
 
 @Injectable()
 export class ReservationNotificationContextService {

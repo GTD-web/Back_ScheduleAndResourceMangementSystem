@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployeeNotification } from '@libs/entities/employee-notification.entity';
+import { EmployeeNotification } from '../../../libs/entities/employee-notification.entity';
 import { DomainEmployeeNotificationService } from './employee-notification.service';
 import { DomainEmployeeNotificationRepository } from './employee-notification.repository';
 

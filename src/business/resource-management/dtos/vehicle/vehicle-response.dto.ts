@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FileResponseDto } from '@src/business.dto.index';
+import { FileResponseDto } from '../../../../business.dto.index';
 
 export class MaintenanceResponseDto {
     @ApiProperty()

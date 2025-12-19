@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ScheduleParticipant } from './schedule-participant.entity';
 import { ScheduleRelation } from './schedule-relations.entity';
-import { ScheduleType, ScheduleStatus } from '@libs/enums/schedule-type.enum';
+import { ScheduleType, ScheduleStatus } from '../enums/schedule-type.enum';
 import { ScheduleDepartment } from './schedule-department.entity';
 
 @Entity('schedules')

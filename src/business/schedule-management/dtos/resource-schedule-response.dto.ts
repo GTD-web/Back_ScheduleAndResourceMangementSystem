@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { Resource } from '@libs/entities/resource.entity';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { ResourceGroup } from '@libs/entities/resource-group.entity';
-import { ScheduleParticipantsWithEmployee } from '@src/context/schedule/services/schedule-query.context.service';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { ResourceGroup } from '../../../../libs/entities/resource-group.entity';
+import { ScheduleParticipantsWithEmployee } from '../../../context/schedule/services/schedule-query.context.service';
 
 export class ResourceScheduleItemDto {
     @ApiProperty({

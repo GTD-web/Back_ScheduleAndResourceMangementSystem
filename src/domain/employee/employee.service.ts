@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainEmployeeRepository } from './employee.repository';
-import { BaseService } from '@libs/services/base.service';
-import { Employee } from '@libs/entities/employee.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { Employee } from '../../../libs/entities/employee.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 import { FindOneOptions, FindOptionsWhere, In } from 'typeorm';
 @Injectable()
 export class DomainEmployeeService extends BaseService<Employee> {

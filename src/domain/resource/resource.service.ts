@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainResourceRepository } from './resource.repository';
-import { BaseService } from '@libs/services/base.service';
-import { Resource } from '@libs/entities/resource.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { Resource } from '../../../libs/entities/resource.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 import { In } from 'typeorm';
 
 @Injectable()

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { File } from '@libs/entities/file.entity';
-import { BaseService } from '@libs/services/base.service';
+import { File } from '../../../libs/entities/file.entity';
+import { BaseService } from '../../../libs/services/base.service';
 import { DomainFileRepository } from './file.repository';
 import { In } from 'typeorm';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

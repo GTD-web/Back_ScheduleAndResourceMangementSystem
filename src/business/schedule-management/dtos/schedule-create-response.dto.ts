@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
 
 /**
  * 생성된 일정 정보 DTO

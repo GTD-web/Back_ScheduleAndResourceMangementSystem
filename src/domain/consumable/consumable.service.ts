@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainConsumableRepository } from './consumable.repository';
-import { BaseService } from '@libs/services/base.service';
-import { Consumable } from '@libs/entities/consumable.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { Consumable } from '../../../libs/entities/consumable.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainConsumableService extends BaseService<Consumable> {

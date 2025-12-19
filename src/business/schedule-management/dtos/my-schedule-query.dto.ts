@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
 
 export enum ScheduleCategoryType {
     ALL = 'ALL',

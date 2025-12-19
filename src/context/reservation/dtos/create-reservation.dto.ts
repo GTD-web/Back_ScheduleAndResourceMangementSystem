@@ -1,5 +1,5 @@
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 export interface CreateReservationDto {
     title: string;

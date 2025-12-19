@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 export class ResourceScheduleQueryDto {
     @ApiProperty({

@@ -1,16 +1,16 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { DomainFileService } from '@src/domain/file/file.service';
-import { DomainFileReservationVehicleService } from '@src/domain/file-reservation-vehicle/file-reservation-vehicle.service';
-import { DomainFileVehicleInfoService } from '@src/domain/file-vehicle-info/file-vehicle-info.service';
-import { DomainFileMaintenanceService } from '@src/domain/file-maintenance/file-maintenance.service';
+import { DomainFileService } from '../../../domain/file/file.service';
+import { DomainFileReservationVehicleService } from '../../../domain/file-reservation-vehicle/file-reservation-vehicle.service';
+import { DomainFileVehicleInfoService } from '../../../domain/file-vehicle-info/file-vehicle-info.service';
+import { DomainFileMaintenanceService } from '../../../domain/file-maintenance/file-maintenance.service';
 import { In, LessThan } from 'typeorm';
-import { File } from '@libs/entities/file.entity';
+import { File } from '../../../../libs/entities/file.entity';
 import { ReservationVehicleFileResponseDto } from '../dtos';
 import { S3Service } from '../adapter/s3.service';
-import { MimeType } from '@libs/enums/mime-type.enum';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { DateUtil } from '@libs/utils/date.util';
-import { DomainFileResourceService } from '@src/domain/file-resource/file-resource.service';
+import { MimeType } from '../../../../libs/enums/mime-type.enum';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { DateUtil } from '../../../../libs/utils/date.util';
+import { DomainFileResourceService } from '../../../domain/file-resource/file-resource.service';
 
 export interface CreateFileDataDto {
     filePath: string;

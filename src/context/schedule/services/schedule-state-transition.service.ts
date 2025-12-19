@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { ScheduleParticipant } from '@libs/entities/schedule-participant.entity';
-import { ParticipantsType, ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ScheduleStatus } from '@libs/enums/schedule-type.enum';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { ScheduleParticipant } from '../../../../libs/entities/schedule-participant.entity';
+import { ParticipantsType, ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { ScheduleStatus } from '../../../../libs/enums/schedule-type.enum';
 import { DomainScheduleService } from '../../../domain/schedule/schedule.service';
 import { DomainReservationService } from '../../../domain/reservation/reservation.service';
 import { DomainScheduleRelationService } from '../../../domain/schedule-relation/schedule-relation.service';
 import { DomainScheduleParticipantService } from '../../../domain/schedule-participant/schedule-participant.service';
 import { DomainScheduleDepartmentService } from '../../../domain/schedule-department/schedule-department.service';
-import { DateUtil } from '@libs/utils/date.util';
-import { Resource } from '@libs/entities/resource.entity';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { DateUtil } from '../../../../libs/utils/date.util';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 export interface ScheduleCancelResult {
     schedule: Schedule;

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, TreeRepository } from 'typeorm';
-import { Department } from '@libs/entities/department.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
+import { Department } from '../../../libs/entities/department.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
 import { DepartmentCreateRequestDto, DepartmentUpdateRequestDto } from './dtos';
 
 @Injectable()

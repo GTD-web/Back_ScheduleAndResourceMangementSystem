@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { Notification } from '@libs/entities/notification.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { Notification } from '../../../libs/entities/notification.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainNotificationRepository extends BaseRepository<Notification> {

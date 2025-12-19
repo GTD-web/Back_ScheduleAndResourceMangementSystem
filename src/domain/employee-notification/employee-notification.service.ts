@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { EmployeeNotification } from '@libs/entities/employee-notification.entity';
-import { BaseService } from '@libs/services/base.service';
+import { EmployeeNotification } from '../../../libs/entities/employee-notification.entity';
+import { BaseService } from '../../../libs/services/base.service';
 import { DomainEmployeeNotificationRepository } from './employee-notification.repository';
 
 @Injectable()
