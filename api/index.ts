@@ -23,6 +23,8 @@ async function createApp(): Promise<NestExpressApplication> {
             'https://lsms.lumir.space',
             'https://lrms.lumir.space',
             'https://rms-backend-iota.vercel.app',
+            'https://rms-backend-lumir-web-dev.vercel.app',
+            'https://rms-backend-git-dev-lumir-web-dev.vercel.app',
             'https://lrms-dev.lumir.space',
             'https://lrim.lumir.space',
             'http://localhost:3002',
