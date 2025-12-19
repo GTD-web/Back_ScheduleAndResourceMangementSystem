@@ -4576,9 +4576,10 @@ module.exports = require("@aws-sdk/s3-request-presigner");
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DateUtil = void 0;
-const dayjs = __webpack_require__(79);
+const dayjsNamespace = __webpack_require__(79);
 const utc = __webpack_require__(80);
 const timezone = __webpack_require__(81);
+const dayjs = dayjsNamespace.default || dayjsNamespace;
 const utcPlugin = utc.default || utc;
 const timezonePlugin = timezone.default || timezone;
 dayjs.extend(utcPlugin);
