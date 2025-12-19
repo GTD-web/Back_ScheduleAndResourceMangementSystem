@@ -26,6 +26,6 @@
             "@resource/*": ["./src/*"]
         }
     },
-    "include": ["src/**/*", "libs/**/*", "public"],
+    "include": ["src/**/*", "libs/**/*", "public", "api/**/*"],
     "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }
