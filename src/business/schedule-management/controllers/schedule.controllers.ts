@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Patch, Param, Query, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiOkResponse, ApiExcludeEndpoint, ApiBody } from '@nestjs/swagger';
 import { ScheduleManagementService } from '../schedule-management.service';
-import { Employee } from '@libs/entities/employee.entity';
-import { User } from '@libs/decorators/user.decorator';
+import { Employee } from '../../../../libs/entities/employee.entity';
+import { User } from '../../../../libs/decorators/user.decorator';
 import { ScheduleCalendarQueryDto } from '../dtos/schedule-calendar-query.dto';
 import { ScheduleCalendarResponseDto } from '../dtos/schedule-calendar-response.dto';
 import { MyScheduleQueryDto } from '../dtos/my-schedule-query.dto';

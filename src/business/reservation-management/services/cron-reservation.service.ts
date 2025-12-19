@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SchedulePostProcessingService } from '@src/context/schedule/services/schedule-post-processing.service';
-import { ReservationContextService } from '@src/context/reservation/services/reservation.context.service';
+import { SchedulePostProcessingService } from '../../../context/schedule/services/schedule-post-processing.service';
+import { ReservationContextService } from '../../../context/reservation/services/reservation.context.service';
 
 @Injectable()
 export class CronReservationService {

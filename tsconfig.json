@@ -6,6 +6,8 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
         "target": "ES2021",
         "sourceMap": true,
         "outDir": "./dist",
@@ -26,6 +28,6 @@
             "@resource/*": ["./src/*"]
         }
     },
-    "include": ["src/**/*", "libs/**/*", "public"],
+    "include": ["src/**/*", "libs/**/*", "public", "api/**/*"],
     "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }

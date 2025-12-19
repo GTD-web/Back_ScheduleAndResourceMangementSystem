@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 // Context Modules
-import { FileContextModule } from '@src/context/file/file.context.module';
+import { FileContextModule } from '../../context/file/file.context.module';
 
 // Business Services
 import { FileManagementService } from './file-management.service';

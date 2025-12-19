@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
+import { ParticipantsType } from '../enums/reservation-type.enum';
 import { Schedule } from './schedule.entity';
 
 @Entity('schedule_participants')

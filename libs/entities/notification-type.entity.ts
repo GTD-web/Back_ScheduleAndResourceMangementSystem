@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
-import { NotificationType } from '@libs/enums/notification-type.enum';
+import { NotificationType } from '../enums/notification-type.enum';
 
 /**
  * 알림 타입별 필수 정보 정의 인터페이스

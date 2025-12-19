@@ -1,11 +1,11 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
-import { RolesGuard } from '@libs/guards/role.guard';
-import { ApiDataResponse } from '@libs/decorators/api-responses.decorator';
+import { JwtAuthGuard } from '../../../../libs/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../../libs/guards/role.guard';
+import { ApiDataResponse } from '../../../../libs/decorators/api-responses.decorator';
 import { EmplyeesByDepartmentResponseDto } from '../dtos/employees-by-department-response.dto';
-import { Roles } from '@libs/decorators/role.decorator';
-import { Role } from '@libs/enums/role-type.enum';
+import { Roles } from '../../../../libs/decorators/role.decorator';
+import { Role } from '../../../../libs/enums/role-type.enum';
 import { EmployeeManagementService } from '../employee-management.service';
 
 @ApiTags('v2 직원')

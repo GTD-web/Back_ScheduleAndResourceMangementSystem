@@ -1,12 +1,12 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, ValidateNested, IsArray, Length } from 'class-validator';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../../libs/enums/resource-type.enum';
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CreateVehicleInfoDto } from '../vehicle/create-vehicle-info.dto';
 import { CreateMeetingRoomInfoDto } from '../meeting-room/create-meeting-room-info.dto';
 import { CreateAccommodationInfoDto } from '../accommodation/create-accommodation-info.dto';
 import { CreateEquipmentInfoDto } from '../equipment/create-equipment-info.dto';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { ERROR_MESSAGE } from '../../../../../libs/constants/error-message';
 
 export class CreateResourceGroupDto {
     @ApiProperty()

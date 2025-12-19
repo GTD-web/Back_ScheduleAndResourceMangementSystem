@@ -1,10 +1,10 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { DomainEmployeeService } from '@src/domain/employee/employee.service';
-import { Employee } from '@libs/entities';
-import { DateUtil } from '@libs/utils/date.util';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { Role } from '@libs/enums/role-type.enum';
+import { DomainEmployeeService } from '../../domain/employee/employee.service';
+import { Employee } from '../../../libs/entities';
+import { DateUtil } from '../../../libs/utils/date.util';
+import { ERROR_MESSAGE } from '../../../libs/constants/error-message';
+import { Role } from '../../../libs/enums/role-type.enum';
 import { LoginDto, SsoResponseDto, LoginResponseDto } from './dtos';
 import axios from 'axios';
 import * as bcrypt from 'bcryptjs';

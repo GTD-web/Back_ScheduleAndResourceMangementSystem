@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainFileResourceRepository } from './file-resource.repository';
-import { BaseService } from '@libs/services/base.service';
-import { FileResource } from '@libs/entities/file-resource.entity';
+import { BaseService } from '../../../libs/services/base.service';
+import { FileResource } from '../../../libs/entities/file-resource.entity';
 
 @Injectable()
 export class DomainFileResourceService extends BaseService<FileResource> {

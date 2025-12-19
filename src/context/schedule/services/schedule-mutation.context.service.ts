@@ -1,21 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
-import { DomainScheduleService } from '@src/domain/schedule/schedule.service';
-import { DomainScheduleParticipantService } from '@src/domain/schedule-participant/schedule-participant.service';
-import { DomainScheduleRelationService } from '@src/domain/schedule-relation/schedule-relation.service';
-import { DomainScheduleDepartmentService } from '@src/domain/schedule-department/schedule-department.service';
+import { DomainScheduleService } from '../../../domain/schedule/schedule.service';
+import { DomainScheduleParticipantService } from '../../../domain/schedule-participant/schedule-participant.service';
+import { DomainScheduleRelationService } from '../../../domain/schedule-relation/schedule-relation.service';
+import { DomainScheduleDepartmentService } from '../../../domain/schedule-department/schedule-department.service';
 import { ReservationContextService } from '../../reservation/services/reservation.context.service';
-import { Employee } from '@libs/entities/employee.entity';
+import { Employee } from '../../../../libs/entities/employee.entity';
 import {
     CreateScheduleDto,
     CreateScheduleParticipantDto,
     CreateScheduleRelationDto,
 } from '../dtos/create-schedule.dto';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { ScheduleRelation } from '@libs/entities/schedule-relations.entity';
-import { ScheduleStatus, ScheduleType } from '@libs/enums/schedule-type.enum';
-import { ParticipantsType, ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { ScheduleRelation } from '../../../../libs/entities/schedule-relations.entity';
+import { ScheduleStatus, ScheduleType } from '../../../../libs/enums/schedule-type.enum';
+import { ParticipantsType, ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 export interface ScheduleCreateResult {
     createdSchedules: Schedule[];

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DomainVehicleInfoService } from './vehicle-info.service';
 import { DomainVehicleInfoRepository } from './vehicle-info.repository';
-import { VehicleInfo } from '@libs/entities/vehicle-info.entity';
+import { VehicleInfo } from '../../../libs/entities/vehicle-info.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([VehicleInfo])],

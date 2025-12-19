@@ -11,7 +11,7 @@ import {
     IsString,
     Length,
 } from 'class-validator';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { ERROR_MESSAGE } from '../../../../../libs/constants/error-message';
 
 export class UpdateMaintenanceDto {
     @ApiProperty({ required: false })

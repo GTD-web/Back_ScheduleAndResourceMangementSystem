@@ -5,7 +5,7 @@ import {
     NotFoundException,
     InternalServerErrorException,
 } from '@nestjs/common';
-import { Employee } from '@libs/entities/employee.entity';
+import { Employee } from '../../../libs/entities/employee.entity';
 
 // 기존 DTO들 import
 import { ScheduleCalendarQueryDto } from './dtos/schedule-calendar-query.dto';
@@ -42,7 +42,7 @@ import { ScheduleStateTransitionService } from '../../context/schedule/services/
 import { ScheduleMutationContextService } from '../../context/schedule/services/schedule-mutation.context.service';
 import { SchedulePostProcessingService } from '../../context/schedule/services/schedule-post-processing.service';
 import { ScheduleAction } from '../../context/schedule/services/schedule-authorization.service';
-import { ParticipantsType, ReservationStatus } from '@libs/enums/reservation-type.enum';
+import { ParticipantsType, ReservationStatus } from '../../../libs/enums/reservation-type.enum';
 import {
     ScheduleDetailProjectDto,
     ScheduleDetailDepartmentDto,
@@ -50,11 +50,11 @@ import {
     ScheduleDetailReservationDto,
 } from './dtos/schedule-detail-response.dto';
 import { ResourceGroupDto } from './dtos/resource-schedule-response.dto';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../libs/enums/resource-type.enum';
 import { DataSource } from 'typeorm';
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
-import { EmployeeContextService } from '@src/context/employee/employee.context.service';
-import { ScheduleNotificationContextService } from '@src/context/notification/services/schedule-notification.context.service';
+import { ScheduleType } from '../../../libs/enums/schedule-type.enum';
+import { EmployeeContextService } from '../../context/employee/employee.context.service';
+import { ScheduleNotificationContextService } from '../../context/notification/services/schedule-notification.context.service';
 import { MyScheduleHistoryQueryDto } from './dtos/my-schedule-history-query.dto';
 import { MyScheduleHistoryResponseDto } from './dtos/my-schedule-history-response.dto';
 

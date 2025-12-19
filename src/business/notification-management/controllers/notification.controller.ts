@@ -1,8 +1,8 @@
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { Controller, Get, Post, Patch, Param, Body, Query } from '@nestjs/common';
-import { User } from '@libs/decorators/user.decorator';
-import { Employee } from '@libs/entities';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { User } from '../../../../libs/decorators/user.decorator';
+import { Employee } from '../../../../libs/entities';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 
 // Business Layer DTOs (중앙집중식 import)
 import {
@@ -12,7 +12,7 @@ import {
     NotificationTypeResponseDto,
     SendNotificationDto,
     PushNotificationDto,
-} from '@src/business.dto.index';
+} from '../../../business.dto.index';
 import { SubscriptionQueryDto } from '../dtos/subscription-query.dto';
 
 // Business Service

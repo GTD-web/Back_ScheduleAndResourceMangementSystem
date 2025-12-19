@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotificationTypeEntity } from '@libs/entities/notification-type.entity';
-import { NotificationType } from '@libs/enums/notification-type.enum';
+import { NotificationTypeEntity } from '../../../libs/entities/notification-type.entity';
+import { NotificationType } from '../../../libs/enums/notification-type.enum';
 
 /**
  * 알림 타입 도메인 서비스

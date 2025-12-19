@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DomainProjectService } from '@src/domain/project/project.service';
+import { DomainProjectService } from '../../domain/project/project.service';
 
 @Injectable()
 export class ProjectContextService {

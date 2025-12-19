@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PushSubscriptionDto } from './push-subscription.dto';
-import { NotificationData } from '@libs/entities/notification.entity';
-import { NotificationType } from '@libs/enums/notification-type.enum';
+import { NotificationData } from '../../../../libs/entities/notification.entity';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
 
 export class PushNotificationPayload {
     @ApiProperty()

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResourceManager } from '@libs/entities/resource-manager.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
+import { ResourceManager } from '../../../libs/entities/resource-manager.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
 
 @Injectable()
 export class DomainResourceManagerRepository extends BaseRepository<ResourceManager> {

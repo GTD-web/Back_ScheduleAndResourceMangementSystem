@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { User } from '@libs/decorators/user.decorator';
-import { Employee } from '@libs/entities';
+import { User } from '../../../../libs/decorators/user.decorator';
+import { Employee } from '../../../../libs/entities';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ApiDataResponse } from '@libs/decorators/api-responses.decorator';
+import { ApiDataResponse } from '../../../../libs/decorators/api-responses.decorator';
 import { TaskManagementService } from '../task-management.service';
 import { TaskListResponseDto, TaskResponseDto } from '../dtos/task-response.dto';
 

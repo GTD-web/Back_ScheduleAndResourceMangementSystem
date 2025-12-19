@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsEnum } from 'class-validator';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
 import { ScheduleCategoryType } from './my-schedule-query.dto';
 
 export class MyScheduleStatisticsQueryDto {

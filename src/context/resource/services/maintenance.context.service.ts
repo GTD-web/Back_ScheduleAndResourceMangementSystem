@@ -1,26 +1,26 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { DataSource, In, MoreThanOrEqual, Not, Raw } from 'typeorm';
-import { Maintenance, Employee } from '@libs/entities';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { Role } from '@libs/enums/role-type.enum';
+import { Maintenance, Employee } from '../../../../libs/entities';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
+import { Role } from '../../../../libs/enums/role-type.enum';
 
 // Domain Services
-import { DomainMaintenanceService } from '@src/domain/maintenance/maintenance.service';
-import { DomainConsumableService } from '@src/domain/consumable/consumable.service';
-import { DomainVehicleInfoService } from '@src/domain/vehicle-info/vehicle-info.service';
-import { DomainEmployeeService } from '@src/domain/employee/employee.service';
-import { DomainFileService } from '@src/domain/file/file.service';
+import { DomainMaintenanceService } from '../../../domain/maintenance/maintenance.service';
+import { DomainConsumableService } from '../../../domain/consumable/consumable.service';
+import { DomainVehicleInfoService } from '../../../domain/vehicle-info/vehicle-info.service';
+import { DomainEmployeeService } from '../../../domain/employee/employee.service';
+import { DomainFileService } from '../../../domain/file/file.service';
 
 // Context Services
 import { FileContextService } from '../../file/services/file.context.service';
 
 // DTOs
-import { CreateMaintenanceDto } from '@src/business/resource-management/dtos/vehicle/create-vehicle-info.dto';
-import { UpdateMaintenanceDto } from '@src/business/resource-management/dtos/vehicle/update-vehicle-info.dto';
-import { MaintenanceResponseDto } from '@src/business/resource-management/dtos/vehicle/vehicle-response.dto';
-import { PaginationData } from '@libs/dtos/pagination-response.dto';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { CreateMaintenanceDto } from '../../../business/resource-management/dtos/vehicle/create-vehicle-info.dto';
+import { UpdateMaintenanceDto } from '../../../business/resource-management/dtos/vehicle/update-vehicle-info.dto';
+import { MaintenanceResponseDto } from '../../../business/resource-management/dtos/vehicle/vehicle-response.dto';
+import { PaginationData } from '../../../../libs/dtos/pagination-response.dto';
+import { IRepositoryOptions } from '../../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class MaintenanceContextService {

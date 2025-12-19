@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainVehicleInfoRepository } from './vehicle-info.repository';
-import { BaseService } from '@libs/services/base.service';
-import { VehicleInfo } from '@libs/entities/vehicle-info.entity';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { BaseService } from '../../../libs/services/base.service';
+import { VehicleInfo } from '../../../libs/entities/vehicle-info.entity';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainVehicleInfoService extends BaseService<VehicleInfo> {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FileContextService } from '@src/context/file/services/file.context.service';
-import { FileResponseDto } from '@resource/business.dto.index';
-import { MimeType } from '@libs/enums/mime-type.enum';
+import { FileContextService } from '../../context/file/services/file.context.service';
+import { FileResponseDto } from '../../business.dto.index';
+import { MimeType } from '../../../libs/enums/mime-type.enum';
 import { CreateFileDataDto } from './dtos';
 
 /**

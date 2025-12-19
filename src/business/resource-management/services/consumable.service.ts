@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Employee } from '@libs/entities';
+import { Employee } from '../../../../libs/entities';
 
 // Context Services
-import { ConsumableContextService } from '@src/context/resource/services/consumable.context.service';
+import { ConsumableContextService } from '../../../context/resource/services/consumable.context.service';
 
 // DTOs
 import { CreateConsumableDto } from '../dtos/vehicle/create-vehicle-info.dto';

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ReservationSnapshot } from '@libs/entities/reservation-snapshot.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
+import { ReservationSnapshot } from '../../../libs/entities/reservation-snapshot.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
 
 @Injectable()
 export class DomainReservationSnapshotRepository extends BaseRepository<ReservationSnapshot> {

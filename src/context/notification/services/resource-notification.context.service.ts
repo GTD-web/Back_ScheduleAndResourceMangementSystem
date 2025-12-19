@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NotificationContextService } from './notification.context.service';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { Resource } from '@libs/entities/resource.entity';
-import { CreateNotificationDataDto } from '@src/context/notification/dtos/create-notification.dto';
-import { Consumable } from '@libs/entities/consumable.entity';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { CreateNotificationDataDto } from '../dtos/create-notification.dto';
+import { Consumable } from '../../../../libs/entities/consumable.entity';
 
 @Injectable()
 export class ResourceNotificationContextService {

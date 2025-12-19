@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationContextService } from '@src/context/notification/services/notification.context.service';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ScheduleQueryContextService } from '@src/context/schedule/services/schedule-query.context.service';
+import { NotificationContextService } from '../../context/notification/services/notification.context.service';
+import { NotificationType } from '../../../libs/enums/notification-type.enum';
+import { ResourceType } from '../../../libs/enums/resource-type.enum';
+import { ScheduleQueryContextService } from '../../context/schedule/services/schedule-query.context.service';
 
 // Import DTOs from business layer index
 import {
@@ -11,9 +11,9 @@ import {
     PushSubscriptionDto,
     NotificationTypeResponseDto,
     CreateNotificationDataDto,
-} from '@src/business.dto.index';
-import { DateUtil } from '@libs/utils/date.util';
-import { EmployeeTokensDto } from '@src/domain/employee/dtos/fcm-token-response.dto';
+} from '../../business.dto.index';
+import { DateUtil } from '../../../libs/utils/date.util';
+import { EmployeeTokensDto } from '../../domain/employee/dtos/fcm-token-response.dto';
 
 /**
  * 알림 관리 비즈니스 서비스

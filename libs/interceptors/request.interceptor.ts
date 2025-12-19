@@ -1,9 +1,9 @@
-import { DateUtil } from '@libs/utils/date.util';
+import { DateUtil } from '../utils/date.util';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { DomainRequestLogService } from '@src/domain/request-log/request-log.service';
-import { Environment } from '@libs/entities/request-log.entity';
+import { DomainRequestLogService } from '../../src/domain/request-log/request-log.service';
+import { Environment } from '../entities/request-log.entity';
 import { throwError } from 'rxjs';
 
 @Injectable()

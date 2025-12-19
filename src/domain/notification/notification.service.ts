@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Notification } from '@libs/entities/notification.entity';
-import { BaseService } from '@libs/services/base.service';
+import { Notification } from '../../../libs/entities/notification.entity';
+import { BaseService } from '../../../libs/services/base.service';
 import { DomainNotificationRepository } from './notification.repository';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainNotificationService extends BaseService<Notification> {

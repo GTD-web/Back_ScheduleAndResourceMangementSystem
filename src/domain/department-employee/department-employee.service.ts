@@ -1,13 +1,13 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { DomainDepartmentEmployeeRepository } from './department-employee.repository';
-import { BaseService } from '@libs/services/base.service';
+import { BaseService } from '../../../libs/services/base.service';
 import {
     DepartmentEmployeeCreateRequestDto,
     DepartmentEmployeeUpdateRequestDto,
     DepartmentEmployeeResponseDto,
     DepartmentEmployeesResponseDto,
 } from './dtos';
-import { DepartmentEmployee } from '@libs/entities/department-employee.entity';
+import { DepartmentEmployee } from '../../../libs/entities/department-employee.entity';
 
 @Injectable()
 export class DomainDepartmentEmployeeService extends BaseService<DepartmentEmployee> {

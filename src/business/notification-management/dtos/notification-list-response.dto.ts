@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import { PaginationMetaDto, ResponseNotificationDto } from '@src/business.dto.index';
+import { PaginationMetaDto, ResponseNotificationDto } from '../../../business.dto.index';
 
 /**
  * 알림 목록 응답 DTO

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EmployeeContextService } from '@src/context/employee/employee.context.service';
+import { EmployeeContextService } from '../../context/employee/employee.context.service';
 import { EmplyeesByDepartmentResponseDto } from './dtos/employees-by-department-response.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { ChangeRoleDto } from './dtos/change-role.dto';

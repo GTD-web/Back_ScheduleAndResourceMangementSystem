@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
 import { StatisticsItemDto } from './my-schedule-statistics-response.dto';
 
 export class MyScheduleResourceDto {

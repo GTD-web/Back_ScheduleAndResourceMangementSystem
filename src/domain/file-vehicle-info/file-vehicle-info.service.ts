@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainFileVehicleInfoRepository } from './file-vehicle-info.repository';
-import { BaseService } from '@libs/services/base.service';
-import { FileVehicleInfo } from '@libs/entities/file-vehicle-info.entity';
+import { BaseService } from '../../../libs/services/base.service';
+import { FileVehicleInfo } from '../../../libs/entities/file-vehicle-info.entity';
 
 @Injectable()
 export class DomainFileVehicleInfoService extends BaseService<FileVehicleInfo> {

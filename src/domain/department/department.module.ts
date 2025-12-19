@@ -4,7 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { DomainDepartmentService } from './department.service';
 import { DomainDepartmentRepository } from './department.repository';
-import { Department } from '@libs/entities/department.entity';
+import { Department } from '../../../libs/entities/department.entity';
 import { DepartmentMicroserviceAdapter } from './adapters';
 
 @Module({

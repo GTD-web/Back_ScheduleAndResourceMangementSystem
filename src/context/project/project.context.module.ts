@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProjectContextService } from './project.context.service';
-import { DomainProjectModule } from '@src/domain/project/project.module';
+import { DomainProjectModule } from '../../domain/project/project.module';
 
 @Module({
     imports: [DomainProjectModule],

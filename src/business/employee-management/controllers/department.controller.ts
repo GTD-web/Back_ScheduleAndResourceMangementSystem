@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ApiDataResponse } from '@libs/decorators/api-responses.decorator';
+import { ApiDataResponse } from '../../../../libs/decorators/api-responses.decorator';
 import { EmployeeManagementService } from '../employee-management.service';
 import { DepartmentListResponseDto, DepartmentHierarchyResponseDto } from '../dtos/department-response.dto';
 

@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { ScheduleDepartment } from '@libs/entities/schedule-department.entity';
-import { BaseService } from '@libs/services/base.service';
+import { ScheduleDepartment } from '../../../libs/entities/schedule-department.entity';
+import { BaseService } from '../../../libs/services/base.service';
 import { ScheduleDepartmentRepository } from './schedule-department.repository';
 import {
     ScheduleDepartmentCreateRequestDto,

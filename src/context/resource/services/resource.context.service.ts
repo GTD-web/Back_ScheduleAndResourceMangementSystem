@@ -1,19 +1,19 @@
 import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, In, IsNull, LessThan, MoreThan, Not } from 'typeorm';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
-import { Resource } from '@libs/entities/resource.entity';
-import { Consumable } from '@libs/entities/consumable.entity';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ERROR_MESSAGE } from '../../../../libs/constants/error-message';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { Consumable } from '../../../../libs/entities/consumable.entity';
 
 // Domain Services
-import { DomainResourceService } from '@src/domain/resource/resource.service';
-import { DomainResourceGroupService } from '@src/domain/resource-group/resource-group.service';
-import { DomainResourceManagerService } from '@src/domain/resource-manager/resource-manager.service';
-import { DomainVehicleInfoService } from '@src/domain/vehicle-info/vehicle-info.service';
-import { DomainMeetingRoomInfoService } from '@src/domain/meeting-room-info/meeting-room-info.service';
-import { DomainAccommodationInfoService } from '@src/domain/accommodation-info/accommodation-info.service';
-import { DomainEquipmentInfoService } from '@src/domain/equipment-info/equipment-info.service';
-import { DomainFileService } from '@src/domain/file/file.service';
+import { DomainResourceService } from '../../../domain/resource/resource.service';
+import { DomainResourceGroupService } from '../../../domain/resource-group/resource-group.service';
+import { DomainResourceManagerService } from '../../../domain/resource-manager/resource-manager.service';
+import { DomainVehicleInfoService } from '../../../domain/vehicle-info/vehicle-info.service';
+import { DomainMeetingRoomInfoService } from '../../../domain/meeting-room-info/meeting-room-info.service';
+import { DomainAccommodationInfoService } from '../../../domain/accommodation-info/accommodation-info.service';
+import { DomainEquipmentInfoService } from '../../../domain/equipment-info/equipment-info.service';
+import { DomainFileService } from '../../../domain/file/file.service';
 import { FileContextService } from '../../file/services/file.context.service';
 import { ConsumableContextService } from './consumable.context.service';
 
@@ -27,20 +27,20 @@ import {
     ManagementResourceResponseDto,
     ManagementResourceTypeGroupDto,
     ManagementResourceGroupDto,
-} from '@src/business/resource-management/dtos/resource/resource-response.dto';
-import { CreateResourceInfoDto } from '@src/business/resource-management/dtos/resource/create-resource.dto';
+} from '../../../business/resource-management/dtos/resource/resource-response.dto';
+import { CreateResourceInfoDto } from '../../../business/resource-management/dtos/resource/create-resource.dto';
 import {
     UpdateResourceInfoDto,
     UpdateResourceOrdersDto,
-} from '@src/business/resource-management/dtos/resource/update-resource.dto';
-import { CheckAvailabilityQueryDto } from '@src/business/resource-management/dtos/resource/check-availability.dto';
-import { ResourceAvailabilityDto } from '@src/business/resource-management/dtos/resource/available-time-response.dto';
-import { UpdateVehicleInfoDto } from '@src/business/resource-management/dtos/vehicle/update-vehicle-info.dto';
-import { UpdateMeetingRoomInfoDto } from '@src/business/resource-management/dtos/meeting-room/update-meeting-room-info.dto';
-import { UpdateAccommodationInfoDto } from '@src/business/resource-management/dtos/accommodation/update-accommodation-info.dto';
-import { UpdateEquipmentInfoDto } from '@src/business/resource-management/dtos/equipment/update-equipment-info.dto';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { DomainConsumableService } from '@src/domain/consumable/consumable.service';
+} from '../../../business/resource-management/dtos/resource/update-resource.dto';
+import { CheckAvailabilityQueryDto } from '../../../business/resource-management/dtos/resource/check-availability.dto';
+import { ResourceAvailabilityDto } from '../../../business/resource-management/dtos/resource/available-time-response.dto';
+import { UpdateVehicleInfoDto } from '../../../business/resource-management/dtos/vehicle/update-vehicle-info.dto';
+import { UpdateMeetingRoomInfoDto } from '../../../business/resource-management/dtos/meeting-room/update-meeting-room-info.dto';
+import { UpdateAccommodationInfoDto } from '../../../business/resource-management/dtos/accommodation/update-accommodation-info.dto';
+import { UpdateEquipmentInfoDto } from '../../../business/resource-management/dtos/equipment/update-equipment-info.dto';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { DomainConsumableService } from '../../../domain/consumable/consumable.service';
 
 @Injectable()
 export class ResourceContextService {

@@ -1,10 +1,10 @@
 import { Controller, Get, Body, Param, Patch, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
-import { User } from '@libs/decorators/user.decorator';
-import { Employee } from '@libs/entities';
+import { User } from '../../../../libs/decorators/user.decorator';
+import { Employee } from '../../../../libs/entities';
 import { ReservationWithRelationsResponseDto, ReservationResponseDto } from '../dtos/reservation-response.dto';
-import { PaginationQueryDto } from '@libs/dtos/pagination-query.dto';
-import { PaginationData } from '@libs/dtos/pagination-response.dto';
+import { PaginationQueryDto } from '../../../../libs/dtos/pagination-query.dto';
+import { PaginationData } from '../../../../libs/dtos/pagination-response.dto';
 import { ReturnVehicleDto, MarkVehicleUnusedDto } from '../dtos/update-reservation.dto';
 import { ReservationService } from '../services/reservation.service';
 import { UpdateReservationStatusDto } from '../dtos/update-reservation.dto';

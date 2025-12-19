@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DomainReservationService } from './reservation.service';
 import { DomainReservationRepository } from './reservation.repository';
-import { Reservation } from '@libs/entities/reservation.entity';
+import { Reservation } from '../../../libs/entities/reservation.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Reservation])],

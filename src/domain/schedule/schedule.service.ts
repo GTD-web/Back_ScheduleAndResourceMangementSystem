@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { DomainScheduleRepository } from './schedule.repository';
-import { BaseService } from '@libs/services/base.service';
-import { Schedule } from '@libs/entities/schedule.entity';
+import { BaseService } from '../../../libs/services/base.service';
+import { Schedule } from '../../../libs/entities/schedule.entity';
 import { MoreThanOrEqual, LessThanOrEqual, Between, In, Raw, LessThan, MoreThan, DeepPartial } from 'typeorm';
-import { DateUtil } from '@libs/utils/date.util';
-import { ScheduleStatus } from '@libs/enums/schedule-type.enum';
-import { IRepositoryOptions } from '@libs/interfaces/repository.interface';
+import { DateUtil } from '../../../libs/utils/date.util';
+import { ScheduleStatus } from '../../../libs/enums/schedule-type.enum';
+import { IRepositoryOptions } from '../../../libs/interfaces/repository.interface';
 
 @Injectable()
 export class DomainScheduleService extends BaseService<Schedule> {

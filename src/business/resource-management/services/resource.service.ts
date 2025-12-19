@@ -1,11 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { Employee } from '@libs/entities';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { Employee } from '../../../../libs/entities';
 
 // Context Services
-import { ResourceContextService } from '@src/context/resource/services/resource.context.service';
-import { ReservationContextService } from '@src/context/reservation/services/reservation.context.service';
-import { ConsumableContextService } from '@src/context/resource/services/consumable.context.service';
+import { ResourceContextService } from '../../../context/resource/services/resource.context.service';
+import { ReservationContextService } from '../../../context/reservation/services/reservation.context.service';
+import { ConsumableContextService } from '../../../context/resource/services/consumable.context.service';
 
 // DTOs
 import {

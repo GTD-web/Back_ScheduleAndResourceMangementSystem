@@ -1,8 +1,8 @@
 import { PrimaryColumn, Column, OneToMany, Entity } from 'typeorm';
 import { EmployeeNotification } from './employee-notification.entity';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
+import { NotificationType } from '../enums/notification-type.enum';
+import { ResourceType } from '../enums/resource-type.enum';
+import { ReservationStatus } from '../enums/reservation-type.enum';
 
 /**
  * 알림 데이터 인터페이스

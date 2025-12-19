@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Employee } from '@libs/entities';
-import { ResourceContextService } from '@src/context/resource/services/resource.context.service';
-import { NotificationContextService } from '@src/context/notification/services/notification.context.service';
-import { ConsumableContextService } from '@src/context/resource/services/consumable.context.service';
-import { Role } from '@libs/enums/role-type.enum';
-import { ParticipantsType, ReservationStatus } from '@libs/enums/reservation-type.enum';
+import { Employee } from '../../../libs/entities';
+import { ResourceContextService } from '../../context/resource/services/resource.context.service';
+import { NotificationContextService } from '../../context/notification/services/notification.context.service';
+import { ConsumableContextService } from '../../context/resource/services/consumable.context.service';
+import { Role } from '../../../libs/enums/role-type.enum';
+import { ParticipantsType, ReservationStatus } from '../../../libs/enums/reservation-type.enum';
 import { TaskListResponseDto, TaskResponseDto } from './dtos/task-response.dto';
-import { ReservationContextService } from '@src/context/reservation/services/reservation.context.service';
-import { ScheduleQueryContextService } from '@src/context/schedule/services/schedule-query.context.service';
+import { ReservationContextService } from '../../context/reservation/services/reservation.context.service';
+import { ScheduleQueryContextService } from '../../context/schedule/services/schedule-query.context.service';
 
 @Injectable()
 export class TaskManagementService {

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DomainScheduleRelationRepository } from './schedule-relation.repository';
-import { BaseService } from '@libs/services/base.service';
-import { ScheduleRelation } from '@libs/entities/schedule-relations.entity';
+import { BaseService } from '../../../libs/services/base.service';
+import { ScheduleRelation } from '../../../libs/entities/schedule-relations.entity';
 import { In, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from 'typeorm';
 
 @Injectable()

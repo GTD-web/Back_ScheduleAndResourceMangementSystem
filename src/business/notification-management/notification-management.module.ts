@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
 // Context Modules
-import { NotificationContextModule } from '@src/context/notification/notification.context.module';
-import { ScheduleContextModule } from '@src/context/schedule/schedule.context.module';
+import { NotificationContextModule } from '../../context/notification/notification.context.module';
+import { ScheduleContextModule } from '../../context/schedule/schedule.context.module';
 
 // Business Services
 import { NotificationManagementService } from './notification-management.service';

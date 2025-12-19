@@ -1,9 +1,9 @@
 import { Controller, Get, UseInterceptors, Req, Query } from '@nestjs/common';
 import { EmployeeManagementService } from '../employee-management.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Public } from '@libs/decorators/public.decorator';
-import { ResponseInterceptor } from '@libs/interceptors/response.interceptor';
-import { ErrorInterceptor } from '@libs/interceptors/error.interceptor';
+import { Public } from '../../../../libs/decorators/public.decorator';
+import { ResponseInterceptor } from '../../../../libs/interceptors/response.interceptor';
+import { ErrorInterceptor } from '../../../../libs/interceptors/error.interceptor';
 
 @ApiTags('v2 직원')
 @Public()

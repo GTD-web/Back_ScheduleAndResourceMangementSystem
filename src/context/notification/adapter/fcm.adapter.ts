@@ -10,9 +10,9 @@ import {
     PortalNotificationResponseDto,
     RecipientDto,
 } from '../dtos/portal-notification.dto';
-import { EmployeeTokensDto } from '@src/domain/employee/dtos/fcm-token-response.dto';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { NotificationData } from '@libs/entities/notification.entity';
+import { EmployeeTokensDto } from '../../../domain/employee/dtos/fcm-token-response.dto';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
+import { NotificationData } from '../../../../libs/entities/notification.entity';
 
 @Injectable()
 export class FCMMicroserviceAdapter {

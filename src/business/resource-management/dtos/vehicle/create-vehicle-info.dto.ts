@@ -11,7 +11,7 @@ import {
     IsDateString,
     Matches,
 } from 'class-validator';
-import { ERROR_MESSAGE } from '@libs/constants/error-message';
+import { ERROR_MESSAGE } from '../../../../../libs/constants/error-message';
 
 export class CreateVehicleInfoDto {
     @ApiProperty({ required: true })

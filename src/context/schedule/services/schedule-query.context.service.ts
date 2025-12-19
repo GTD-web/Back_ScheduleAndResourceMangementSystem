@@ -1,27 +1,27 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { DomainScheduleService } from '@src/domain/schedule/schedule.service';
-import { DomainScheduleParticipantService } from '@src/domain/schedule-participant/schedule-participant.service';
-import { DomainScheduleRelationService } from '@src/domain/schedule-relation/schedule-relation.service';
-import { DomainScheduleDepartmentService } from '@src/domain/schedule-department/schedule-department.service';
+import { DomainScheduleService } from '../../../domain/schedule/schedule.service';
+import { DomainScheduleParticipantService } from '../../../domain/schedule-participant/schedule-participant.service';
+import { DomainScheduleRelationService } from '../../../domain/schedule-relation/schedule-relation.service';
+import { DomainScheduleDepartmentService } from '../../../domain/schedule-department/schedule-department.service';
 
 import { Between, In, Like, MoreThanOrEqual, Not, IsNull, LessThanOrEqual } from 'typeorm';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { ScheduleParticipant } from '@libs/entities/schedule-participant.entity';
-import { ScheduleRelation } from '@libs/entities/schedule-relations.entity';
-import { Employee } from '@libs/entities/employee.entity';
-import { ParticipantsType } from '@libs/enums/reservation-type.enum';
-import { DomainEmployeeService } from '@src/domain/employee/employee.service';
-import { DomainProjectService } from '@src/domain/project/project.service';
-import { DomainReservationService } from '@src/domain/reservation/reservation.service';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { ResourceType } from '@libs/enums/resource-type.enum';
-import { ScheduleType } from '@libs/enums/schedule-type.enum';
-import { DomainResourceService } from '@src/domain/resource/resource.service';
-import { DomainResourceGroupService } from '@src/domain/resource-group/resource-group.service';
-import { Resource } from '@libs/entities/resource.entity';
-import { ResourceGroup } from '@libs/entities/resource-group.entity';
-import { DateUtil } from '@libs/utils/date.util';
-import { ScheduleCategoryType } from '@src/business/schedule-management/dtos/my-schedule-query.dto';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { ScheduleParticipant } from '../../../../libs/entities/schedule-participant.entity';
+import { ScheduleRelation } from '../../../../libs/entities/schedule-relations.entity';
+import { Employee } from '../../../../libs/entities/employee.entity';
+import { ParticipantsType } from '../../../../libs/enums/reservation-type.enum';
+import { DomainEmployeeService } from '../../../domain/employee/employee.service';
+import { DomainProjectService } from '../../../domain/project/project.service';
+import { DomainReservationService } from '../../../domain/reservation/reservation.service';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
+import { ScheduleType } from '../../../../libs/enums/schedule-type.enum';
+import { DomainResourceService } from '../../../domain/resource/resource.service';
+import { DomainResourceGroupService } from '../../../domain/resource-group/resource-group.service';
+import { Resource } from '../../../../libs/entities/resource.entity';
+import { ResourceGroup } from '../../../../libs/entities/resource-group.entity';
+import { DateUtil } from '../../../../libs/utils/date.util';
+import { ScheduleCategoryType } from '../../../business/schedule-management/dtos/my-schedule-query.dto';
 
 export interface ScheduleParticipantsWithEmployee {
     participantId: string;

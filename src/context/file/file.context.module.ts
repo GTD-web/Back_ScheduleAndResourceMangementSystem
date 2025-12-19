@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { File, FileMaintenance, FileReservationVehicle, FileResource, FileVehicleInfo } from '@libs/entities';
+import { File, FileMaintenance, FileReservationVehicle, FileResource, FileVehicleInfo } from '../../../libs/entities';
 
 // Domain Modules
-import { DomainFileModule } from '@src/domain/file/file.module';
-import { DomainFileMaintenanceModule } from '@src/domain/file-maintenance/file-maintenance.module';
-import { DomainFileReservationVehicleModule } from '@src/domain/file-reservation-vehicle/file-reservation-vehicle.module';
-import { DomainFileResourceModule } from '@src/domain/file-resource/file-resource.module';
-import { DomainFileVehicleInfoModule } from '@src/domain/file-vehicle-info/file-vehicle-info.module';
+import { DomainFileModule } from '../../domain/file/file.module';
+import { DomainFileMaintenanceModule } from '../../domain/file-maintenance/file-maintenance.module';
+import { DomainFileReservationVehicleModule } from '../../domain/file-reservation-vehicle/file-reservation-vehicle.module';
+import { DomainFileResourceModule } from '../../domain/file-resource/file-resource.module';
+import { DomainFileVehicleInfoModule } from '../../domain/file-vehicle-info/file-vehicle-info.module';
 import { FileContextService } from './services/file.context.service';
 import { S3Service } from './adapter/s3.service';
 

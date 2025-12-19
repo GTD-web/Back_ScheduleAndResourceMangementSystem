@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EquipmentInfo } from '@libs/entities/equipment-info.entity';
-import { BaseRepository } from '@libs/repositories/base.repository';
+import { EquipmentInfo } from '../../../libs/entities/equipment-info.entity';
+import { BaseRepository } from '../../../libs/repositories/base.repository';
 
 @Injectable()
 export class DomainEquipmentInfoRepository extends BaseRepository<EquipmentInfo> {

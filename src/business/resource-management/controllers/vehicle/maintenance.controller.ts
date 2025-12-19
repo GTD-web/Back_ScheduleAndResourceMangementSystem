@@ -3,11 +3,11 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiOkResponse } from '@
 import { CreateMaintenanceDto } from '../../dtos/vehicle/create-vehicle-info.dto';
 import { UpdateMaintenanceDto } from '../../dtos/vehicle/update-vehicle-info.dto';
 import { MaintenanceResponseDto } from '../../dtos/vehicle/vehicle-response.dto';
-import { User } from '@libs/decorators/user.decorator';
-import { Employee } from '@libs/entities';
+import { User } from '../../../../../libs/decorators/user.decorator';
+import { Employee } from '../../../../../libs/entities';
 
-import { PaginationQueryDto } from '@libs/dtos/pagination-query.dto';
-import { PaginationData } from '@libs/dtos/pagination-response.dto';
+import { PaginationQueryDto } from '../../../../../libs/dtos/pagination-query.dto';
+import { PaginationData } from '../../../../../libs/dtos/pagination-response.dto';
 import { MaintenanceService } from '../../services/maintenance.service';
 
 @ApiTags('v2 차량 정비 이력')

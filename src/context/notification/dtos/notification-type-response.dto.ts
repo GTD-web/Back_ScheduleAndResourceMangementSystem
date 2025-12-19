@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { NotificationType } from '@libs/enums/notification-type.enum';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
 import { IsEnum, IsObject, IsOptional, IsString, IsBoolean, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 

@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationData } from '@libs/dtos/pagination-response.dto';
+import { PaginationData } from '../../../../libs/dtos/pagination-response.dto';
 
 // Context Services
-import { MaintenanceContextService } from '@src/context/resource/services/maintenance.context.service';
-import { NotificationContextService } from '@src/context/notification/services/notification.context.service';
+import { MaintenanceContextService } from '../../../context/resource/services/maintenance.context.service';
+import { NotificationContextService } from '../../../context/notification/services/notification.context.service';
 
 // DTOs
 import { CreateMaintenanceDto } from '../dtos/vehicle/create-vehicle-info.dto';
 import { UpdateMaintenanceDto } from '../dtos/vehicle/update-vehicle-info.dto';
 import { MaintenanceResponseDto } from '../dtos/vehicle/vehicle-response.dto';
-import { EmployeeContextService } from '@src/context/employee/employee.context.service';
-import { ResourceContextService } from '@src/context/resource/services/resource.context.service';
-import { ResourceNotificationContextService } from '@src/context/notification/services/resource-notification.context.service';
+import { EmployeeContextService } from '../../../context/employee/employee.context.service';
+import { ResourceContextService } from '../../../context/resource/services/resource.context.service';
+import { ResourceNotificationContextService } from '../../../context/notification/services/resource-notification.context.service';
 
 @Injectable()
 export class MaintenanceService {

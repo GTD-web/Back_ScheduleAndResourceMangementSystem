@@ -1,24 +1,24 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Reservation, ReservationParticipant, Employee, Resource, ReservationVehicle } from '@libs/entities';
+import { Reservation, ReservationParticipant, Employee, Resource, ReservationVehicle } from '../../../libs/entities';
 
 // Domain Modules
-import { DomainReservationModule } from '@src/domain/reservation/reservation.module';
-import { DomainReservationParticipantModule } from '@src/domain/reservation-participant/reservation-participant.module';
-import { DomainEmployeeModule } from '@src/domain/employee/employee.module';
-import { DomainResourceModule } from '@src/domain/resource/resource.module';
-import { DomainNotificationModule } from '@src/domain/notification/notification.module';
-import { DomainEmployeeNotificationModule } from '@src/domain/employee-notification/employee-notification.module';
-import { DomainReservationVehicleModule } from '@src/domain/reservation-vehicle/reservation-vehicle.module';
-import { DomainVehicleInfoModule } from '@src/domain/vehicle-info/vehicle-info.module';
-import { DomainFileModule } from '@src/domain/file/file.module';
+import { DomainReservationModule } from '../../domain/reservation/reservation.module';
+import { DomainReservationParticipantModule } from '../../domain/reservation-participant/reservation-participant.module';
+import { DomainEmployeeModule } from '../../domain/employee/employee.module';
+import { DomainResourceModule } from '../../domain/resource/resource.module';
+import { DomainNotificationModule } from '../../domain/notification/notification.module';
+import { DomainEmployeeNotificationModule } from '../../domain/employee-notification/employee-notification.module';
+import { DomainReservationVehicleModule } from '../../domain/reservation-vehicle/reservation-vehicle.module';
+import { DomainVehicleInfoModule } from '../../domain/vehicle-info/vehicle-info.module';
+import { DomainFileModule } from '../../domain/file/file.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { FileContextModule } from '../file/file.context.module';
-import { DomainScheduleModule } from '@src/domain/schedule/schedule.module';
+import { DomainScheduleModule } from '../../domain/schedule/schedule.module';
 
 // Context Services
 import { ReservationContextService } from './services/reservation.context.service';
-import { DomainScheduleParticipantModule } from '@src/domain/schedule-participant/schedule-participant.module';
+import { DomainScheduleParticipantModule } from '../../domain/schedule-participant/schedule-participant.module';
 
 /**
  * 예약 관리 컨텍스트 모듈

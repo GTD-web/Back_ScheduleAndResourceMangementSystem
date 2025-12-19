@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NotificationTypeEntity } from '@libs/entities/notification-type.entity';
+import { NotificationTypeEntity } from '../../../libs/entities/notification-type.entity';
 import { DomainNotificationTypeService } from './notification-type.service';
 
 /**

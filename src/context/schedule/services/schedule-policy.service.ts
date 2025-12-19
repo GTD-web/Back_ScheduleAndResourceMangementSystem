@@ -1,10 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { Schedule } from '@libs/entities/schedule.entity';
-import { Reservation } from '@libs/entities/reservation.entity';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { DateUtil } from '@libs/utils/date.util';
-import { DomainReservationService } from '@src/domain/reservation/reservation.service';
-import { ScheduleStatus } from '@libs/enums/schedule-type.enum';
+import { Schedule } from '../../../../libs/entities/schedule.entity';
+import { Reservation } from '../../../../libs/entities/reservation.entity';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { DateUtil } from '../../../../libs/utils/date.util';
+import { DomainReservationService } from '../../../domain/reservation/reservation.service';
+import { ScheduleStatus } from '../../../../libs/enums/schedule-type.enum';
 
 export interface PolicyResult {
     isAllowed: boolean;

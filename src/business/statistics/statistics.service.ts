@@ -5,7 +5,7 @@ import {
     VehicleMaintenanceHistory,
     ConsumableMaintenanceStats,
     EmployeeReservationStats,
-} from '@libs/entities';
+} from '../../../libs/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     ConsumableMaintenanceStatsFilterDto,

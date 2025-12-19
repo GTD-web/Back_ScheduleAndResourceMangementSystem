@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
 // Context Modules
-import { ResourceContextModule } from '@src/context/resource/resource.context.module';
-import { ReservationContextModule } from '@src/context/reservation/reservation.context.module';
-import { FileContextModule } from '@src/context/file/file.context.module';
-import { NotificationContextModule } from '@src/context/notification/notification.context.module';
-import { EmployeeContextModule } from '@src/context/employee/employee.context.module';
+import { ResourceContextModule } from '../../context/resource/resource.context.module';
+import { ReservationContextModule } from '../../context/reservation/reservation.context.module';
+import { FileContextModule } from '../../context/file/file.context.module';
+import { NotificationContextModule } from '../../context/notification/notification.context.module';
+import { EmployeeContextModule } from '../../context/employee/employee.context.module';
 
 // Controllers
 import { ResourceController } from './controllers/resource/resource.controller';

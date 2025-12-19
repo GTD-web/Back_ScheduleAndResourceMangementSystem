@@ -1,9 +1,9 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
-import { DateUtil } from '@libs/utils/date.util';
-import { Public } from '@libs/decorators/public.decorator';
+import { DateUtil } from '../../../libs/utils/date.util';
+import { Public } from '../../../libs/decorators/public.decorator';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ResponseInterceptor } from '@libs/interceptors/response.interceptor';
-import { ErrorInterceptor } from '@libs/interceptors/error.interceptor';
+import { ResponseInterceptor } from '../../../libs/interceptors/response.interceptor';
+import { ErrorInterceptor } from '../../../libs/interceptors/error.interceptor';
 
 import { StatisticsService } from './statistics.service';
 import {

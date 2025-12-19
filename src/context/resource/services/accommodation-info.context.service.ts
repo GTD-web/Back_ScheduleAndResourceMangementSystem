@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DomainAccommodationInfoService } from '@src/domain/accommodation-info/accommodation-info.service';
+import { DomainAccommodationInfoService } from '../../../domain/accommodation-info/accommodation-info.service';
 
 @Injectable()
 export class AccommodationInfoContextService {

@@ -1,4 +1,4 @@
-import { Public } from '@libs/decorators/public.decorator';
+import { Public } from '../../../../libs/decorators/public.decorator';
 import { Controller, Get } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { CronReservationService } from '../services/cron-reservation.service';

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../../libs/enums/resource-type.enum';
 
 /**
  * 시간 슬롯을 표시하는 DTO

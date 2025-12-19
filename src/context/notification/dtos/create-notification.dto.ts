@@ -1,7 +1,7 @@
-import { NotificationData } from '@libs/entities/notification.entity';
-import { NotificationType } from '@libs/enums/notification-type.enum';
-import { ReservationStatus } from '@libs/enums/reservation-type.enum';
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { NotificationData } from '../../../../libs/entities/notification.entity';
+import { NotificationType } from '../../../../libs/enums/notification-type.enum';
+import { ReservationStatus } from '../../../../libs/enums/reservation-type.enum';
+import { ResourceType } from '../../../../libs/enums/resource-type.enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsNumber, IsEnum, IsDateString, ValidateNested, IsBoolean } from 'class-validator';

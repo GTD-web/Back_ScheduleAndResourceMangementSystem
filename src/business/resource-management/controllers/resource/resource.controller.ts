@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Delete, Body, Param, Patch, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiOkResponse } from '@nestjs/swagger';
 
-import { ResourceType } from '@libs/enums/resource-type.enum';
+import { ResourceType } from '../../../../../libs/enums/resource-type.enum';
 import {
     CreateResourceResponseDto,
     ResourceResponseDto,
@@ -15,8 +15,8 @@ import { ResourceQueryDto } from '../../dtos/resource/resource-query.dto';
 import { CheckAvailabilityQueryDto } from '../../dtos/resource/check-availability.dto';
 import { ResourceMonthAvailabilityQueryDto } from '../../dtos/resource/resource-month-availability-query.dto';
 import { ResourceMonthAvailabilityResponseDto } from '../../dtos/resource/resource-month-availability-response.dto';
-import { Employee } from '@libs/entities/employee.entity';
-import { User } from '@libs/decorators/user.decorator';
+import { Employee } from '../../../../../libs/entities/employee.entity';
+import { User } from '../../../../../libs/decorators/user.decorator';
 
 @ApiTags('v2 자원')
 @Controller('v2/resources')
