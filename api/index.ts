@@ -71,4 +71,3 @@ export default async (req: express.Request, res: express.Response) => {
     await bootstrapServer();
     server(req, res);
 };
-

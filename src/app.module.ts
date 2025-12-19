@@ -7,10 +7,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 // 프로젝트 내부 라이브러리
-import { typeOrmConfig } from '@libs/configs/typeorm.config';
-import databaseConfig, { JWT_CONFIG } from '@libs/configs/env.config';
-import { jwtConfig } from '@libs/configs/jwt.config';
-import { Entities } from '@libs/entities';
+import { typeOrmConfig } from '../libs/configs/typeorm.config';
+import databaseConfig, { JWT_CONFIG } from '../libs/configs/env.config';
+import { jwtConfig } from '../libs/configs/jwt.config';
+import { Entities } from '../libs/entities';
 
 import { FileManagementModule } from './business/file-management/file-management.module';
 import { ResourceManagementModule } from './business/resource-management/resource-management.module';
@@ -22,7 +22,7 @@ import { NotificationManagementModule } from './business/notification-management
 import { StatisticsModule } from './business/statistics/statistics.module';
 import { AuthManagementModule } from './business/auth-management/auth-management.module';
 import { DomainRequestLogModule } from './domain/request-log/request-log.module';
-import { RequestInterceptor } from '@libs/interceptors/request.interceptor';
+import { RequestInterceptor } from '../libs/interceptors/request.interceptor';
 
 @Module({
     imports: [
