@@ -4579,9 +4579,13 @@ exports.DateUtil = void 0;
 const dayjs = __webpack_require__(79);
 const utc = __webpack_require__(80);
 const timezone = __webpack_require__(81);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault('Asia/Seoul');
+const utcPlugin = utc.default || utc;
+const timezonePlugin = timezone.default || timezone;
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+if (dayjs.tz) {
+    dayjs.tz.setDefault('Asia/Seoul');
+}
 class DateUtilWrapper {
     constructor(date) {
         this.date = date;

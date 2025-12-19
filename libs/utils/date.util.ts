@@ -1,13 +1,19 @@
+// namespace import 사용 (webpack 및 Vercel 호환성)
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 import * as timezone from 'dayjs/plugin/timezone';
 
-// 플러그인 등록
-dayjs.extend(utc);
-dayjs.extend(timezone);
+// 플러그인 등록 (default export 처리)
+const utcPlugin = (utc as any).default || utc;
+const timezonePlugin = (timezone as any).default || timezone;
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
 
 // 기본 타임존 설정
-dayjs.tz.setDefault('Asia/Seoul');
+if ((dayjs as any).tz) {
+    (dayjs as any).tz.setDefault('Asia/Seoul');
+}
 
 class DateUtilWrapper {
     constructor(private date: dayjs.Dayjs) {}
