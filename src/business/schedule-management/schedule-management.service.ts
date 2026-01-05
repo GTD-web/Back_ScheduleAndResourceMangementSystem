@@ -1131,7 +1131,6 @@ export class ScheduleManagementService {
      */
     async updateSchedule(user: Employee, scheduleId: string, updateDto: ScheduleUpdateRequestDto): Promise<boolean> {
         this.logger.log(`일정 수정 요청 - 사용자: ${user.employeeId}, 일정: ${scheduleId}`);
-
         // 0. 수정 시나리오 분석 및 검증
         const updateScenarios = this.schedulePolicyService.수정_시나리오를_분석한다(updateDto);
         this.schedulePolicyService.수정요청을_기본검증한다(updateDto, updateScenarios);
