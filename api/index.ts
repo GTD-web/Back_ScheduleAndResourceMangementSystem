@@ -48,8 +48,8 @@ async function createApp(): Promise<NestExpressApplication> {
         app.useGlobalPipes(
             new ValidationPipe({
                 transform: true,
-                whitelist: true,
-                forbidNonWhitelisted: false,
+                // whitelist: true,
+                // forbidNonWhitelisted: false,
             }),
         );
 

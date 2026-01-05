@@ -12524,6 +12524,7 @@ let ScheduleController = class ScheduleController {
         return this.scheduleManagementService.extendSchedule30Min(user, scheduleId);
     }
     async updateSchedule(user, scheduleId, updateScheduleDto) {
+        console.log('updateScheduleDto', JSON.stringify(updateScheduleDto, null, 2));
         return this.scheduleManagementService.updateSchedule(user, scheduleId, updateScheduleDto);
     }
 };
@@ -16404,7 +16405,9 @@ let ScheduleManagementService = ScheduleManagementService_1 = class ScheduleMana
     }
     async updateSchedule(user, scheduleId, updateDto) {
         this.logger.log(`일정 수정 요청 - 사용자: ${user.employeeId}, 일정: ${scheduleId}`);
+        console.log('updateDto', JSON.stringify(updateDto, null, 2));
         const updateScenarios = this.schedulePolicyService.수정_시나리오를_분석한다(updateDto);
+        console.log('updateScenarios', JSON.stringify(updateScenarios, null, 2));
         this.schedulePolicyService.수정요청을_기본검증한다(updateDto, updateScenarios);
         const authResult = await this.scheduleAuthorizationService.일정_권한을_확인한다(user, scheduleId, schedule_authorization_service_2.ScheduleAction.UPDATE);
         this.scheduleAuthorizationService.권한_체크_실패시_예외를_던진다(authResult);
@@ -18330,9 +18333,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                         department: employee.department
                             ? employee.department.departmentName
                             : existingEmployee.department,
-                        position: employee.rank?.rankName || null,
-                        rank: employee.rank?.rankName || null,
-                        positionTitle: employee.position?.positionTitle || null,
+                        position: employee.rank?.rankName || '',
+                        rank: employee.rank?.rankName || '',
+                        positionTitle: employee.position?.positionTitle || '',
                         status: employee.status,
                     });
                 }
@@ -18343,9 +18346,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                     existingEmployee.name = employee.name;
                     existingEmployee.employeeNumber = employee.employeeNumber;
                     existingEmployee.department = employee.department.departmentName;
-                    existingEmployee.position = employee.rank?.rankName || null;
-                    existingEmployee.rank = employee.rank?.rankName || null;
-                    existingEmployee.positionTitle = employee.position?.positionTitle || null;
+                    existingEmployee.position = employee.rank?.rankName || '';
+                    existingEmployee.rank = employee.rank?.rankName || '';
+                    existingEmployee.positionTitle = employee.position?.positionTitle || '';
                     existingEmployee.mobile = employee.phoneNumber;
                     existingEmployee.status = employee.status;
                     await this.domainEmployeeService.save(existingEmployee);
@@ -18356,9 +18359,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                         name: employee.name,
                         email: employee.email,
                         department: employee.department.departmentName,
-                        position: employee.rank?.rankName || null,
-                        rank: employee.rank?.rankName || null,
-                        positionTitle: employee.position?.positionTitle || null,
+                        position: employee.rank?.rankName || '',
+                        rank: employee.rank?.rankName || '',
+                        positionTitle: employee.position?.positionTitle || '',
                         mobile: employee.phoneNumber,
                         status: employee.status,
                     };
