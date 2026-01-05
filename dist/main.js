@@ -18333,9 +18333,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                         department: employee.department
                             ? employee.department.departmentName
                             : existingEmployee.department,
-                        position: employee.rank?.rankName || null,
-                        rank: employee.rank?.rankName || null,
-                        positionTitle: employee.position?.positionTitle || null,
+                        position: employee.rank?.rankName || '',
+                        rank: employee.rank?.rankName || '',
+                        positionTitle: employee.position?.positionTitle || '',
                         status: employee.status,
                     });
                 }
@@ -18346,9 +18346,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                     existingEmployee.name = employee.name;
                     existingEmployee.employeeNumber = employee.employeeNumber;
                     existingEmployee.department = employee.department.departmentName;
-                    existingEmployee.position = employee.rank?.rankName || null;
-                    existingEmployee.rank = employee.rank?.rankName || null;
-                    existingEmployee.positionTitle = employee.position?.positionTitle || null;
+                    existingEmployee.position = employee.rank?.rankName || '';
+                    existingEmployee.rank = employee.rank?.rankName || '';
+                    existingEmployee.positionTitle = employee.position?.positionTitle || '';
                     existingEmployee.mobile = employee.phoneNumber;
                     existingEmployee.status = employee.status;
                     await this.domainEmployeeService.save(existingEmployee);
@@ -18359,9 +18359,9 @@ let EmployeeContextService = EmployeeContextService_1 = class EmployeeContextSer
                         name: employee.name,
                         email: employee.email,
                         department: employee.department.departmentName,
-                        position: employee.rank?.rankName || null,
-                        rank: employee.rank?.rankName || null,
-                        positionTitle: employee.position?.positionTitle || null,
+                        position: employee.rank?.rankName || '',
+                        rank: employee.rank?.rankName || '',
+                        positionTitle: employee.position?.positionTitle || '',
                         mobile: employee.phoneNumber,
                         status: employee.status,
                     };
