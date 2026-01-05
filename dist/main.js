@@ -16404,7 +16404,9 @@ let ScheduleManagementService = ScheduleManagementService_1 = class ScheduleMana
     }
     async updateSchedule(user, scheduleId, updateDto) {
         this.logger.log(`일정 수정 요청 - 사용자: ${user.employeeId}, 일정: ${scheduleId}`);
+        console.log('updateDto', JSON.stringify(updateDto, null, 2));
         const updateScenarios = this.schedulePolicyService.수정_시나리오를_분석한다(updateDto);
+        console.log('updateScenarios', JSON.stringify(updateScenarios, null, 2));
         this.schedulePolicyService.수정요청을_기본검증한다(updateDto, updateScenarios);
         const authResult = await this.scheduleAuthorizationService.일정_권한을_확인한다(user, scheduleId, schedule_authorization_service_2.ScheduleAction.UPDATE);
         this.scheduleAuthorizationService.권한_체크_실패시_예외를_던진다(authResult);
