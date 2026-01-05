@@ -12524,6 +12524,7 @@ let ScheduleController = class ScheduleController {
         return this.scheduleManagementService.extendSchedule30Min(user, scheduleId);
     }
     async updateSchedule(user, scheduleId, updateScheduleDto) {
+        console.log('updateScheduleDto', JSON.stringify(updateScheduleDto, null, 2));
         return this.scheduleManagementService.updateSchedule(user, scheduleId, updateScheduleDto);
     }
 };
