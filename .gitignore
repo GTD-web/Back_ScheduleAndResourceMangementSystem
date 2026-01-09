@@ -4,6 +4,7 @@
 /documents
 /senario
 # files
+/storage/*
 
 # Logs
 logs

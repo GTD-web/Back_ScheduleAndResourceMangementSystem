@@ -1,0 +1,205 @@
+import { Injectable } from '@nestjs/common';
+import { UsedAttendance } from '../../../domain/used-attendance/used-attendance.entity';
+
+/**
+ * 정상근무 범위 정책 서비스
+ *
+ * 정상근무 시간 범위, 지각/조퇴 판정, 근태 인정 여부 등의 정책을 관리합니다.
+ * 정책 변경 시 이 서비스만 수정하면 됩니다.
+ */
+@Injectable()
+export class WorkTimePolicyService {
+    /**
+     * 정상근무 시작 시간 (기본값: 09:00)
+     */
+    private readonly NORMAL_WORK_START_TIME = '09:00:00';
+
+    /**
+     * 정상근무 종료 시간 (기본값: 18:00)
+     */
+    private readonly NORMAL_WORK_END_TIME = '18:00:00';
+
+    /**
+     * 정상근무 시작 시간을 반환한다
+     */
+    getNormalWorkStartTime(): string {
+        return this.NORMAL_WORK_START_TIME;
+    }
+
+    /**
+     * 정상근무 종료 시간을 반환한다
+     */
+    getNormalWorkEndTime(): string {
+        return this.NORMAL_WORK_END_TIME;
+    }
+
+    /**
+     * 근태가 정상 근무로 인정되는지 확인한다
+     */
+    isRecognizedWorkTime(attendanceType: any): boolean {
+        return attendanceType?.is_recognized_work_time === true;
+    }
+
+    /**
+     * 근태가 오전 근무를 인정하는지 확인한다
+     *
+     * @param attendanceType 근태 유형
+     * @returns 오전 근무 인정 여부
+     */
+    isMorningRecognized(attendanceType: any): boolean {
+        if (!this.isRecognizedWorkTime(attendanceType)) {
+            return false;
+        }
+        const startTime = attendanceType?.startWorkTime;
+        // startWorkTime이 없거나 정상근무 시작 시간 이전/이후를 커버하면 오전 인정
+        return !startTime || startTime <= this.NORMAL_WORK_START_TIME;
+    }
+
+    /**
+     * 근태가 오후 근무를 인정하는지 확인한다
+     *
+     * @param attendanceType 근태 유형
+     * @returns 오후 근무 인정 여부
+     */
+    isAfternoonRecognized(attendanceType: any): boolean {
+        if (!this.isRecognizedWorkTime(attendanceType)) {
+            return false;
+        }
+        const endTime = attendanceType?.endWorkTime;
+        // endWorkTime이 없거나 정상근무 종료 시간 이후/이후를 커버하면 오후 인정
+        return !endTime || endTime >= this.NORMAL_WORK_END_TIME;
+    }
+
+    /**
+     * 근태가 하루 종일 근무를 인정하는지 확인한다
+     *
+     * @param attendanceType 근태 유형
+     * @returns 하루 종일 인정 여부
+     */
+    isFullDayRecognized(attendanceType: any): boolean {
+        if (!this.isRecognizedWorkTime(attendanceType)) {
+            return false;
+        }
+        const startTime = attendanceType?.startWorkTime;
+        const endTime = attendanceType?.endWorkTime;
+        // startWorkTime과 endWorkTime이 모두 없거나, 전체 시간대를 커버하면 하루 종일
+        return (
+            (!startTime || startTime <= this.NORMAL_WORK_START_TIME) &&
+            (!endTime || endTime >= this.NORMAL_WORK_END_TIME)
+        );
+    }
+
+    /**
+     * 근태 목록에서 오전 근무를 인정하는 근태가 있는지 확인한다
+     *
+     * @param attendances 근태 목록
+     * @returns 오전 근무 인정 여부
+     */
+    hasMorningRecognized(attendances: UsedAttendance[]): boolean {
+        return attendances.some((ua) => this.isMorningRecognized(ua.attendanceType));
+    }
+
+    /**
+     * 근태 목록에서 오후 근무를 인정하는 근태가 있는지 확인한다
+     *
+     * @param attendances 근태 목록
+     * @returns 오후 근무 인정 여부
+     */
+    hasAfternoonRecognized(attendances: UsedAttendance[]): boolean {
+        return attendances.some((ua) => this.isAfternoonRecognized(ua.attendanceType));
+    }
+
+    /**
+     * 근태 목록에서 정상 근무로 인정되는 근태가 있는지 확인한다
+     *
+     * @param attendances 근태 목록
+     * @returns 정상 근무 인정 여부
+     */
+    hasRecognizedWorkTime(attendances: UsedAttendance[]): boolean {
+        return attendances.some((ua) => this.isRecognizedWorkTime(ua.attendanceType));
+    }
+
+    /**
+     * 근태 목록에서 하루 종일 근무를 인정하는 근태가 있는지 확인한다
+     *
+     * @param attendances 근태 목록
+     * @returns 하루 종일 인정 여부
+     */
+    hasFullDayRecognized(attendances: UsedAttendance[]): boolean {
+        return attendances.some((ua) => this.isFullDayRecognized(ua.attendanceType));
+    }
+
+    /**
+     * 지각 여부를 판정한다
+     *
+     * @param enterTime 출근 시간 (HHMMSS 형식)
+     * @param hasMorningRecognized 오전 근무 인정 여부
+     * @param isHoliday 공휴일 여부
+     * @param isBeforeHireDate 입사일 이전 여부
+     * @param isAfterTerminationDate 퇴사일 이후 여부
+     * @returns 지각 여부
+     */
+    isLate(
+        enterTime: string,
+        hasMorningRecognized: boolean,
+        isHoliday: boolean,
+        isBeforeHireDate: boolean,
+        isAfterTerminationDate: boolean,
+    ): boolean {
+        // 입사일 이전, 퇴사일 이후, 공휴일은 지각 아님
+        if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
+            return false;
+        }
+
+        // 오전 근무가 인정되면 지각 아님
+        if (hasMorningRecognized) {
+            return false;
+        }
+
+        // HHMMSS 형식을 HH:MM:SS 형식으로 변환하여 비교
+        const enterTimeFormatted = this.HHMMSS를HHMMSS로변환(enterTime);
+        return enterTimeFormatted > this.NORMAL_WORK_START_TIME;
+    }
+
+    /**
+     * 조퇴 여부를 판정한다
+     *
+     * @param leaveTime 퇴근 시간 (HHMMSS 형식)
+     * @param hasAfternoonRecognized 오후 근무 인정 여부
+     * @param isHoliday 공휴일 여부
+     * @param isBeforeHireDate 입사일 이전 여부
+     * @param isAfterTerminationDate 퇴사일 이후 여부
+     * @returns 조퇴 여부
+     */
+    isEarlyLeave(
+        leaveTime: string,
+        hasAfternoonRecognized: boolean,
+        isHoliday: boolean,
+        isBeforeHireDate: boolean,
+        isAfterTerminationDate: boolean,
+    ): boolean {
+        // 입사일 이전, 퇴사일 이후, 공휴일은 조퇴 아님
+        if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
+            return false;
+        }
+
+        // 오후 근무가 인정되면 조퇴 아님
+        if (hasAfternoonRecognized) {
+            return false;
+        }
+
+        // HHMMSS 형식을 HH:MM:SS 형식으로 변환하여 비교
+        const leaveTimeFormatted = this.HHMMSS를HHMMSS로변환(leaveTime);
+        return leaveTimeFormatted < this.NORMAL_WORK_END_TIME;
+    }
+
+    /**
+     * HHMMSS 형식을 HH:MM:SS 형식으로 변환한다
+     */
+    private HHMMSS를HHMMSS로변환(hhmmss: string): string {
+        if (!hhmmss || hhmmss.length !== 6) {
+            return hhmmss;
+        }
+        return `${hhmmss.substring(0, 2)}:${hhmmss.substring(2, 4)}:${hhmmss.substring(4, 6)}`;
+    }
+}

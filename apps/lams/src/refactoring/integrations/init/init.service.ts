@@ -1,0 +1,421 @@
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { DomainAttendanceTypeService } from '../../domain/attendance-type/attendance-type.service';
+import { DomainHolidayInfoService } from '../../domain/holiday-info/holiday-info.service';
+import { OrganizationMigrationService } from '../migration/migration.service';
+import { AttendanceType } from '../../domain/attendance-type/attendance-type.entity';
+import { HolidayInfo } from '../../domain/holiday-info/holiday-info.entity';
+import { Employee } from '@libs/modules/employee/employee.entity';
+import { IsNull } from 'typeorm';
+
+/**
+ * 기본 데이터 초기화 서비스
+ *
+ * 애플리케이션 시작 시 필수 기본 데이터가 없으면 자동으로 생성합니다.
+ * - 근태 유형 (AttendanceType): 연차, 반차, 출장, 병가, 경조사 등
+ * - 휴일 정보 (HolidayInfo): 공휴일 정보
+ */
+@Injectable()
+export class InitService implements OnApplicationBootstrap {
+    private readonly logger = new Logger(InitService.name);
+
+    constructor(
+        private readonly dataSource: DataSource,
+        private readonly attendanceTypeService: DomainAttendanceTypeService,
+        private readonly holidayInfoService: DomainHolidayInfoService,
+        private readonly organizationMigrationService: OrganizationMigrationService,
+    ) {}
+
+    async onApplicationBootstrap(): Promise<void> {
+        try {
+            this.logger.log('기본 데이터 초기화 시작...');
+
+            // 데이터베이스 연결 확인
+            if (!this.dataSource.isInitialized) {
+                await this.dataSource.initialize();
+            }
+
+            // 1. 근태 유형 기본 데이터 생성
+            await this.근태유형기본데이터생성();
+
+            // 2. 휴일 정보 기본 데이터 생성
+            await this.휴일정보기본데이터생성();
+
+            // 3. 조직 데이터 마이그레이션 (직원 데이터가 없으면 실행)
+            await this.조직데이터마이그레이션();
+
+            this.logger.log('✅ 기본 데이터 초기화 완료');
+        } catch (error) {
+            this.logger.error(`기본 데이터 초기화 실패: ${error.message}`, error.stack);
+            // 초기화 오류는 애플리케이션 시작을 막지 않습니다
+        }
+    }
+
+    /**
+     * 근태 유형 기본 데이터를 생성한다
+     */
+    private async 근태유형기본데이터생성(): Promise<void> {
+        this.logger.log('근태 유형 기본 데이터 확인 중...');
+
+        const defaultAttendanceTypes = [
+            {
+                title: '연차',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 1.0,
+            },
+            {
+                title: '오전반차',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.5,
+            },
+            {
+                title: '오후반차',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.5,
+            },
+            {
+                title: '공가',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오전공가',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오후공가',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '출장',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오전출장',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오후출장',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '교육',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오전교육',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오후교육',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '경조휴가',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '보건휴가(오전 반차)',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '병가',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '생일오전반차',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.5,
+            },
+            {
+                title: '생일오후반차',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.5,
+            },
+            {
+                title: '대체휴가',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오전대체휴가',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '오후대체휴가',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '14:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '무급휴가',
+                workTime: 0,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '보건휴가(오전반차)',
+                workTime: 240,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '14:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '국내출장',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '국외출장',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '사외교육',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+            {
+                title: '사내교육',
+                workTime: 480,
+                isRecognizedWorkTime: true,
+                startWorkTime: '09:00',
+                endWorkTime: '18:00',
+                deductedAnnualLeave: 0.0,
+            },
+        ];
+
+        const existingTypes = await this.dataSource.manager.find(AttendanceType, {
+            where: { deleted_at: IsNull() },
+        });
+        const existingTitles = new Set(existingTypes.map((at) => at.title));
+
+        let createdCount = 0;
+        for (const typeData of defaultAttendanceTypes) {
+            if (existingTitles.has(typeData.title)) {
+                this.logger.log(`근태 유형 "${typeData.title}"이 이미 존재합니다.`);
+                continue;
+            }
+
+            try {
+                await this.attendanceTypeService.생성한다({
+                    title: typeData.title,
+                    workTime: typeData.workTime,
+                    isRecognizedWorkTime: typeData.isRecognizedWorkTime,
+                    startWorkTime: typeData.startWorkTime,
+                    endWorkTime: typeData.endWorkTime,
+                    deductedAnnualLeave: typeData.deductedAnnualLeave,
+                });
+                createdCount++;
+                this.logger.log(`근태 유형 "${typeData.title}" 생성 완료`);
+            } catch (error) {
+                this.logger.warn(`근태 유형 "${typeData.title}" 생성 실패: ${error.message}`);
+            }
+        }
+
+        if (createdCount > 0) {
+            this.logger.log(`근태 유형 기본 데이터 생성 완료: ${createdCount}개 생성됨`);
+        } else {
+            this.logger.log('근태 유형 기본 데이터가 모두 존재합니다.');
+        }
+    }
+
+    /**
+     * 휴일 정보 기본 데이터를 생성한다
+     */
+    private async 휴일정보기본데이터생성(): Promise<void> {
+        this.logger.log('휴일 정보 기본 데이터 확인 중...');
+
+        const defaultHolidays = [
+            { holidayName: '1월1일', holidayDate: '2024-01-01' },
+            { holidayName: '설날', holidayDate: '2024-02-09' },
+            { holidayName: '설날', holidayDate: '2024-02-10' },
+            { holidayName: '설날', holidayDate: '2024-02-11' },
+            { holidayName: '대체공휴일(설날)', holidayDate: '2024-02-12' },
+            { holidayName: '삼일절', holidayDate: '2024-03-01' },
+            { holidayName: '국회의원선거', holidayDate: '2024-04-10' },
+            { holidayName: '어린이날', holidayDate: '2024-05-05' },
+            { holidayName: '대체공휴일(어린이날)', holidayDate: '2024-05-06' },
+            { holidayName: '부처님오신날', holidayDate: '2024-05-15' },
+            { holidayName: '현충일', holidayDate: '2024-06-06' },
+            { holidayName: '광복절', holidayDate: '2024-08-15' },
+            { holidayName: '추석', holidayDate: '2024-09-16' },
+            { holidayName: '추석', holidayDate: '2024-09-17' },
+            { holidayName: '추석', holidayDate: '2024-09-18' },
+            { holidayName: '임시공휴일', holidayDate: '2024-10-01' },
+            { holidayName: '개천절', holidayDate: '2024-10-03' },
+            { holidayName: '한글날', holidayDate: '2024-10-09' },
+            { holidayName: '기독탄신일', holidayDate: '2024-12-25' },
+            { holidayName: '1월1일', holidayDate: '2025-01-01' },
+            { holidayName: '임시공휴일(설날)', holidayDate: '2025-01-27' },
+            { holidayName: '설날', holidayDate: '2025-01-28' },
+            { holidayName: '설날', holidayDate: '2025-01-29' },
+            { holidayName: '설날', holidayDate: '2025-01-30' },
+            { holidayName: '삼일절', holidayDate: '2025-03-01' },
+            { holidayName: '대체공휴일(삼일절)', holidayDate: '2025-03-03' },
+            { holidayName: '어린이날', holidayDate: '2025-05-05' },
+            { holidayName: '부처님오신날', holidayDate: '2025-05-05' },
+            { holidayName: '대체공휴일(부처님오신날)', holidayDate: '2025-05-06' },
+            { holidayName: '현충일', holidayDate: '2025-06-06' },
+            { holidayName: '임시공휴일(대통령선거)', holidayDate: '2025-06-03' },
+            { holidayName: '광복절', holidayDate: '2025-08-15' },
+            { holidayName: '추석', holidayDate: '2025-10-05' },
+            { holidayName: '추석', holidayDate: '2025-10-06' },
+            { holidayName: '추석', holidayDate: '2025-10-07' },
+            { holidayName: '임시공휴일(추석)', holidayDate: '2025-10-08' },
+            { holidayName: '개천절', holidayDate: '2025-10-03' },
+            { holidayName: '한글날', holidayDate: '2025-10-09' },
+            { holidayName: '전사휴무(연차소진)', holidayDate: '2025-10-10' },
+            { holidayName: '기독탄신일', holidayDate: '2025-12-25' },
+        ];
+
+        const existingHolidays = await this.dataSource.manager.find(HolidayInfo, {
+            where: { deleted_at: IsNull() },
+        });
+        const existingHolidayMap = new Map<string, boolean>();
+        existingHolidays.forEach((h) => {
+            const key = `${h.holiday_date}_${h.holiday_name}`;
+            existingHolidayMap.set(key, true);
+        });
+
+        let createdCount = 0;
+        for (const holidayData of defaultHolidays) {
+            const key = `${holidayData.holidayDate}_${holidayData.holidayName}`;
+            if (existingHolidayMap.has(key)) {
+                this.logger.log(
+                    `휴일 정보 "${holidayData.holidayName} (${holidayData.holidayDate})"이 이미 존재합니다.`,
+                );
+                continue;
+            }
+
+            try {
+                await this.holidayInfoService.생성한다({
+                    holidayName: holidayData.holidayName,
+                    holidayDate: holidayData.holidayDate,
+                });
+                createdCount++;
+                this.logger.log(`휴일 정보 "${holidayData.holidayName} (${holidayData.holidayDate})" 생성 완료`);
+            } catch (error) {
+                this.logger.warn(
+                    `휴일 정보 "${holidayData.holidayName} (${holidayData.holidayDate})" 생성 실패: ${error.message}`,
+                );
+            }
+        }
+
+        if (createdCount > 0) {
+            this.logger.log(`휴일 정보 기본 데이터 생성 완료: ${createdCount}개 생성됨`);
+        } else {
+            this.logger.log('휴일 정보 기본 데이터가 모두 존재합니다.');
+        }
+    }
+
+    /**
+     * 조직 데이터 마이그레이션을 실행한다
+     * 직원 데이터가 없으면 SSO에서 데이터를 가져와서 마이그레이션합니다.
+     */
+    private async 조직데이터마이그레이션(): Promise<void> {
+        this.logger.log('조직 데이터 확인 중...');
+
+        // 직원 데이터가 있는지 확인 (Employee 엔티티는 deleted_at 필드가 없음)
+        const employeeCount = await this.dataSource.manager.count(Employee);
+
+        if (employeeCount > 0) {
+            this.logger.log(`조직 데이터가 이미 존재합니다 (직원 ${employeeCount}명). 마이그레이션을 건너뜁니다.`);
+            return;
+        }
+
+        try {
+            this.logger.log('조직 데이터가 없습니다. SSO에서 데이터를 가져와서 마이그레이션을 시작합니다.');
+            const result = await this.organizationMigrationService.마이그레이션한다();
+            this.logger.log(
+                `✅ 조직 데이터 마이그레이션 완료: 직급 ${result.statistics.ranks}개, 직책 ${result.statistics.positions}개, 부서 ${result.statistics.departments}개, 직원 ${result.statistics.employees}명`,
+            );
+        } catch (error) {
+            this.logger.error(`조직 데이터 마이그레이션 실패: ${error.message}`, error.stack);
+            // 마이그레이션 실패는 애플리케이션 시작을 막지 않습니다
+        }
+    }
+}

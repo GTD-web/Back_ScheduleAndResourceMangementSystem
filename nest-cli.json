@@ -1,11 +1,33 @@
 {
     "$schema": "https://json.schemastore.org/nest-cli",
     "collection": "@nestjs/schematics",
-    "sourceRoot": "src",
+    "sourceRoot": "apps/lams/src",
     "entryFile": "main",
     "compilerOptions": {
         "deleteOutDir": true,
         "webpack": true,
-        "tsConfigPath": "tsconfig.json"
+        "tsConfigPath": "apps/lams/tsconfig.app.json"
+    },
+    "monorepo": true,
+    "root": "apps/lams",
+    "projects": {
+        "lams": {
+            "type": "application",
+            "root": "apps/lams",
+            "entryFile": "main",
+            "sourceRoot": "apps/lams/src",
+            "compilerOptions": {
+                "tsConfigPath": "apps/lams/tsconfig.app.json"
+            }
+        },
+        "lsms": {
+            "type": "application",
+            "root": "apps/lsms",
+            "entryFile": "main",
+            "sourceRoot": "apps/lsms/src",
+            "compilerOptions": {
+                "tsConfigPath": "apps/lsms/tsconfig.app.json"
+            }
+        }
     }
 }

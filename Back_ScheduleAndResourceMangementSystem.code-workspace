@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../Back_ProjectManagementSystem"
+	},
+	{
+		"path": "../Back_EvaludationManagementSystem"
+	}
+],
+  "settings": {}
+}
