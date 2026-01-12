@@ -9293,11 +9293,11 @@ __decorate([
 이 API는 세 가지 시나리오로 사용할 수 있습니다:
 
 ### 🎯 시나리오 1: 시간 슬롯 방식 (회의실, 장비)
-30분 단위로 사용 가능한 시간 슬롯을 조회합니다.
+시간 슬롯 단위로 사용 가능한 시간 슬롯을 조회합니다.
 - **필수**: resourceType, resourceGroupId, startDate, endDate(=startDate), timeUnit
-- **선택**: am, pm (시간대 필터)
+- **선택**: am, pm (시간대 필터), slotIntervalMinutes (슬롯 간격, 기본값: 30분)
 
-**예시**: \`?resourceType=MEETING_ROOM&resourceGroupId=xxx&startDate=2024-01-15&endDate=2024-01-15&timeUnit=30&pm=true\`
+**예시**: \`?resourceType=MEETING_ROOM&resourceGroupId=xxx&startDate=2024-01-15&endDate=2024-01-15&timeUnit=30&slotIntervalMinutes=30&pm=true\`
 
 ### 🎯 시나리오 2: 시간 범위 방식 (정확한 시간 지정)
 특정 시간 범위에서 자원 가용성을 확인합니다.
@@ -10677,6 +10677,18 @@ __decorate([
     (0, class_transformer_1.Type)(() => Number),
     __metadata("design:type", Number)
 ], ResourceQueryDto.prototype, "timeUnit", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '슬롯 간격(분) - 시간 슬롯 생성 시 간격을 설정합니다. 기본값: 30',
+        example: 30,
+        minimum: 1,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1),
+    (0, class_transformer_1.Type)(() => Number),
+    __metadata("design:type", Number)
+], ResourceQueryDto.prototype, "slotIntervalMinutes", void 0);
 
 
 /***/ }),
@@ -12233,13 +12245,11 @@ let ResourceService = class ResourceService {
         };
     }
     async findAvailableTime(query) {
-        const { resourceType, resourceGroupId, startDate, endDate, startTime, endTime, am, pm, timeUnit, reservationId, } = query;
+        const { resourceType, resourceGroupId, startDate, endDate, startTime, endTime, am, pm, timeUnit, slotIntervalMinutes, reservationId, } = query;
         const now = new Date();
         const queryStartDate = new Date(`${startDate}T00:00:00Z`);
         const todayString = now.toISOString().slice(0, 10);
         const queryDateString = queryStartDate.toISOString().slice(0, 10);
-        console.log('조회 시작날짜 (UTC):', queryDateString);
-        console.log('오늘 날짜 (UTC):', todayString);
         if (queryDateString < todayString) {
             return [];
         }
@@ -12259,13 +12269,9 @@ let ResourceService = class ResourceService {
             const dateRangeEnd = endTime
                 ? new Date(`${endDate}T${endTime}+09:00`)
                 : new Date(`${endDate}T23:59:59+09:00`);
-            console.log('dateRangeStart', dateRangeStart);
-            console.log('dateRangeEnd', dateRangeEnd);
-            console.log('resource', resource.resourceId);
             const reservations = await this.reservationContextService.자원의_날짜범위_예약을_조회한다(resource.resourceId, dateRangeStart, dateRangeEnd, reservationId);
-            console.log('reservations', reservations);
             if (isTimeSlotRequest) {
-                const availabilityDto = await this.calculateTimeSlotAvailability(resource, startDate, endDate, startTime, endTime, am, pm, timeUnit, reservations);
+                const availabilityDto = await this.calculateTimeSlotAvailability(resource, startDate, endDate, startTime, endTime, am, pm, timeUnit, slotIntervalMinutes, reservations);
                 availabilityDto.resourceGroupName = resource.resourceGroup.title;
                 result.push(availabilityDto);
             }
@@ -12304,20 +12310,18 @@ let ResourceService = class ResourceService {
             throw new common_1.BadRequestException('시간 범위와 시간대 선택을 동시에 할 수 없습니다.');
         }
     }
-    async calculateTimeSlotAvailability(resource, startDate, endDate, startTime, endTime, am, pm, timeUnit, reservations = []) {
+    async calculateTimeSlotAvailability(resource, startDate, endDate, startTime, endTime, am, pm, timeUnit, slotIntervalMinutes = 30, reservations = []) {
         const availabilityDto = new available_time_response_dto_1.ResourceAvailabilityDto();
         availabilityDto.resourceId = resource.resourceId;
         availabilityDto.resourceName = resource.name;
         const isToday = startDate === new Date().toISOString().slice(0, 10);
         const timeRange = this.resourceContextService.현재시간_기준_가용시간대를_계산한다(resource.type, isToday, startTime, endTime);
-        console.log('timeRange', timeRange);
-        const availableSlots = this.calculateAvailableTimeSlots(startDate, timeRange.startTime, timeRange.endTime, timeUnit, am, pm, reservations);
+        const availableSlots = this.calculateAvailableTimeSlots(startDate, timeRange.startTime, timeRange.endTime, timeUnit, am, pm, slotIntervalMinutes, reservations);
         availabilityDto.availableTimeSlots = availableSlots;
         return availabilityDto;
     }
-    calculateAvailableTimeSlots(dateStr, startTime, endTime, timeUnit, am, pm, reservations = []) {
+    calculateAvailableTimeSlots(dateStr, startTime, endTime, timeUnit, am, pm, slotIntervalMinutes = 30, reservations = []) {
         const availableSlots = [];
-        const slotIntervalMinutes = 30;
         let actualStartTime = startTime;
         let actualEndTime = endTime;
         if (am && !pm) {
@@ -12328,7 +12332,6 @@ let ResourceService = class ResourceService {
         }
         const startDateTime = new Date(`${dateStr}T${actualStartTime}+09:00`);
         const endDateTime = new Date(`${dateStr}T${actualEndTime}+09:00`);
-        console.log('startDateTime', startDateTime, endDateTime);
         const slotStart = new Date(startDateTime);
         while (slotStart < endDateTime) {
             const slotEnd = new Date(slotStart);
