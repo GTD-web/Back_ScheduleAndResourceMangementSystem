@@ -11,9 +11,12 @@ import { DomainHolidayInfoModule } from './holiday-info/holiday-info.module';
 import { DomainMonthlyEventSummaryModule } from './monthly-event-summary/monthly-event-summary.module';
 import { DomainUsedAttendanceModule } from './used-attendance/used-attendance.module';
 import { DomainDailySummaryChangeHistoryModule } from './daily-summary-change-history/daily-summary-change-history.module';
+import { WorkTimeOverrideModule } from './work-time-override/work-time-override.module';
 import { DomainProjectModule } from './project/project.module';
 import { DomainAssignedProjectModule } from './assigned-project/assigned-project.module';
 import { DomainWorkHoursModule } from './work-hours/work-hours.module';
+import { DomainEmployeeDepartmentPermissionModule } from './employee-department-permission/employee-department-permission.module';
+import { DomainEmployeeExtraInfoModule } from './employee-extra-info/employee-extra-info.module';
 // 메타데이터 모듈은 @libs/modules에서 import
 import { DomainEmployeeModule } from '@libs/modules/employee/employee.module';
 import { DomainDepartmentModule } from '@libs/modules/department/department.module';
@@ -45,6 +48,7 @@ import { DomainEmployeeDepartmentPositionModule } from '@libs/modules/employee-d
         DomainHolidayInfoModule,
         DomainUsedAttendanceModule,
         DomainMonthlyEventSummaryModule,
+        WorkTimeOverrideModule,
 
         // 데이터 스냅샷 관련 (LAMS 전용)
         DomainDataSnapshotInfoModule,
@@ -61,6 +65,12 @@ import { DomainEmployeeDepartmentPositionModule } from '@libs/modules/employee-d
         DomainProjectModule,
         DomainAssignedProjectModule,
         DomainWorkHoursModule,
+
+        // 권한 관리 (LAMS 전용)
+        DomainEmployeeDepartmentPermissionModule,
+
+        // 직원 추가 정보 (LAMS 전용)
+        DomainEmployeeExtraInfoModule,
     ],
     exports: [
         // // 메타데이터 관련

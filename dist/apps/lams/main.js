@@ -393,6 +393,222 @@ function setupSwagger(app, dtos) {
 
 /***/ }),
 
+/***/ "./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.module.ts":
+/*!********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.module.ts ***!
+  \********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceDataBusinessModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_data_business_service_1 = __webpack_require__(/*! ./attendance-data-business.service */ "./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.service.ts");
+const attendance_data_context_module_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.module */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.module.ts");
+const data_snapshot_context_module_1 = __webpack_require__(/*! ../../context/data-snapshot-context/data-snapshot-context.module */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.module.ts");
+let AttendanceDataBusinessModule = class AttendanceDataBusinessModule {
+};
+exports.AttendanceDataBusinessModule = AttendanceDataBusinessModule;
+exports.AttendanceDataBusinessModule = AttendanceDataBusinessModule = __decorate([
+    (0, common_1.Module)({
+        imports: [attendance_data_context_module_1.AttendanceDataContextModule, data_snapshot_context_module_1.DataSnapshotContextModule],
+        providers: [attendance_data_business_service_1.AttendanceDataBusinessService],
+        exports: [attendance_data_business_service_1.AttendanceDataBusinessService],
+    })
+], AttendanceDataBusinessModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.service.ts":
+/*!*********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.service.ts ***!
+  \*********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var AttendanceDataBusinessService_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceDataBusinessService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_data_context_service_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.service */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.service.ts");
+const data_snapshot_context_service_1 = __webpack_require__(/*! ../../context/data-snapshot-context/data-snapshot-context.service */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.service.ts");
+let AttendanceDataBusinessService = AttendanceDataBusinessService_1 = class AttendanceDataBusinessService {
+    constructor(attendanceDataContextService, dataSnapshotContextService) {
+        this.attendanceDataContextService = attendanceDataContextService;
+        this.dataSnapshotContextService = dataSnapshotContextService;
+        this.logger = new common_1.Logger(AttendanceDataBusinessService_1.name);
+    }
+    async 월간요약을조회한다(query) {
+        this.logger.log(`월간 요약 조회: year=${query.year}, month=${query.month}, departmentId=${query.departmentId}`);
+        return await this.attendanceDataContextService.월간요약을조회한다(query);
+    }
+    async 일간요약을수정한다(command) {
+        this.logger.log(`일간 요약 수정: dailySummaryId=${command.dailySummaryId}`);
+        return await this.attendanceDataContextService.일간요약을수정한다(command);
+    }
+    async 근태스냅샷을저장한다(command) {
+        this.logger.log(`근태 스냅샷 저장: year=${command.year}, month=${command.month}, departmentId=${command.departmentId}`);
+        return await this.dataSnapshotContextService.근태스냅샷을저장한다(command);
+    }
+    async 스냅샷으로부터복원한다(command) {
+        this.logger.log(`스냅샷으로부터 복원: snapshotId=${command.snapshotId}`);
+        return await this.dataSnapshotContextService.스냅샷으로부터복원한다(command);
+    }
+    async 스냅샷목록을조회한다(query) {
+        this.logger.log(`스냅샷 목록 조회: year=${query.year}, month=${query.month}, departmentId=${query.departmentId}`);
+        return await this.dataSnapshotContextService.스냅샷목록을조회한다(query);
+    }
+};
+exports.AttendanceDataBusinessService = AttendanceDataBusinessService;
+exports.AttendanceDataBusinessService = AttendanceDataBusinessService = AttendanceDataBusinessService_1 = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_data_context_service_1.AttendanceDataContextService !== "undefined" && attendance_data_context_service_1.AttendanceDataContextService) === "function" ? _a : Object, typeof (_b = typeof data_snapshot_context_service_1.DataSnapshotContextService !== "undefined" && data_snapshot_context_service_1.DataSnapshotContextService) === "function" ? _b : Object])
+], AttendanceDataBusinessService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.module.ts":
+/*!**********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.module.ts ***!
+  \**********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueBusinessModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_issue_business_service_1 = __webpack_require__(/*! ./attendance-issue-business.service */ "./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.service.ts");
+const attendance_issue_context_module_1 = __webpack_require__(/*! ../../context/attendance-issue-context/attendance-issue-context.module */ "./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.module.ts");
+const attendance_data_context_module_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.module */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.module.ts");
+let AttendanceIssueBusinessModule = class AttendanceIssueBusinessModule {
+};
+exports.AttendanceIssueBusinessModule = AttendanceIssueBusinessModule;
+exports.AttendanceIssueBusinessModule = AttendanceIssueBusinessModule = __decorate([
+    (0, common_1.Module)({
+        imports: [attendance_issue_context_module_1.AttendanceIssueContextModule, attendance_data_context_module_1.AttendanceDataContextModule],
+        providers: [attendance_issue_business_service_1.AttendanceIssueBusinessService],
+        exports: [attendance_issue_business_service_1.AttendanceIssueBusinessService],
+    })
+], AttendanceIssueBusinessModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.service.ts":
+/*!***********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.service.ts ***!
+  \***********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var AttendanceIssueBusinessService_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueBusinessService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_issue_context_service_1 = __webpack_require__(/*! ../../context/attendance-issue-context/attendance-issue-context.service */ "./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.service.ts");
+const attendance_data_context_service_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.service */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.service.ts");
+let AttendanceIssueBusinessService = AttendanceIssueBusinessService_1 = class AttendanceIssueBusinessService {
+    constructor(attendanceIssueContextService, attendanceDataContextService) {
+        this.attendanceIssueContextService = attendanceIssueContextService;
+        this.attendanceDataContextService = attendanceDataContextService;
+        this.logger = new common_1.Logger(AttendanceIssueBusinessService_1.name);
+    }
+    async 근태이슈목록을조회한다(params) {
+        this.logger.log(`근태 이슈 목록 조회: ${JSON.stringify(params)}`);
+        return await this.attendanceIssueContextService.근태이슈목록을조회한다(params);
+    }
+    async 근태이슈를조회한다(id) {
+        this.logger.log(`근태 이슈 조회: id=${id}`);
+        return await this.attendanceIssueContextService.근태이슈를조회한다({ id });
+    }
+    async 근태이슈사유를수정한다(id, description, userId) {
+        this.logger.log(`근태 이슈 사유 수정: id=${id}`);
+        return await this.attendanceIssueContextService.근태이슈사유를수정한다({
+            id,
+            description,
+            userId,
+        });
+    }
+    async 근태이슈수정정보를설정한다(id, data, userId) {
+        this.logger.log(`근태 이슈 수정 정보 설정: id=${id}`);
+        return await this.attendanceIssueContextService.근태이슈수정정보를설정한다({
+            id,
+            ...data,
+            userId,
+        });
+    }
+    async 근태이슈를반영한다(id, confirmedBy, userId) {
+        this.logger.log(`근태 이슈 반영: id=${id}`);
+        const issueResponse = await this.attendanceIssueContextService.근태이슈를조회한다({ id });
+        const issue = issueResponse.issue;
+        if (issue.dailyEventSummaryId) {
+            await this.attendanceDataContextService.일간요약을수정한다({
+                dailySummaryId: issue.dailyEventSummaryId,
+                enter: issue.correctedEnterTime || undefined,
+                leave: issue.correctedLeaveTime || undefined,
+                attendanceTypeIds: issue.correctedAttendanceTypeIds || undefined,
+                reason: `근태 이슈 반영: ${issue.description || '사유 없음'}`,
+                performedBy: userId,
+            });
+        }
+        return await this.attendanceIssueContextService.근태이슈를반영한다({
+            id,
+            confirmedBy,
+            userId,
+        });
+    }
+    async 근태이슈를미반영처리한다(id, rejectionReason, userId) {
+        this.logger.log(`근태 이슈 미반영 처리: id=${id}`);
+        return await this.attendanceIssueContextService.근태이슈를미반영처리한다({
+            id,
+            rejectionReason,
+            userId,
+        });
+    }
+};
+exports.AttendanceIssueBusinessService = AttendanceIssueBusinessService;
+exports.AttendanceIssueBusinessService = AttendanceIssueBusinessService = AttendanceIssueBusinessService_1 = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_context_service_1.AttendanceIssueContextService !== "undefined" && attendance_issue_context_service_1.AttendanceIssueContextService) === "function" ? _a : Object, typeof (_b = typeof attendance_data_context_service_1.AttendanceDataContextService !== "undefined" && attendance_data_context_service_1.AttendanceDataContextService) === "function" ? _b : Object])
+], AttendanceIssueBusinessService);
+
+
+/***/ }),
+
 /***/ "./apps/lams/src/refactoring/business/file-management-business/file-management-business.module.ts":
 /*!********************************************************************************************************!*\
   !*** ./apps/lams/src/refactoring/business/file-management-business/file-management-business.module.ts ***!
@@ -412,12 +628,17 @@ const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const file_management_business_service_1 = __webpack_require__(/*! ./file-management-business.service */ "./apps/lams/src/refactoring/business/file-management-business/file-management-business.service.ts");
 const file_management_context_module_1 = __webpack_require__(/*! ../../context/file-management-context/file-management-context.module */ "./apps/lams/src/refactoring/context/file-management-context/file-management-context.module.ts");
 const attendance_data_context_module_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.module */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.module.ts");
+const data_snapshot_context_module_1 = __webpack_require__(/*! ../../context/data-snapshot-context/data-snapshot-context.module */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.module.ts");
 let FileManagementBusinessModule = class FileManagementBusinessModule {
 };
 exports.FileManagementBusinessModule = FileManagementBusinessModule;
 exports.FileManagementBusinessModule = FileManagementBusinessModule = __decorate([
     (0, common_1.Module)({
-        imports: [file_management_context_module_1.FileManagementContextModule.forRoot(), attendance_data_context_module_1.AttendanceDataContextModule],
+        imports: [
+            file_management_context_module_1.FileManagementContextModule.forRoot(),
+            attendance_data_context_module_1.AttendanceDataContextModule,
+            data_snapshot_context_module_1.DataSnapshotContextModule,
+        ],
         providers: [file_management_business_service_1.FileManagementBusinessService],
         exports: [file_management_business_service_1.FileManagementBusinessService],
     })
@@ -443,16 +664,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var FileManagementBusinessService_1;
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileManagementBusinessService = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const file_management_context_service_1 = __webpack_require__(/*! ../../context/file-management-context/file-management-context.service */ "./apps/lams/src/refactoring/context/file-management-context/file-management-context.service.ts");
 const attendance_data_context_service_1 = __webpack_require__(/*! ../../context/attendance-data-context/attendance-data-context.service */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.service.ts");
+const data_snapshot_context_service_1 = __webpack_require__(/*! ../../context/data-snapshot-context/data-snapshot-context.service */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.service.ts");
 let FileManagementBusinessService = FileManagementBusinessService_1 = class FileManagementBusinessService {
-    constructor(fileManagementContextService, attendanceDataContextService) {
+    constructor(fileManagementContextService, attendanceDataContextService, dataSnapshotContextService) {
         this.fileManagementContextService = fileManagementContextService;
         this.attendanceDataContextService = attendanceDataContextService;
+        this.dataSnapshotContextService = dataSnapshotContextService;
         this.logger = new common_1.Logger(FileManagementBusinessService_1.name);
     }
     async 파일을업로드한다(file, uploadBy, year, month) {
@@ -463,6 +686,7 @@ let FileManagementBusinessService = FileManagementBusinessService_1 = class File
     }
     async 파일내용을반영한다(fileIds, employeeIds, year, month, performedBy) {
         this.logger.log(`파일 내용 반영 시작: fileIds=${fileIds.length}개, 직원 수=${employeeIds.length}`);
+        await this.dataSnapshotContextService.해당연월의모든부서기존월간요약스냅샷을저장한다(year, month, performedBy);
         const reflections = [];
         for (const fileId of fileIds) {
             this.logger.log(`파일 내용 반영 중: fileId=${fileId}`);
@@ -474,9 +698,9 @@ let FileManagementBusinessService = FileManagementBusinessService_1 = class File
             this.logger.log(`파일 내용 반영 완료: fileId=${fileId}, reflectionHistoryId=${reflectionResult.reflectionHistoryId}`);
         }
         this.logger.log(`모든 파일 내용 반영 완료: 총 ${reflections.length}개 파일`);
-        const dailySummaryResult = await this.attendanceDataContextService.일일요약을생성한다(employeeIds, year, month, performedBy);
+        const dailySummaryResult = await this.attendanceDataContextService.일일요약을생성한다(year, month, performedBy);
         this.logger.log(`일일 요약 생성 완료: daily=${dailySummaryResult.statistics.dailyEventSummaryCount}, issues=${dailySummaryResult.statistics.attendanceIssueCount}`);
-        const monthlySummaryResult = await this.attendanceDataContextService.월간요약을생성한다(employeeIds, year, month, performedBy);
+        const monthlySummaryResult = await this.attendanceDataContextService.월간요약을생성한다(year, month, performedBy);
         this.logger.log(`월간 요약 생성 완료: monthly=${monthlySummaryResult.statistics.monthlyEventSummaryCount}`);
         return {
             reflections,
@@ -484,12 +708,210 @@ let FileManagementBusinessService = FileManagementBusinessService_1 = class File
             monthlySummaryResult,
         };
     }
+    async 이력으로되돌리기(reflectionHistoryId, year, month, performedBy) {
+        this.logger.log(`이력으로 되돌리기 시작: reflectionHistoryId=${reflectionHistoryId}, year=${year}, month=${month}`);
+        await this.dataSnapshotContextService.해당연월의모든부서기존월간요약스냅샷을저장한다(year, month, performedBy);
+        const restoreResult = await this.fileManagementContextService.이력으로되돌리기({
+            reflectionHistoryId,
+            performedBy,
+        });
+        this.logger.log(`이력으로 되돌리기 완료: year=${year}, month=${month}`);
+        const dailySummaryResult = await this.attendanceDataContextService.일일요약을생성한다(year, month, performedBy);
+        this.logger.log(`일일 요약 생성 완료: daily=${dailySummaryResult.statistics.dailyEventSummaryCount}, issues=${dailySummaryResult.statistics.attendanceIssueCount}`);
+        const monthlySummaryResult = await this.attendanceDataContextService.월간요약을생성한다(year, month, performedBy);
+        this.logger.log(`월간 요약 생성 완료: monthly=${monthlySummaryResult.statistics.monthlyEventSummaryCount}`);
+        return {
+            reflectionHistoryId: restoreResult.reflectionHistoryId,
+            dailySummaryResult,
+            monthlySummaryResult,
+        };
+    }
+    async 파일목록과반영이력을조회한다(query) {
+        this.logger.log(`파일 목록과 반영이력 조회: year=${query.year}, month=${query.month}`);
+        return await this.fileManagementContextService.파일목록과반영이력을조회한다(query);
+    }
 };
 exports.FileManagementBusinessService = FileManagementBusinessService;
 exports.FileManagementBusinessService = FileManagementBusinessService = FileManagementBusinessService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof file_management_context_service_1.FileManagementContextService !== "undefined" && file_management_context_service_1.FileManagementContextService) === "function" ? _a : Object, typeof (_b = typeof attendance_data_context_service_1.AttendanceDataContextService !== "undefined" && attendance_data_context_service_1.AttendanceDataContextService) === "function" ? _b : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof file_management_context_service_1.FileManagementContextService !== "undefined" && file_management_context_service_1.FileManagementContextService) === "function" ? _a : Object, typeof (_b = typeof attendance_data_context_service_1.AttendanceDataContextService !== "undefined" && attendance_data_context_service_1.AttendanceDataContextService) === "function" ? _b : Object, typeof (_c = typeof data_snapshot_context_service_1.DataSnapshotContextService !== "undefined" && data_snapshot_context_service_1.DataSnapshotContextService) === "function" ? _c : Object])
 ], FileManagementBusinessService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.module.ts":
+/*!************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.module.ts ***!
+  \************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementBusinessModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const organization_management_business_service_1 = __webpack_require__(/*! ./organization-management-business.service */ "./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.service.ts");
+const organization_management_context_module_1 = __webpack_require__(/*! ../../context/organization-management-context/organization-management-context.module */ "./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.module.ts");
+let OrganizationManagementBusinessModule = class OrganizationManagementBusinessModule {
+};
+exports.OrganizationManagementBusinessModule = OrganizationManagementBusinessModule;
+exports.OrganizationManagementBusinessModule = OrganizationManagementBusinessModule = __decorate([
+    (0, common_1.Module)({
+        imports: [organization_management_context_module_1.OrganizationManagementContextModule],
+        providers: [organization_management_business_service_1.OrganizationManagementBusinessService],
+        exports: [organization_management_business_service_1.OrganizationManagementBusinessService],
+    })
+], OrganizationManagementBusinessModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.service.ts":
+/*!*************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.service.ts ***!
+  \*************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var OrganizationManagementBusinessService_1;
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementBusinessService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const organization_management_context_service_1 = __webpack_require__(/*! ../../context/organization-management-context/organization-management-context.service */ "./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.service.ts");
+let OrganizationManagementBusinessService = OrganizationManagementBusinessService_1 = class OrganizationManagementBusinessService {
+    constructor(organizationManagementContextService) {
+        this.organizationManagementContextService = organizationManagementContextService;
+        this.logger = new common_1.Logger(OrganizationManagementBusinessService_1.name);
+    }
+    async 부서목록을조회한다(query) {
+        this.logger.log(`부서 목록 조회: year=${query.year}, month=${query.month}`);
+        return await this.organizationManagementContextService.부서목록을조회한다(query);
+    }
+};
+exports.OrganizationManagementBusinessService = OrganizationManagementBusinessService;
+exports.OrganizationManagementBusinessService = OrganizationManagementBusinessService = OrganizationManagementBusinessService_1 = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof organization_management_context_service_1.OrganizationManagementContextService !== "undefined" && organization_management_context_service_1.OrganizationManagementContextService) === "function" ? _a : Object])
+], OrganizationManagementBusinessService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/settings-business/settings-business.module.ts":
+/*!******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/settings-business/settings-business.module.ts ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsBusinessModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const settings_business_service_1 = __webpack_require__(/*! ./settings-business.service */ "./apps/lams/src/refactoring/business/settings-business/settings-business.service.ts");
+const settings_context_module_1 = __webpack_require__(/*! ../../context/settings-context/settings-context.module */ "./apps/lams/src/refactoring/context/settings-context/settings-context.module.ts");
+let SettingsBusinessModule = class SettingsBusinessModule {
+};
+exports.SettingsBusinessModule = SettingsBusinessModule;
+exports.SettingsBusinessModule = SettingsBusinessModule = __decorate([
+    (0, common_1.Module)({
+        imports: [settings_context_module_1.SettingsContextModule],
+        providers: [settings_business_service_1.SettingsBusinessService],
+        exports: [settings_business_service_1.SettingsBusinessService],
+    })
+], SettingsBusinessModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/business/settings-business/settings-business.service.ts":
+/*!*******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/business/settings-business/settings-business.service.ts ***!
+  \*******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsBusinessService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const settings_context_service_1 = __webpack_require__(/*! ../../context/settings-context/settings-context.service */ "./apps/lams/src/refactoring/context/settings-context/settings-context.service.ts");
+let SettingsBusinessService = class SettingsBusinessService {
+    constructor(settingsContextService) {
+        this.settingsContextService = settingsContextService;
+    }
+    async 관리자직원목록을조회한다(query) {
+        return await this.settingsContextService.관리자직원목록을조회한다(query);
+    }
+    async 권한관리용부서목록을조회한다(query) {
+        return await this.settingsContextService.권한관리용부서목록을조회한다(query);
+    }
+    async 휴일목록을조회한다(query) {
+        return await this.settingsContextService.휴일목록을조회한다(query);
+    }
+    async 특별근태시간목록을조회한다(query) {
+        return await this.settingsContextService.특별근태시간목록을조회한다(query);
+    }
+    async 직원부서권한을변경한다(command) {
+        return await this.settingsContextService.직원부서권한을변경한다(command);
+    }
+    async 직원추가정보를변경한다(command) {
+        return await this.settingsContextService.직원추가정보를변경한다(command);
+    }
+    async 휴일정보를생성한다(command) {
+        return await this.settingsContextService.휴일정보를생성한다(command);
+    }
+    async 휴일정보를수정한다(command) {
+        return await this.settingsContextService.휴일정보를수정한다(command);
+    }
+    async 휴일정보를삭제한다(command) {
+        return await this.settingsContextService.휴일정보를삭제한다(command);
+    }
+    async 특별근태시간을생성한다(command) {
+        return await this.settingsContextService.특별근태시간을생성한다(command);
+    }
+    async 특별근태시간을수정한다(command) {
+        return await this.settingsContextService.특별근태시간을수정한다(command);
+    }
+    async 특별근태시간을삭제한다(command) {
+        return await this.settingsContextService.특별근태시간을삭제한다(command);
+    }
+};
+exports.SettingsBusinessService = SettingsBusinessService;
+exports.SettingsBusinessService = SettingsBusinessService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof settings_context_service_1.SettingsContextService !== "undefined" && settings_context_service_1.SettingsContextService) === "function" ? _a : Object])
+], SettingsBusinessService);
 
 
 /***/ }),
@@ -520,7 +942,12 @@ const daily_event_summary_module_1 = __webpack_require__(/*! ../../domain/daily-
 const monthly_event_summary_module_1 = __webpack_require__(/*! ../../domain/monthly-event-summary/monthly-event-summary.module */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.module.ts");
 const attendance_issue_module_1 = __webpack_require__(/*! ../../domain/attendance-issue/attendance-issue.module */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.module.ts");
 const employee_module_1 = __webpack_require__(/*! @libs/modules/employee/employee.module */ "./libs/modules/employee/employee.module.ts");
+const employee_department_position_history_module_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.module */ "./libs/modules/employee-department-position-history/employee-department-position-history.module.ts");
+const daily_summary_change_history_module_1 = __webpack_require__(/*! ../../domain/daily-summary-change-history/daily-summary-change-history.module */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.module.ts");
+const work_time_override_module_1 = __webpack_require__(/*! ../../domain/work-time-override/work-time-override.module */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.module.ts");
 const work_time_policy_service_1 = __webpack_require__(/*! ./services/work-time-policy.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/work-time-policy.service.ts");
+const daily_summary_judgment_service_1 = __webpack_require__(/*! ./services/daily-summary-judgment.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/daily-summary-judgment.service.ts");
+const attendance_type_module_1 = __webpack_require__(/*! ../../domain/attendance-type/attendance-type.module */ "./apps/lams/src/refactoring/domain/attendance-type/attendance-type.module.ts");
 let AttendanceDataContextModule = class AttendanceDataContextModule {
 };
 exports.AttendanceDataContextModule = AttendanceDataContextModule;
@@ -535,11 +962,17 @@ exports.AttendanceDataContextModule = AttendanceDataContextModule = __decorate([
             monthly_event_summary_module_1.DomainMonthlyEventSummaryModule,
             attendance_issue_module_1.DomainAttendanceIssueModule,
             employee_module_1.DomainEmployeeModule,
+            employee_department_position_history_module_1.DomainEmployeeDepartmentPositionHistoryModule,
+            daily_summary_change_history_module_1.DomainDailySummaryChangeHistoryModule,
+            attendance_type_module_1.DomainAttendanceTypeModule,
+            work_time_override_module_1.WorkTimeOverrideModule,
         ],
         providers: [
             attendance_data_context_service_1.AttendanceDataContextService,
             work_time_policy_service_1.WorkTimePolicyService,
+            daily_summary_judgment_service_1.DailySummaryJudgmentService,
             ...handlers_1.COMMAND_HANDLERS,
+            ...handlers_1.QUERY_HANDLERS,
         ],
         exports: [attendance_data_context_service_1.AttendanceDataContextService],
     })
@@ -575,23 +1008,29 @@ let AttendanceDataContextService = class AttendanceDataContextService {
         this.commandBus = commandBus;
         this.queryBus = queryBus;
     }
-    async 일일요약을생성한다(employeeIds, year, month, performedBy) {
+    async 일일요약을생성한다(year, month, performedBy) {
         const command = new handlers_1.GenerateDailySummariesCommand({
-            employeeIds,
             year,
             month,
             performedBy,
         });
         return await this.commandBus.execute(command);
     }
-    async 월간요약을생성한다(employeeIds, year, month, performedBy) {
+    async 월간요약을생성한다(year, month, performedBy) {
         const command = new handlers_1.GenerateMonthlySummariesCommand({
-            employeeIds,
             year,
             month,
             performedBy,
         });
         return await this.commandBus.execute(command);
+    }
+    async 월간요약을조회한다(query) {
+        const queryCommand = new handlers_1.GetMonthlySummariesQuery(query);
+        return await this.queryBus.execute(queryCommand);
+    }
+    async 일간요약을수정한다(command) {
+        const commandInstance = new handlers_1.UpdateDailySummaryCommand(command);
+        return await this.commandBus.execute(commandInstance);
     }
 };
 exports.AttendanceDataContextService = AttendanceDataContextService;
@@ -639,7 +1078,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var GenerateDailySummariesHandler_1;
-var _a, _b, _c, _d, _e, _f, _g, _h;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GenerateDailySummariesHandler = void 0;
 const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
@@ -651,22 +1090,28 @@ const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain
 const event_info_service_1 = __webpack_require__(/*! ../../../../../domain/event-info/event-info.service */ "./apps/lams/src/refactoring/domain/event-info/event-info.service.ts");
 const used_attendance_service_1 = __webpack_require__(/*! ../../../../../domain/used-attendance/used-attendance.service */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.service.ts");
 const holiday_info_service_1 = __webpack_require__(/*! ../../../../../domain/holiday-info/holiday-info.service */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.service.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
 const employee_service_1 = __webpack_require__(/*! @libs/modules/employee/employee.service */ "./libs/modules/employee/employee.service.ts");
 const work_time_policy_service_1 = __webpack_require__(/*! ../../../services/work-time-policy.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/work-time-policy.service.ts");
+const daily_summary_judgment_service_1 = __webpack_require__(/*! ../../../services/daily-summary-judgment.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/daily-summary-judgment.service.ts");
 const event_info_entity_1 = __webpack_require__(/*! ../../../../../domain/event-info/event-info.entity */ "./apps/lams/src/refactoring/domain/event-info/event-info.entity.ts");
 const used_attendance_entity_1 = __webpack_require__(/*! ../../../../../domain/used-attendance/used-attendance.entity */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.entity.ts");
 const daily_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.entity */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.entity.ts");
+const attendance_issue_entity_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.entity */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.entity.ts");
+const daily_summary_change_history_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-summary-change-history/daily-summary-change-history.entity */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.entity.ts");
 const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
 const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
 let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class GenerateDailySummariesHandler {
-    constructor(dailyEventSummaryService, attendanceIssueService, eventInfoService, usedAttendanceService, holidayInfoService, employeeService, workTimePolicyService, dataSource) {
+    constructor(dailyEventSummaryService, attendanceIssueService, eventInfoService, usedAttendanceService, holidayInfoService, workTimeOverrideService, employeeService, workTimePolicyService, dailySummaryJudgmentService, dataSource) {
         this.dailyEventSummaryService = dailyEventSummaryService;
         this.attendanceIssueService = attendanceIssueService;
         this.eventInfoService = eventInfoService;
         this.usedAttendanceService = usedAttendanceService;
         this.holidayInfoService = holidayInfoService;
+        this.workTimeOverrideService = workTimeOverrideService;
         this.employeeService = employeeService;
         this.workTimePolicyService = workTimePolicyService;
+        this.dailySummaryJudgmentService = dailySummaryJudgmentService;
         this.dataSource = dataSource;
         this.logger = new common_1.Logger(GenerateDailySummariesHandler_1.name);
     }
@@ -777,6 +1222,8 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
         const startDate = new Date(yearNum, monthNum - 1, 1);
         const endDate = new Date(yearNum, monthNum, 0);
         const allDates = this.날짜범위생성(startDate, endDate);
+        const dateStrings = allDates.map((date) => (0, date_fns_1.format)(date, 'yyyy-MM-dd'));
+        const workTimeOverrides = await this.workTimeOverrideService.날짜목록으로조회한다(dateStrings, manager);
         const eventsByEmployeeAndDate = new Map();
         events.forEach((event) => {
             if (!event.employee_number || !employeeNumberMap.has(event.employee_number))
@@ -815,12 +1262,6 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
                 const dayEvents = employeeEvents?.get(dateStr);
                 const dayAttendances = employeeAttendances?.get(dateStr) || [];
                 const summary = new daily_event_summary_entity_1.DailyEventSummary(dateStr, employee.id, undefined, holidaySet.has(dateStr) || this.주말여부확인(dateStr));
-                const hireDate = employee.hireDate ? (0, date_fns_1.format)(new Date(employee.hireDate), 'yyyy-MM-dd') : null;
-                const terminationDate = employee.status === '퇴사' && employee.terminationDate
-                    ? (0, date_fns_1.format)(new Date(employee.terminationDate), 'yyyy-MM-dd')
-                    : null;
-                const isBeforeHireDate = hireDate && dateStr < hireDate;
-                const isAfterTerminationDate = terminationDate && dateStr > terminationDate;
                 let realEnterTime = null;
                 let realLeaveTime = null;
                 if (dayEvents && dayEvents.length > 0) {
@@ -834,26 +1275,22 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
                 const workTime = this.출입기록과근태기반출입시간을계산한다(realEnterTime, realLeaveTime, recognizedAttendances);
                 summary.enter = workTime.enter;
                 summary.leave = workTime.leave;
-                if (isBeforeHireDate || isAfterTerminationDate) {
-                    summary.is_absent = false;
-                }
-                else if (summary.is_holiday) {
-                    summary.is_absent = false;
-                }
-                else if (recognizedAttendances.length > 0 || (dayEvents && dayEvents.length > 0)) {
-                    summary.is_absent = false;
-                }
-                else {
-                    summary.is_absent = true;
-                }
-                if (dayEvents && dayEvents.length > 0) {
-                    const hasMorningRecognized = this.workTimePolicyService.hasMorningRecognized(recognizedAttendances);
-                    const hasAfternoonRecognized = this.workTimePolicyService.hasAfternoonRecognized(recognizedAttendances);
-                    const earliestHHMMSS = dayEvents[0].hhmmss;
-                    const latestHHMMSS = dayEvents[dayEvents.length - 1].hhmmss;
-                    summary.is_late = this.workTimePolicyService.isLate(earliestHHMMSS, hasMorningRecognized, summary.is_holiday, isBeforeHireDate, isAfterTerminationDate);
-                    summary.is_early_leave = this.workTimePolicyService.isEarlyLeave(latestHHMMSS, hasAfternoonRecognized, summary.is_holiday, isBeforeHireDate, isAfterTerminationDate);
-                }
+                const usedAttendancesForJudgment = dayAttendances.map((ua) => ({
+                    attendanceTypeId: ua.attendance_type_id,
+                    title: ua.attendanceType?.title || '',
+                    workTime: ua.attendanceType?.work_time,
+                    isRecognizedWorkTime: ua.attendanceType?.is_recognized_work_time,
+                    startWorkTime: ua.attendanceType?.start_work_time || null,
+                    endWorkTime: ua.attendanceType?.end_work_time || null,
+                    deductedAnnualLeave: ua.attendanceType?.deducted_annual_leave,
+                }));
+                const 판정결과 = await this.dailySummaryJudgmentService.결근지각조퇴판정한다(summary, realEnterTime, realLeaveTime, usedAttendancesForJudgment.length > 0 ? usedAttendancesForJudgment : null, manager);
+                summary.is_absent = 판정결과.isAbsent;
+                summary.is_late = 판정결과.isLate;
+                summary.is_early_leave = 판정결과.isEarlyLeave;
+                summary.has_attendance_conflict = 판정결과.hasAttendanceConflict;
+                summary.has_attendance_overlap = 판정결과.hasAttendanceOverlap;
+                summary.work_time = this.근무시간을계산한다(summary.enter, summary.leave, recognizedAttendances);
                 summary.is_checked = true;
                 summary.note = '';
                 const usedAttendanceInfos = dayAttendances.map((ua) => {
@@ -918,8 +1355,70 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
     }
     async 근태이슈를생성한다(summaries, performedBy, manager) {
         const issues = [];
+        const summaryIds = summaries.map((s) => s.id);
+        if (summaryIds.length === 0) {
+            return issues;
+        }
+        const existingIssues = await manager
+            .createQueryBuilder('AttendanceIssue', 'ai')
+            .where('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .andWhere('ai.deleted_at IS NULL')
+            .getMany();
+        const existingIssueMap = new Map();
+        existingIssues.forEach((issue) => {
+            if (issue.daily_event_summary_id) {
+                existingIssueMap.set(issue.daily_event_summary_id, true);
+            }
+        });
+        const dateSet = new Set(summaries.map((s) => s.date));
+        const dateArray = Array.from(dateSet);
+        const usedAttendancesMap = new Map();
+        if (dateArray.length > 0) {
+            const minDate = dateArray.sort()[0];
+            const maxDate = dateArray.sort().reverse()[0];
+            const allUsedAttendances = await manager
+                .createQueryBuilder('UsedAttendance', 'ua')
+                .leftJoinAndSelect('ua.attendanceType', 'at')
+                .where('ua.deleted_at IS NULL')
+                .andWhere('ua.used_at >= :minDate', { minDate })
+                .andWhere('ua.used_at <= :maxDate', { maxDate })
+                .getMany();
+            allUsedAttendances.forEach((ua) => {
+                const key = `${ua.employee_id}_${ua.used_at}`;
+                if (!usedAttendancesMap.has(key)) {
+                    usedAttendancesMap.set(key, []);
+                }
+                usedAttendancesMap.get(key).push(ua);
+            });
+        }
         for (const summary of summaries) {
-            if (summary.is_late || summary.is_early_leave || summary.is_absent) {
+            const key = `${summary.employee_id}_${summary.date}`;
+            const dayAttendances = usedAttendancesMap.get(key) || [];
+            const problematicAttendanceTypeIds = dayAttendances
+                .map((ua) => ua.attendance_type_id)
+                .filter((id) => !!id)
+                .slice(0, 2);
+            const isAttendanceIssue = summary.is_late || summary.is_early_leave || summary.is_absent;
+            let isDuplicateTimeIssue = false;
+            if (dayAttendances.length === 2) {
+                const [attendance1, attendance2] = dayAttendances;
+                const startTime1 = attendance1.attendanceType?.start_work_time;
+                const endTime1 = attendance1.attendanceType?.end_work_time;
+                const startTime2 = attendance2.attendanceType?.start_work_time;
+                const endTime2 = attendance2.attendanceType?.end_work_time;
+                if (startTime1 &&
+                    endTime1 &&
+                    startTime2 &&
+                    endTime2 &&
+                    startTime1 === startTime2 &&
+                    endTime1 === endTime2) {
+                    isDuplicateTimeIssue = true;
+                }
+            }
+            if (isAttendanceIssue || isDuplicateTimeIssue) {
+                if (existingIssueMap.has(summary.id)) {
+                    continue;
+                }
                 try {
                     const issue = await this.attendanceIssueService.생성한다({
                         employeeId: summary.employee_id,
@@ -929,9 +1428,9 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
                         problematicLeaveTime: summary.real_leave || summary.leave,
                         correctedEnterTime: null,
                         correctedLeaveTime: null,
-                        problematicAttendanceTypeId: null,
-                        correctedAttendanceTypeId: null,
-                        description: this.이슈설명생성(summary),
+                        problematicAttendanceTypeIds: problematicAttendanceTypeIds.length > 0 ? problematicAttendanceTypeIds : null,
+                        correctedAttendanceTypeIds: null,
+                        description: null,
                     }, manager);
                     issues.push(issue);
                 }
@@ -941,16 +1440,6 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
             }
         }
         return issues;
-    }
-    이슈설명생성(summary) {
-        const descriptions = [];
-        if (summary.is_late)
-            descriptions.push('지각');
-        if (summary.is_early_leave)
-            descriptions.push('조퇴');
-        if (summary.is_absent)
-            descriptions.push('결근');
-        return descriptions.join(', ');
     }
     날짜범위생성(start, end) {
         const dates = [];
@@ -1008,6 +1497,42 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
             leave: leaveTime,
         };
     }
+    근무시간을계산한다(enter, leave, recognizedAttendances) {
+        if (enter && leave) {
+            const enterTime = this.시간문자열을분으로변환(enter);
+            const leaveTime = this.시간문자열을분으로변환(leave);
+            const totalWorkMinutes = leaveTime - enterTime;
+            const requiredRestMinutes = this.법정휴식시간을계산한다(totalWorkMinutes);
+            const workTime = totalWorkMinutes - requiredRestMinutes;
+            return workTime > 0 ? workTime : 0;
+        }
+        if (recognizedAttendances.length > 0) {
+            const totalWorkTime = recognizedAttendances.reduce((sum, ua) => {
+                return sum + (ua.attendanceType?.work_time || 0);
+            }, 0);
+            return totalWorkTime > 0 ? totalWorkTime : null;
+        }
+        return null;
+    }
+    법정휴식시간을계산한다(totalWorkMinutes) {
+        const FOUR_HOURS = 4 * 60;
+        const EIGHT_HOURS = 8 * 60;
+        if (totalWorkMinutes < FOUR_HOURS) {
+            return 0;
+        }
+        else if (totalWorkMinutes < EIGHT_HOURS) {
+            return 30;
+        }
+        else {
+            return 60;
+        }
+    }
+    시간문자열을분으로변환(timeStr) {
+        const parts = timeStr.split(':');
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        return hours * 60 + minutes;
+    }
     인정근태기반출입시간을계산한다(dayAttendances) {
         const hasMorningRecognized = this.workTimePolicyService.hasMorningRecognized(dayAttendances);
         const hasAfternoonRecognized = this.workTimePolicyService.hasAfternoonRecognized(dayAttendances);
@@ -1050,6 +1575,7 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
         if (existingSummaries.length === 0) {
             return;
         }
+        const summaryIds = existingSummaries.map((s) => s.id);
         const now = new Date();
         for (const summary of existingSummaries) {
             summary.deleted_at = now;
@@ -1057,7 +1583,33 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
             summary.메타데이터업데이트한다(performedBy);
         }
         await manager.save(daily_event_summary_entity_1.DailyEventSummary, existingSummaries);
-        this.logger.log(`해당 연월 일간요약 소프트 삭제 완료: ${existingSummaries.length}건`);
+        const existingIssues = await manager
+            .createQueryBuilder(attendance_issue_entity_1.AttendanceIssue, 'ai')
+            .where('ai.deleted_at IS NULL')
+            .andWhere('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .getMany();
+        if (existingIssues.length > 0) {
+            for (const issue of existingIssues) {
+                issue.deleted_at = now;
+                issue.수정자설정한다(performedBy);
+                issue.메타데이터업데이트한다(performedBy);
+            }
+            await manager.save(attendance_issue_entity_1.AttendanceIssue, existingIssues);
+        }
+        const existingHistories = await manager
+            .createQueryBuilder(daily_summary_change_history_entity_1.DailySummaryChangeHistory, 'dsh')
+            .where('dsh.deleted_at IS NULL')
+            .andWhere('dsh.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .getMany();
+        if (existingHistories.length > 0) {
+            for (const history of existingHistories) {
+                history.deleted_at = now;
+                history.수정자설정한다(performedBy);
+                history.메타데이터업데이트한다(performedBy);
+            }
+            await manager.save(daily_summary_change_history_entity_1.DailySummaryChangeHistory, existingHistories);
+        }
+        this.logger.log(`해당 연월 일간요약 소프트 삭제 완료: 일간요약=${existingSummaries.length}건, 이슈=${existingIssues.length}건, 변경이력=${existingHistories.length}건`);
     }
     async 스냅샷기반일일요약생성(snapshotData, year, month, manager) {
         const summaries = [];
@@ -1067,7 +1619,7 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
             if (dateYear !== year || dateMonth !== month) {
                 continue;
             }
-            const summary = new daily_event_summary_entity_1.DailyEventSummary(snapshot.date, snapshot.employee_id, undefined, snapshot.is_holiday, snapshot.enter, snapshot.leave, snapshot.real_enter, snapshot.real_leave, snapshot.is_checked, snapshot.is_late, snapshot.is_early_leave, snapshot.is_absent, snapshot.work_time, snapshot.note, snapshot.used_attendances);
+            const summary = new daily_event_summary_entity_1.DailyEventSummary(snapshot.date, snapshot.employee_id, undefined, snapshot.is_holiday, snapshot.enter, snapshot.leave, snapshot.real_enter, snapshot.real_leave, snapshot.is_checked, snapshot.is_late, snapshot.is_early_leave, snapshot.is_absent, snapshot.has_attendance_conflict ?? false, snapshot.has_attendance_overlap ?? false, snapshot.work_time, snapshot.note, snapshot.used_attendances);
             summaries.push(summary);
         }
         const yearNum = parseInt(year);
@@ -1122,7 +1674,7 @@ let GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = class Gene
 exports.GenerateDailySummariesHandler = GenerateDailySummariesHandler;
 exports.GenerateDailySummariesHandler = GenerateDailySummariesHandler = GenerateDailySummariesHandler_1 = __decorate([
     (0, cqrs_1.CommandHandler)(generate_daily_summaries_command_1.GenerateDailySummariesCommand),
-    __metadata("design:paramtypes", [typeof (_a = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _b : Object, typeof (_c = typeof event_info_service_1.DomainEventInfoService !== "undefined" && event_info_service_1.DomainEventInfoService) === "function" ? _c : Object, typeof (_d = typeof used_attendance_service_1.DomainUsedAttendanceService !== "undefined" && used_attendance_service_1.DomainUsedAttendanceService) === "function" ? _d : Object, typeof (_e = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _e : Object, typeof (_f = typeof employee_service_1.DomainEmployeeService !== "undefined" && employee_service_1.DomainEmployeeService) === "function" ? _f : Object, typeof (_g = typeof work_time_policy_service_1.WorkTimePolicyService !== "undefined" && work_time_policy_service_1.WorkTimePolicyService) === "function" ? _g : Object, typeof (_h = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _h : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _b : Object, typeof (_c = typeof event_info_service_1.DomainEventInfoService !== "undefined" && event_info_service_1.DomainEventInfoService) === "function" ? _c : Object, typeof (_d = typeof used_attendance_service_1.DomainUsedAttendanceService !== "undefined" && used_attendance_service_1.DomainUsedAttendanceService) === "function" ? _d : Object, typeof (_e = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _e : Object, typeof (_f = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _f : Object, typeof (_g = typeof employee_service_1.DomainEmployeeService !== "undefined" && employee_service_1.DomainEmployeeService) === "function" ? _g : Object, typeof (_h = typeof work_time_policy_service_1.WorkTimePolicyService !== "undefined" && work_time_policy_service_1.WorkTimePolicyService) === "function" ? _h : Object, typeof (_j = typeof daily_summary_judgment_service_1.DailySummaryJudgmentService !== "undefined" && daily_summary_judgment_service_1.DailySummaryJudgmentService) === "function" ? _j : Object, typeof (_k = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _k : Object])
 ], GenerateDailySummariesHandler);
 
 
@@ -1164,7 +1716,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var GenerateMonthlySummariesHandler_1;
-var _a, _b, _c;
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GenerateMonthlySummariesHandler = void 0;
 const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
@@ -1173,23 +1725,99 @@ const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
 const generate_monthly_summaries_command_1 = __webpack_require__(/*! ./generate-monthly-summaries.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.command.ts");
 const monthly_event_summary_service_1 = __webpack_require__(/*! ../../../../../domain/monthly-event-summary/monthly-event-summary.service */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.service.ts");
 const daily_event_summary_service_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.service */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.service.ts");
+const used_attendance_service_1 = __webpack_require__(/*! ../../../../../domain/used-attendance/used-attendance.service */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.service.ts");
+const attendance_type_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-type/attendance-type.service */ "./apps/lams/src/refactoring/domain/attendance-type/attendance-type.service.ts");
+const daily_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.entity */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.entity.ts");
+const monthly_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/monthly-event-summary/monthly-event-summary.entity */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.entity.ts");
+const used_attendance_entity_1 = __webpack_require__(/*! ../../../../../domain/used-attendance/used-attendance.entity */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.entity.ts");
+const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
 let GenerateMonthlySummariesHandler = GenerateMonthlySummariesHandler_1 = class GenerateMonthlySummariesHandler {
-    constructor(monthlyEventSummaryService, dailyEventSummaryService, dataSource) {
+    constructor(monthlyEventSummaryService, dailyEventSummaryService, usedAttendanceService, attendanceTypeService, dataSource) {
         this.monthlyEventSummaryService = monthlyEventSummaryService;
         this.dailyEventSummaryService = dailyEventSummaryService;
+        this.usedAttendanceService = usedAttendanceService;
+        this.attendanceTypeService = attendanceTypeService;
         this.dataSource = dataSource;
         this.logger = new common_1.Logger(GenerateMonthlySummariesHandler_1.name);
     }
     async execute(command) {
-        const { employeeIds, year, month, performedBy } = command.data;
+        const { year, month, performedBy } = command.data;
         return await this.dataSource.transaction(async (manager) => {
             try {
-                this.logger.log(`월간 요약 생성 시작: year=${year}, month=${month}, 직원 수=${employeeIds.length}`);
-                this.logger.log(`✅ 월간 요약 생성 완료`);
+                const yearNum = parseInt(year);
+                const monthNum = parseInt(month);
+                const startDate = (0, date_fns_1.startOfMonth)(new Date(yearNum, monthNum - 1, 1));
+                const endDate = (0, date_fns_1.endOfMonth)(new Date(yearNum, monthNum - 1, 1));
+                const startDateStr = (0, date_fns_1.format)(startDate, 'yyyy-MM-dd');
+                const endDateStr = (0, date_fns_1.format)(endDate, 'yyyy-MM-dd');
+                const yyyymm = `${year}-${month.padStart(2, '0')}`;
+                await this.해당연월월간요약소프트삭제(yyyymm, performedBy, manager);
+                const employeesWithDailySummaries = await manager
+                    .createQueryBuilder(daily_event_summary_entity_1.DailyEventSummary, 'daily')
+                    .select('DISTINCT daily.employee_id', 'employeeId')
+                    .where('daily.deleted_at IS NULL')
+                    .andWhere('daily.date >= :startDate', { startDate: startDateStr })
+                    .andWhere('daily.date <= :endDate', { endDate: endDateStr })
+                    .andWhere('daily.employee_id IS NOT NULL')
+                    .getRawMany();
+                const allEmployeeIds = employeesWithDailySummaries
+                    .map((row) => row.employeeId)
+                    .filter((id) => id !== null);
+                this.logger.log(`월간 요약 생성 시작: year=${year}, month=${month}, 일간 요약이 있는 직원 수=${allEmployeeIds.length}`);
+                if (allEmployeeIds.length === 0) {
+                    this.logger.warn(`해당 연월에 일간 요약이 있는 직원이 없습니다. year=${year}, month=${month}`);
+                    return {
+                        success: true,
+                        statistics: {
+                            monthlyEventSummaryCount: 0,
+                        },
+                    };
+                }
+                const allAttendanceTypes = await this.attendanceTypeService.목록조회한다();
+                const usedAttendances = await manager
+                    .createQueryBuilder(used_attendance_entity_1.UsedAttendance, 'ua')
+                    .leftJoinAndSelect('ua.attendanceType', 'at')
+                    .where('ua.deleted_at IS NULL')
+                    .andWhere('ua.used_at >= :startDate', { startDate: startDateStr })
+                    .andWhere('ua.used_at <= :endDate', { endDate: endDateStr })
+                    .andWhere('ua.employee_id IN (:...employeeIds)', { employeeIds: allEmployeeIds })
+                    .getMany();
+                let monthlyEventSummaryCount = 0;
+                for (const employeeId of allEmployeeIds) {
+                    const dailySummaries = await manager
+                        .createQueryBuilder(daily_event_summary_entity_1.DailyEventSummary, 'daily')
+                        .leftJoinAndSelect('daily.employee', 'employee')
+                        .where('daily.deleted_at IS NULL')
+                        .andWhere('daily.employee_id = :employeeId', { employeeId })
+                        .andWhere('daily.date >= :startDate', { startDate: startDateStr })
+                        .andWhere('daily.date <= :endDate', { endDate: endDateStr })
+                        .orderBy('daily.date', 'ASC')
+                        .getMany();
+                    if (dailySummaries.length === 0) {
+                        this.logger.warn(`일간 요약이 없습니다. employeeId=${employeeId}, yyyymm=${yyyymm}`);
+                        continue;
+                    }
+                    const employeeUsedAttendances = usedAttendances.filter((ua) => ua.employee_id === employeeId);
+                    try {
+                        const monthlySummary = await this.monthlyEventSummaryService.생성또는갱신한다(employeeId, yyyymm, dailySummaries, employeeUsedAttendances, allAttendanceTypes, { manager });
+                        for (const dailySummary of dailySummaries) {
+                            dailySummary.업데이트한다(monthlySummary.id);
+                            dailySummary.수정자설정한다(performedBy);
+                            dailySummary.메타데이터업데이트한다(performedBy);
+                        }
+                        await manager.save(daily_event_summary_entity_1.DailyEventSummary, dailySummaries);
+                        monthlyEventSummaryCount++;
+                    }
+                    catch (error) {
+                        this.logger.error(`월간 요약 생성 실패 (employeeId=${employeeId}, yyyymm=${yyyymm}): ${error.message}`, error.stack);
+                        throw error;
+                    }
+                }
+                this.logger.log(`✅ 월간 요약 생성 완료: ${monthlyEventSummaryCount}건`);
                 return {
                     success: true,
                     statistics: {
-                        monthlyEventSummaryCount: 0,
+                        monthlyEventSummaryCount,
                     },
                 };
             }
@@ -1199,11 +1827,29 @@ let GenerateMonthlySummariesHandler = GenerateMonthlySummariesHandler_1 = class 
             }
         });
     }
+    async 해당연월월간요약소프트삭제(yyyymm, performedBy, manager) {
+        const existingSummaries = await manager
+            .createQueryBuilder(monthly_event_summary_entity_1.MonthlyEventSummary, 'mes')
+            .where('mes.yyyymm = :yyyymm', { yyyymm })
+            .withDeleted()
+            .getMany();
+        if (existingSummaries.length === 0) {
+            return;
+        }
+        const now = new Date();
+        for (const summary of existingSummaries) {
+            summary.deleted_at = now;
+            summary.수정자설정한다(performedBy);
+            summary.메타데이터업데이트한다(performedBy);
+        }
+        await manager.save(monthly_event_summary_entity_1.MonthlyEventSummary, existingSummaries);
+        this.logger.log(`해당 연월 월간요약 소프트 삭제 완료: ${existingSummaries.length}건 (yyyymm=${yyyymm})`);
+    }
 };
 exports.GenerateMonthlySummariesHandler = GenerateMonthlySummariesHandler;
 exports.GenerateMonthlySummariesHandler = GenerateMonthlySummariesHandler = GenerateMonthlySummariesHandler_1 = __decorate([
     (0, cqrs_1.CommandHandler)(generate_monthly_summaries_command_1.GenerateMonthlySummariesCommand),
-    __metadata("design:paramtypes", [typeof (_a = typeof monthly_event_summary_service_1.DomainMonthlyEventSummaryService !== "undefined" && monthly_event_summary_service_1.DomainMonthlyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _b : Object, typeof (_c = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _c : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof monthly_event_summary_service_1.DomainMonthlyEventSummaryService !== "undefined" && monthly_event_summary_service_1.DomainMonthlyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _b : Object, typeof (_c = typeof used_attendance_service_1.DomainUsedAttendanceService !== "undefined" && used_attendance_service_1.DomainUsedAttendanceService) === "function" ? _c : Object, typeof (_d = typeof attendance_type_service_1.DomainAttendanceTypeService !== "undefined" && attendance_type_service_1.DomainAttendanceTypeService) === "function" ? _d : Object, typeof (_e = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _e : Object])
 ], GenerateMonthlySummariesHandler);
 
 
@@ -1234,11 +1880,299 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ATTENDANCE_DATA_COMMAND_HANDLERS = void 0;
 __exportStar(__webpack_require__(/*! ./generate-daily-summaries.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-daily-summaries.command.ts"), exports);
 __exportStar(__webpack_require__(/*! ./generate-monthly-summaries.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./update-daily-summary.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.command.ts"), exports);
 __exportStar(__webpack_require__(/*! ./generate-daily-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-daily-summaries.handler.ts"), exports);
 __exportStar(__webpack_require__(/*! ./generate-monthly-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./update-daily-summary.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.handler.ts"), exports);
 const generate_daily_summaries_handler_1 = __webpack_require__(/*! ./generate-daily-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-daily-summaries.handler.ts");
 const generate_monthly_summaries_handler_1 = __webpack_require__(/*! ./generate-monthly-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.handler.ts");
-exports.ATTENDANCE_DATA_COMMAND_HANDLERS = [generate_daily_summaries_handler_1.GenerateDailySummariesHandler, generate_monthly_summaries_handler_1.GenerateMonthlySummariesHandler];
+const update_daily_summary_handler_1 = __webpack_require__(/*! ./update-daily-summary.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.handler.ts");
+exports.ATTENDANCE_DATA_COMMAND_HANDLERS = [
+    generate_daily_summaries_handler_1.GenerateDailySummariesHandler,
+    generate_monthly_summaries_handler_1.GenerateMonthlySummariesHandler,
+    update_daily_summary_handler_1.UpdateDailySummaryHandler,
+];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.command.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.command.ts ***!
+  \*************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateDailySummaryCommand = void 0;
+class UpdateDailySummaryCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.UpdateDailySummaryCommand = UpdateDailySummaryCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.handler.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.handler.ts ***!
+  \*************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UpdateDailySummaryHandler_1;
+var _a, _b, _c, _d, _e, _f;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateDailySummaryHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const update_daily_summary_command_1 = __webpack_require__(/*! ./update-daily-summary.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/update-daily-summary.command.ts");
+const daily_event_summary_service_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.service */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.service.ts");
+const daily_summary_change_history_service_1 = __webpack_require__(/*! ../../../../../domain/daily-summary-change-history/daily-summary-change-history.service */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.service.ts");
+const attendance_type_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-type/attendance-type.service */ "./apps/lams/src/refactoring/domain/attendance-type/attendance-type.service.ts");
+const work_time_policy_service_1 = __webpack_require__(/*! ../../../services/work-time-policy.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/work-time-policy.service.ts");
+const daily_summary_judgment_service_1 = __webpack_require__(/*! ../../../services/daily-summary-judgment.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/daily-summary-judgment.service.ts");
+const daily_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.entity */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.entity.ts");
+let UpdateDailySummaryHandler = UpdateDailySummaryHandler_1 = class UpdateDailySummaryHandler {
+    constructor(dailyEventSummaryService, dailySummaryChangeHistoryService, attendanceTypeService, workTimePolicyService, dailySummaryJudgmentService, dataSource) {
+        this.dailyEventSummaryService = dailyEventSummaryService;
+        this.dailySummaryChangeHistoryService = dailySummaryChangeHistoryService;
+        this.attendanceTypeService = attendanceTypeService;
+        this.workTimePolicyService = workTimePolicyService;
+        this.dailySummaryJudgmentService = dailySummaryJudgmentService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(UpdateDailySummaryHandler_1.name);
+    }
+    async execute(command) {
+        const { dailySummaryId, enter, leave, attendanceTypeIds, reason, performedBy } = command.data;
+        this.logger.log(`일간 요약 수정 시작: dailySummaryId=${dailySummaryId}`);
+        const isTimeUpdate = enter !== undefined || leave !== undefined;
+        const isAttendanceTypeUpdate = attendanceTypeIds !== undefined && attendanceTypeIds.length > 0;
+        if (!isTimeUpdate && !isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간(enter 또는 leave) 또는 근태유형(attendanceTypeIds) 중 하나는 필수입니다.');
+        }
+        if (isTimeUpdate && isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없습니다.');
+        }
+        if (isAttendanceTypeUpdate && attendanceTypeIds.length > 2) {
+            throw new common_1.BadRequestException('근태유형은 최대 2개까지 설정 가능합니다.');
+        }
+        return await this.dataSource.transaction(async (manager) => {
+            const dailySummary = await manager.findOne(daily_event_summary_entity_1.DailyEventSummary, {
+                where: { id: dailySummaryId },
+            });
+            if (!dailySummary) {
+                throw new common_1.NotFoundException(`일간 요약을 찾을 수 없습니다. (id: ${dailySummaryId})`);
+            }
+            let changeContent = '';
+            let updatedEnter = dailySummary.enter;
+            let updatedLeave = dailySummary.leave;
+            let workTime = null;
+            let usedAttendances = dailySummary.used_attendances || undefined;
+            const hasExistingAttendanceTypes = dailySummary.used_attendances && dailySummary.used_attendances.length > 0;
+            const existingAttendanceTypeTitles = hasExistingAttendanceTypes
+                ? dailySummary.used_attendances.map((ua) => ua.title).join(', ')
+                : null;
+            if (isTimeUpdate) {
+                const changeParts = [];
+                if (hasExistingAttendanceTypes) {
+                    changeParts.push(`근태유형(${existingAttendanceTypeTitles}) → 출퇴근시간`);
+                }
+                if (enter !== undefined && enter !== dailySummary.enter) {
+                    const oldValue = dailySummary.enter || '미설정';
+                    const newValue = enter;
+                    changeParts.push(`출근시간: ${oldValue} → ${newValue}`);
+                    updatedEnter = enter;
+                }
+                if (leave !== undefined && leave !== dailySummary.leave) {
+                    const oldValue = dailySummary.leave || '미설정';
+                    const newValue = leave;
+                    changeParts.push(`퇴근시간: ${oldValue} → ${newValue}`);
+                    updatedLeave = leave;
+                }
+                changeContent = changeParts.join(', ');
+                const updatedRealEnter = updatedEnter;
+                const updatedRealLeave = updatedLeave;
+                if (updatedEnter && updatedLeave) {
+                    workTime = this.근무시간을계산한다(updatedEnter, updatedLeave, []);
+                }
+                else {
+                    workTime = this.근무시간을계산한다(updatedEnter, updatedLeave, this.usedAttendances를UsedAttendance형태로변환(usedAttendances));
+                }
+                const 판정결과 = await this.dailySummaryJudgmentService.결근지각조퇴판정한다(dailySummary, updatedRealEnter, updatedRealLeave, usedAttendances, manager);
+                dailySummary.업데이트한다(undefined, undefined, updatedEnter, updatedLeave, updatedRealEnter, updatedRealLeave, undefined, 판정결과.isLate, 판정결과.isEarlyLeave, 판정결과.isAbsent, 판정결과.hasAttendanceConflict, 판정결과.hasAttendanceOverlap, workTime, undefined, undefined);
+            }
+            if (isAttendanceTypeUpdate) {
+                const attendanceTypes = await Promise.all(attendanceTypeIds.map((id) => this.attendanceTypeService.ID로조회한다(id)));
+                usedAttendances = attendanceTypes.map((attendanceType) => ({
+                    attendanceTypeId: attendanceType.id,
+                    title: attendanceType.title,
+                    workTime: attendanceType.workTime,
+                    isRecognizedWorkTime: attendanceType.isRecognizedWorkTime,
+                    startWorkTime: attendanceType.startWorkTime,
+                    endWorkTime: attendanceType.endWorkTime,
+                    deductedAnnualLeave: attendanceType.deductedAnnualLeave,
+                }));
+                const finalTimes = this.출입기록과근태기반출입시간을계산한다(null, null, attendanceTypes);
+                updatedEnter = finalTimes.enter;
+                updatedLeave = finalTimes.leave;
+                const recognizedAttendances = attendanceTypes
+                    .filter((at) => this.workTimePolicyService.isRecognizedWorkTime(at))
+                    .map((at) => ({ attendanceType: { work_time: at.workTime } }));
+                workTime = this.근무시간을계산한다(updatedEnter, updatedLeave, recognizedAttendances);
+                const newAttendanceTypeTitles = attendanceTypes.map((at) => at.title).join(', ');
+                const changeParts = [];
+                if (dailySummary.enter || dailySummary.leave) {
+                    const existingTime = `${dailySummary.enter || '미설정'} ~ ${dailySummary.leave || '미설정'}`;
+                    changeParts.push(`출퇴근시간(${existingTime}) → 근태유형`);
+                }
+                if (hasExistingAttendanceTypes) {
+                    const existingIds = new Set(dailySummary.used_attendances.map((ua) => ua.attendanceTypeId));
+                    const newIds = new Set(attendanceTypes.map((at) => at.id));
+                    const addedTypes = attendanceTypes.filter((at) => !existingIds.has(at.id));
+                    const removedTypes = dailySummary.used_attendances.filter((ua) => !newIds.has(ua.attendanceTypeId));
+                    if (removedTypes.length > 0 || addedTypes.length > 0) {
+                        const removedTitles = removedTypes.map((ua) => ua.title).join(', ');
+                        const addedTitles = addedTypes.map((at) => at.title).join(', ');
+                        if (removedTitles && addedTitles) {
+                            changeParts.push(`근태유형: ${removedTitles} → ${addedTitles}`);
+                        }
+                        else if (removedTitles) {
+                            changeParts.push(`근태유형: ${removedTitles} → 제거`);
+                        }
+                        else if (addedTitles) {
+                            changeParts.push(`근태유형: 추가 → ${addedTitles}`);
+                        }
+                    }
+                }
+                else {
+                    changeParts.push(`근태유형: 추가 → ${newAttendanceTypeTitles}`);
+                }
+                changeContent = changeParts.join(', ');
+                const 판정결과 = await this.dailySummaryJudgmentService.결근지각조퇴판정한다(dailySummary, null, null, usedAttendances, manager);
+                dailySummary.업데이트한다(undefined, undefined, updatedEnter, updatedLeave, null, null, undefined, 판정결과.isLate, 판정결과.isEarlyLeave, 판정결과.isAbsent, 판정결과.hasAttendanceConflict, 판정결과.hasAttendanceOverlap, workTime, undefined, usedAttendances);
+            }
+            dailySummary.수정자설정한다(performedBy);
+            dailySummary.메타데이터업데이트한다(performedBy);
+            const updatedSummary = await manager.save(dailySummary);
+            await this.dailySummaryChangeHistoryService.생성한다({
+                dailyEventSummaryId: dailySummaryId,
+                date: dailySummary.date,
+                content: changeContent,
+                changedBy: performedBy,
+                reason: reason,
+            }, manager);
+            this.logger.log(`일간 요약 수정 완료: dailySummaryId=${dailySummaryId}`);
+            return {
+                dailySummary: updatedSummary.DTO변환한다(),
+            };
+        });
+    }
+    근무시간을계산한다(enter, leave, recognizedAttendances) {
+        if (enter && leave) {
+            const enterTime = this.시간문자열을분으로변환(enter);
+            const leaveTime = this.시간문자열을분으로변환(leave);
+            const totalWorkMinutes = leaveTime - enterTime;
+            const requiredRestMinutes = this.법정휴식시간을계산한다(totalWorkMinutes);
+            const workTime = totalWorkMinutes - requiredRestMinutes;
+            return workTime > 0 ? workTime : 0;
+        }
+        if (recognizedAttendances.length > 0) {
+            const totalWorkTime = recognizedAttendances.reduce((sum, ua) => {
+                return sum + (ua.attendanceType?.work_time || 0);
+            }, 0);
+            return totalWorkTime > 0 ? totalWorkTime : null;
+        }
+        return null;
+    }
+    출입기록과근태기반출입시간을계산한다(realEnterTime, realLeaveTime, attendanceTypes) {
+        const compareTime = (time1, time2) => {
+            return time1.localeCompare(time2);
+        };
+        const enterTimeCandidates = [];
+        if (realEnterTime) {
+            enterTimeCandidates.push(realEnterTime);
+        }
+        attendanceTypes.forEach((attendanceType) => {
+            const startTime = attendanceType.startWorkTime;
+            if (startTime) {
+                const formattedStartTime = startTime.length === 5 ? startTime + ':00' : startTime;
+                enterTimeCandidates.push(formattedStartTime);
+            }
+        });
+        const leaveTimeCandidates = [];
+        if (realLeaveTime) {
+            leaveTimeCandidates.push(realLeaveTime);
+        }
+        attendanceTypes.forEach((attendanceType) => {
+            const endTime = attendanceType.endWorkTime;
+            if (endTime) {
+                const formattedEndTime = endTime.length === 5 ? endTime + ':00' : endTime;
+                leaveTimeCandidates.push(formattedEndTime);
+            }
+        });
+        let enterTime = null;
+        if (enterTimeCandidates.length > 0) {
+            enterTimeCandidates.sort(compareTime);
+            enterTime = enterTimeCandidates[0];
+        }
+        let leaveTime = null;
+        if (leaveTimeCandidates.length > 0) {
+            leaveTimeCandidates.sort(compareTime);
+            leaveTime = leaveTimeCandidates[leaveTimeCandidates.length - 1];
+        }
+        return {
+            enter: enterTime,
+            leave: leaveTime,
+        };
+    }
+    usedAttendances를UsedAttendance형태로변환(usedAttendances) {
+        if (!usedAttendances || usedAttendances.length === 0) {
+            return [];
+        }
+        return usedAttendances.map((ua) => ({
+            attendanceType: {
+                work_time: ua.workTime,
+            },
+        }));
+    }
+    시간문자열을분으로변환(timeStr) {
+        const parts = timeStr.split(':');
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        return hours * 60 + minutes;
+    }
+    법정휴식시간을계산한다(totalWorkMinutes) {
+        const FOUR_HOURS = 4 * 60;
+        const EIGHT_HOURS = 8 * 60;
+        if (totalWorkMinutes < FOUR_HOURS) {
+            return 0;
+        }
+        else if (totalWorkMinutes < EIGHT_HOURS) {
+            return 30;
+        }
+        else {
+            return 60;
+        }
+    }
+};
+exports.UpdateDailySummaryHandler = UpdateDailySummaryHandler;
+exports.UpdateDailySummaryHandler = UpdateDailySummaryHandler = UpdateDailySummaryHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(update_daily_summary_command_1.UpdateDailySummaryCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService !== "undefined" && daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService) === "function" ? _b : Object, typeof (_c = typeof attendance_type_service_1.DomainAttendanceTypeService !== "undefined" && attendance_type_service_1.DomainAttendanceTypeService) === "function" ? _c : Object, typeof (_d = typeof work_time_policy_service_1.WorkTimePolicyService !== "undefined" && work_time_policy_service_1.WorkTimePolicyService) === "function" ? _d : Object, typeof (_e = typeof daily_summary_judgment_service_1.DailySummaryJudgmentService !== "undefined" && daily_summary_judgment_service_1.DailySummaryJudgmentService) === "function" ? _e : Object, typeof (_f = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _f : Object])
+], UpdateDailySummaryHandler);
 
 
 /***/ }),
@@ -1266,6 +2200,168 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(/*! ./commands */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/index.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.handler.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.handler.ts ***!
+  \*************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetMonthlySummariesHandler_1;
+var _a, _b, _c, _d, _e, _f;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetMonthlySummariesHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_monthly_summaries_query_1 = __webpack_require__(/*! ./get-monthly-summaries.query */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query.ts");
+const monthly_event_summary_service_1 = __webpack_require__(/*! ../../../../../domain/monthly-event-summary/monthly-event-summary.service */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.service.ts");
+const daily_event_summary_service_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.service */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.service.ts");
+const daily_summary_change_history_service_1 = __webpack_require__(/*! ../../../../../domain/daily-summary-change-history/daily-summary-change-history.service */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.service.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+const employee_department_position_history_service_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.service */ "./libs/modules/employee-department-position-history/employee-department-position-history.service.ts");
+const monthly_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/monthly-event-summary/monthly-event-summary.entity */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.entity.ts");
+const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
+let GetMonthlySummariesHandler = GetMonthlySummariesHandler_1 = class GetMonthlySummariesHandler {
+    constructor(monthlyEventSummaryService, dailyEventSummaryService, dailySummaryChangeHistoryService, attendanceIssueService, employeeDepartmentPositionHistoryService, dataSource) {
+        this.monthlyEventSummaryService = monthlyEventSummaryService;
+        this.dailyEventSummaryService = dailyEventSummaryService;
+        this.dailySummaryChangeHistoryService = dailySummaryChangeHistoryService;
+        this.attendanceIssueService = attendanceIssueService;
+        this.employeeDepartmentPositionHistoryService = employeeDepartmentPositionHistoryService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetMonthlySummariesHandler_1.name);
+    }
+    async execute(query) {
+        const { year, month, departmentId } = query.data;
+        this.logger.log(`월간 요약 조회 시작: year=${year}, month=${month}, departmentId=${departmentId}`);
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const startDate = (0, date_fns_1.startOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const endDate = (0, date_fns_1.endOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const yyyymm = `${year}-${month.padStart(2, '0')}`;
+        const monthEndDate = (0, date_fns_1.format)(endDate, 'yyyy-MM-dd');
+        const employeeHistories = await this.employeeDepartmentPositionHistoryService.findByDepartmentAtDate(departmentId, monthEndDate);
+        const employeeIds = employeeHistories.map((eh) => eh.employeeId).filter((id) => id);
+        if (employeeIds.length === 0) {
+            this.logger.warn(`부서에 속한 직원이 없습니다. departmentId=${departmentId}`);
+            return {
+                monthlySummaries: [],
+            };
+        }
+        const monthlySummaries = await this.dataSource.manager
+            .createQueryBuilder(monthly_event_summary_entity_1.MonthlyEventSummary, 'monthly')
+            .leftJoinAndSelect('monthly.employee', 'employee')
+            .leftJoinAndSelect('monthly.dailyEventSummaries', 'daily')
+            .leftJoinAndSelect('daily.employee', 'dailyEmployee')
+            .where('monthly.deleted_at IS NULL')
+            .andWhere('monthly.yyyymm = :yyyymm', { yyyymm })
+            .andWhere('monthly.employee_id IN (:...employeeIds)', { employeeIds })
+            .orderBy('monthly.employee_number', 'ASC')
+            .addOrderBy('daily.date', 'ASC')
+            .getMany();
+        const allDailySummaries = [];
+        monthlySummaries.forEach((monthly) => {
+            if (monthly.dailyEventSummaries && monthly.dailyEventSummaries.length > 0) {
+                allDailySummaries.push(...monthly.dailyEventSummaries);
+            }
+        });
+        const dailySummaryIds = allDailySummaries.map((daily) => daily.id);
+        const historyMap = await this.dailySummaryChangeHistoryService.일간요약ID목록으로목록조회한다(dailySummaryIds);
+        const issueMap = await this.attendanceIssueService.일간요약ID목록으로목록조회한다(dailySummaryIds);
+        const monthlySummaryDTOs = monthlySummaries.map((monthly) => {
+            const monthlyDTO = monthly.DTO변환한다();
+            const dailySummaries = monthly.dailyEventSummaries || [];
+            const dailySummariesWithHistory = dailySummaries.map((daily) => {
+                const dailyDTO = daily.DTO변환한다();
+                const history = historyMap.get(daily.id) || [];
+                const issues = issueMap.get(daily.id) || [];
+                return {
+                    ...dailyDTO,
+                    history: history.length > 0 ? history : undefined,
+                    issues: issues.length > 0 ? issues : undefined,
+                };
+            });
+            return {
+                ...monthlyDTO,
+                dailySummaries: dailySummariesWithHistory,
+            };
+        });
+        this.logger.log(`월간 요약 조회 완료: monthly=${monthlySummaryDTOs.length}건`);
+        return {
+            monthlySummaries: monthlySummaryDTOs,
+        };
+    }
+};
+exports.GetMonthlySummariesHandler = GetMonthlySummariesHandler;
+exports.GetMonthlySummariesHandler = GetMonthlySummariesHandler = GetMonthlySummariesHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_monthly_summaries_query_1.GetMonthlySummariesQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof monthly_event_summary_service_1.DomainMonthlyEventSummaryService !== "undefined" && monthly_event_summary_service_1.DomainMonthlyEventSummaryService) === "function" ? _a : Object, typeof (_b = typeof daily_event_summary_service_1.DomainDailyEventSummaryService !== "undefined" && daily_event_summary_service_1.DomainDailyEventSummaryService) === "function" ? _b : Object, typeof (_c = typeof daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService !== "undefined" && daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService) === "function" ? _c : Object, typeof (_d = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _d : Object, typeof (_e = typeof employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService !== "undefined" && employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService) === "function" ? _e : Object, typeof (_f = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _f : Object])
+], GetMonthlySummariesHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query.ts":
+/*!***********************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query.ts ***!
+  \***********************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetMonthlySummariesQuery = void 0;
+class GetMonthlySummariesQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetMonthlySummariesQuery = GetMonthlySummariesQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/index.ts":
+/*!*************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/index.ts ***!
+  \*************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ATTENDANCE_DATA_QUERY_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./get-monthly-summaries.query */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-monthly-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.handler.ts"), exports);
+const get_monthly_summaries_handler_1 = __webpack_require__(/*! ./get-monthly-summaries.handler */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.handler.ts");
+exports.ATTENDANCE_DATA_QUERY_HANDLERS = [get_monthly_summaries_handler_1.GetMonthlySummariesHandler];
 
 
 /***/ }),
@@ -1295,8 +2391,204 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QUERY_HANDLERS = exports.COMMAND_HANDLERS = void 0;
 __exportStar(__webpack_require__(/*! ./attendance-data */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/index.ts"), exports);
 const attendance_data_1 = __webpack_require__(/*! ./attendance-data */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/index.ts");
+const queries_1 = __webpack_require__(/*! ./attendance-data/queries */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/index.ts");
 exports.COMMAND_HANDLERS = [...attendance_data_1.ATTENDANCE_DATA_COMMAND_HANDLERS];
-exports.QUERY_HANDLERS = [];
+exports.QUERY_HANDLERS = [...queries_1.ATTENDANCE_DATA_QUERY_HANDLERS];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-data-context/services/daily-summary-judgment.service.ts":
+/*!**************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-data-context/services/daily-summary-judgment.service.ts ***!
+  \**************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DailySummaryJudgmentService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
+const holiday_info_service_1 = __webpack_require__(/*! ../../../domain/holiday-info/holiday-info.service */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.service.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+const work_time_policy_service_1 = __webpack_require__(/*! ./work-time-policy.service */ "./apps/lams/src/refactoring/context/attendance-data-context/services/work-time-policy.service.ts");
+const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
+let DailySummaryJudgmentService = class DailySummaryJudgmentService {
+    constructor(holidayInfoService, workTimeOverrideService, workTimePolicyService) {
+        this.holidayInfoService = holidayInfoService;
+        this.workTimeOverrideService = workTimeOverrideService;
+        this.workTimePolicyService = workTimePolicyService;
+    }
+    async 결근지각조퇴판정한다(dailySummary, realEnter, realLeave, usedAttendances, manager) {
+        const dateStr = dailySummary.date;
+        let isBeforeHireDate = false;
+        let isAfterTerminationDate = false;
+        if (dailySummary.employee_id && manager) {
+            const employee = await manager.findOne(employee_entity_1.Employee, {
+                where: { id: dailySummary.employee_id },
+            });
+            if (employee) {
+                const hireDate = employee.hireDate ? (0, date_fns_1.format)(new Date(employee.hireDate), 'yyyy-MM-dd') : null;
+                const terminationDate = employee.status === '퇴사' && employee.terminationDate
+                    ? (0, date_fns_1.format)(new Date(employee.terminationDate), 'yyyy-MM-dd')
+                    : null;
+                isBeforeHireDate = hireDate ? dateStr < hireDate : false;
+                isAfterTerminationDate = terminationDate ? dateStr > terminationDate : false;
+            }
+        }
+        const holidays = await this.holidayInfoService.목록조회한다();
+        const holidaySet = new Set(holidays.map((h) => h.holidayDate));
+        const isHoliday = holidaySet.has(dateStr) || this.주말여부확인(dateStr);
+        const recognizedAttendances = usedAttendances
+            ?.filter((ua) => ua.isRecognizedWorkTime)
+            .map((ua) => ({
+            attendanceType: {
+                work_time: ua.workTime,
+                start_work_time: ua.startWorkTime,
+                end_work_time: ua.endWorkTime,
+                is_recognized_work_time: ua.isRecognizedWorkTime,
+                startWorkTime: ua.startWorkTime,
+                endWorkTime: ua.endWorkTime,
+            },
+        })) || [];
+        let isAbsent = false;
+        if (isBeforeHireDate || isAfterTerminationDate) {
+            isAbsent = false;
+        }
+        else if (isHoliday) {
+            isAbsent = false;
+        }
+        else if (recognizedAttendances.length > 0 || (realEnter && realLeave)) {
+            isAbsent = false;
+        }
+        else {
+            isAbsent = true;
+        }
+        let isLate = false;
+        let isEarlyLeave = false;
+        if (realEnter && realLeave) {
+            const hasMorningRecognized = this.workTimePolicyService.hasMorningRecognized(recognizedAttendances);
+            const hasAfternoonRecognized = this.workTimePolicyService.hasAfternoonRecognized(recognizedAttendances);
+            const enterHHMMSS = this.HHMMSS를HHMMSS로변환(realEnter);
+            const leaveHHMMSS = this.HHMMSS를HHMMSS로변환(realLeave);
+            const workTimeOverride = await this.workTimeOverrideService.날짜로조회한다(dateStr, manager);
+            isLate = this.workTimePolicyService.isLate(enterHHMMSS, dateStr, hasMorningRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate, workTimeOverride);
+            isEarlyLeave = this.workTimePolicyService.isEarlyLeave(leaveHHMMSS, dateStr, hasAfternoonRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate, workTimeOverride);
+        }
+        const { hasAttendanceConflict, hasAttendanceOverlap } = this.근태충돌겹침판정한다(usedAttendances);
+        return {
+            isAbsent,
+            isLate,
+            isEarlyLeave,
+            hasAttendanceConflict,
+            hasAttendanceOverlap,
+        };
+    }
+    근태충돌겹침판정한다(usedAttendances) {
+        if (!usedAttendances || usedAttendances.length < 2) {
+            return {
+                hasAttendanceConflict: false,
+                hasAttendanceOverlap: false,
+            };
+        }
+        const attendancesWithTimeRange = usedAttendances.filter((ua) => ua.startWorkTime && ua.endWorkTime);
+        if (attendancesWithTimeRange.length < 2) {
+            return {
+                hasAttendanceConflict: false,
+                hasAttendanceOverlap: false,
+            };
+        }
+        const 연차근태 = attendancesWithTimeRange.filter((ua) => ua.title.includes('연차'));
+        const 반차근태 = attendancesWithTimeRange.filter((ua) => ua.title.includes('반차'));
+        const 출장근태 = attendancesWithTimeRange.filter((ua) => ua.title.includes('출장'));
+        const 조합목록 = [];
+        for (const 연차 of 연차근태) {
+            for (const 반차 of 반차근태) {
+                조합목록.push({ att1: 연차, att2: 반차 });
+            }
+        }
+        for (const 연차 of 연차근태) {
+            for (const 출장 of 출장근태) {
+                조합목록.push({ att1: 연차, att2: 출장 });
+            }
+        }
+        if (조합목록.length === 0) {
+            return {
+                hasAttendanceConflict: false,
+                hasAttendanceOverlap: false,
+            };
+        }
+        let hasConflict = false;
+        let hasOverlap = false;
+        for (const { att1, att2 } of 조합목록) {
+            const timeRange1 = {
+                start: this.시간을분으로변환(att1.startWorkTime),
+                end: this.시간을분으로변환(att1.endWorkTime),
+            };
+            const timeRange2 = {
+                start: this.시간을분으로변환(att2.startWorkTime),
+                end: this.시간을분으로변환(att2.endWorkTime),
+            };
+            const isConflict = timeRange1.start === timeRange2.start && timeRange1.end === timeRange2.end;
+            const isOverlapping = this.시간범위가겹치는가(timeRange1, timeRange2);
+            if (isConflict) {
+                hasConflict = true;
+            }
+            else if (isOverlapping) {
+                hasOverlap = true;
+            }
+        }
+        return {
+            hasAttendanceConflict: hasConflict,
+            hasAttendanceOverlap: hasOverlap && !hasConflict,
+        };
+    }
+    시간을분으로변환(timeStr) {
+        if (!timeStr || timeStr.length < 8) {
+            return 0;
+        }
+        const parts = timeStr.split(':');
+        if (parts.length !== 3) {
+            return 0;
+        }
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        return hours * 60 + minutes;
+    }
+    시간범위가겹치는가(range1, range2) {
+        if (range1.start === range2.start && range1.end === range2.end) {
+            return false;
+        }
+        return ((range1.start >= range2.start && range1.start < range2.end) ||
+            (range2.start >= range1.start && range2.start < range1.end));
+    }
+    HHMMSS를HHMMSS로변환(hhmmss) {
+        if (!hhmmss || hhmmss.length !== 8) {
+            return hhmmss;
+        }
+        return hhmmss.replace(/:/g, '');
+    }
+    주말여부확인(dateString) {
+        const date = new Date(dateString);
+        const dayOfWeek = date.getDay();
+        return dayOfWeek === 0 || dayOfWeek === 6;
+    }
+};
+exports.DailySummaryJudgmentService = DailySummaryJudgmentService;
+exports.DailySummaryJudgmentService = DailySummaryJudgmentService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _a : Object, typeof (_b = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _b : Object, typeof (_c = typeof work_time_policy_service_1.WorkTimePolicyService !== "undefined" && work_time_policy_service_1.WorkTimePolicyService) === "function" ? _c : Object])
+], DailySummaryJudgmentService);
 
 
 /***/ }),
@@ -1366,7 +2658,19 @@ let WorkTimePolicyService = class WorkTimePolicyService {
     hasFullDayRecognized(attendances) {
         return attendances.some((ua) => this.isFullDayRecognized(ua.attendanceType));
     }
-    isLate(enterTime, hasMorningRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate) {
+    getWorkStartTime(date, workTimeOverride) {
+        if (workTimeOverride?.startWorkTime) {
+            return workTimeOverride.startWorkTime;
+        }
+        return this.NORMAL_WORK_START_TIME;
+    }
+    getWorkEndTime(date, workTimeOverride) {
+        if (workTimeOverride?.endWorkTime) {
+            return workTimeOverride.endWorkTime;
+        }
+        return this.NORMAL_WORK_END_TIME;
+    }
+    isLate(enterTime, date, hasMorningRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate, workTimeOverride) {
         if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
             return false;
         }
@@ -1374,9 +2678,10 @@ let WorkTimePolicyService = class WorkTimePolicyService {
             return false;
         }
         const enterTimeFormatted = this.HHMMSS를HHMMSS로변환(enterTime);
-        return enterTimeFormatted > this.NORMAL_WORK_START_TIME;
+        const workStartTime = this.getWorkStartTime(date, workTimeOverride);
+        return enterTimeFormatted > workStartTime;
     }
-    isEarlyLeave(leaveTime, hasAfternoonRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate) {
+    isEarlyLeave(leaveTime, date, hasAfternoonRecognized, isHoliday, isBeforeHireDate, isAfterTerminationDate, workTimeOverride) {
         if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
             return false;
         }
@@ -1384,7 +2689,8 @@ let WorkTimePolicyService = class WorkTimePolicyService {
             return false;
         }
         const leaveTimeFormatted = this.HHMMSS를HHMMSS로변환(leaveTime);
-        return leaveTimeFormatted < this.NORMAL_WORK_END_TIME;
+        const workEndTime = this.getWorkEndTime(date, workTimeOverride);
+        return leaveTimeFormatted < workEndTime;
     }
     HHMMSS를HHMMSS로변환(hhmmss) {
         if (!hhmmss || hhmmss.length !== 6) {
@@ -1397,6 +2703,1565 @@ exports.WorkTimePolicyService = WorkTimePolicyService;
 exports.WorkTimePolicyService = WorkTimePolicyService = __decorate([
     (0, common_1.Injectable)()
 ], WorkTimePolicyService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.module.ts":
+/*!*******************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.module.ts ***!
+  \*******************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueContextModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const attendance_issue_context_service_1 = __webpack_require__(/*! ./attendance-issue-context.service */ "./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.service.ts");
+const handlers_1 = __webpack_require__(/*! ./handlers */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/index.ts");
+const attendance_issue_module_1 = __webpack_require__(/*! ../../domain/attendance-issue/attendance-issue.module */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.module.ts");
+let AttendanceIssueContextModule = class AttendanceIssueContextModule {
+};
+exports.AttendanceIssueContextModule = AttendanceIssueContextModule;
+exports.AttendanceIssueContextModule = AttendanceIssueContextModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            cqrs_1.CqrsModule,
+            attendance_issue_module_1.DomainAttendanceIssueModule,
+        ],
+        providers: [
+            attendance_issue_context_service_1.AttendanceIssueContextService,
+            ...handlers_1.COMMAND_HANDLERS,
+            ...handlers_1.QUERY_HANDLERS,
+        ],
+        exports: [attendance_issue_context_service_1.AttendanceIssueContextService],
+    })
+], AttendanceIssueContextModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.service.ts":
+/*!********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/attendance-issue-context.service.ts ***!
+  \********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueContextService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const attendance_issue_1 = __webpack_require__(/*! ./handlers/attendance-issue */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/index.ts");
+let AttendanceIssueContextService = class AttendanceIssueContextService {
+    constructor(commandBus, queryBus) {
+        this.commandBus = commandBus;
+        this.queryBus = queryBus;
+    }
+    async 근태이슈목록을조회한다(query) {
+        const queryInstance = new attendance_issue_1.GetAttendanceIssuesQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+    async 근태이슈를조회한다(query) {
+        const queryInstance = new attendance_issue_1.GetAttendanceIssueQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+    async 근태이슈사유를수정한다(command) {
+        const commandInstance = new attendance_issue_1.UpdateAttendanceIssueDescriptionCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 근태이슈수정정보를설정한다(command) {
+        const commandInstance = new attendance_issue_1.UpdateAttendanceIssueCorrectionCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 근태이슈를반영한다(command) {
+        const commandInstance = new attendance_issue_1.ApplyAttendanceIssueCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 근태이슈를미반영처리한다(command) {
+        const commandInstance = new attendance_issue_1.RejectAttendanceIssueCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+};
+exports.AttendanceIssueContextService = AttendanceIssueContextService;
+exports.AttendanceIssueContextService = AttendanceIssueContextService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _b : Object])
+], AttendanceIssueContextService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.command.ts":
+/*!*****************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.command.ts ***!
+  \*****************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ApplyAttendanceIssueCommand = void 0;
+class ApplyAttendanceIssueCommand {
+    constructor(command) {
+        this.command = command;
+    }
+}
+exports.ApplyAttendanceIssueCommand = ApplyAttendanceIssueCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.handler.ts":
+/*!*****************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.handler.ts ***!
+  \*****************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ApplyAttendanceIssueHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const apply_attendance_issue_command_1 = __webpack_require__(/*! ./apply-attendance-issue.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.command.ts");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+let ApplyAttendanceIssueHandler = class ApplyAttendanceIssueHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(command) {
+        const { command: cmd } = command;
+        const issue = await this.attendanceIssueService.ID로조회한다(cmd.id);
+        if (issue.status === attendance_issue_types_1.AttendanceIssueStatus.APPLIED) {
+            throw new common_1.BadRequestException('이미 반영된 이슈입니다.');
+        }
+        const hasCorrection = issue.correctedEnterTime ||
+            issue.correctedLeaveTime ||
+            (issue.correctedAttendanceTypeIds && issue.correctedAttendanceTypeIds.length > 0);
+        if (!hasCorrection) {
+            throw new common_1.BadRequestException('수정 정보가 설정되지 않았습니다. 먼저 수정 정보를 설정해주세요.');
+        }
+        const updatedIssue = await this.attendanceIssueService.반영처리한다(cmd.id, cmd.confirmedBy, cmd.userId);
+        return { issue: updatedIssue };
+    }
+};
+exports.ApplyAttendanceIssueHandler = ApplyAttendanceIssueHandler;
+exports.ApplyAttendanceIssueHandler = ApplyAttendanceIssueHandler = __decorate([
+    (0, cqrs_1.CommandHandler)(apply_attendance_issue_command_1.ApplyAttendanceIssueCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], ApplyAttendanceIssueHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/index.ts":
+/*!****************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/index.ts ***!
+  \****************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./update-attendance-issue-description.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./update-attendance-issue-description.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./update-attendance-issue-correction.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./update-attendance-issue-correction.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./apply-attendance-issue.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./apply-attendance-issue.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/apply-attendance-issue.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./reject-attendance-issue.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./reject-attendance-issue.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.handler.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.command.ts":
+/*!******************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.command.ts ***!
+  \******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RejectAttendanceIssueCommand = void 0;
+class RejectAttendanceIssueCommand {
+    constructor(command) {
+        this.command = command;
+    }
+}
+exports.RejectAttendanceIssueCommand = RejectAttendanceIssueCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.handler.ts":
+/*!******************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.handler.ts ***!
+  \******************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RejectAttendanceIssueHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const reject_attendance_issue_command_1 = __webpack_require__(/*! ./reject-attendance-issue.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/reject-attendance-issue.command.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+let RejectAttendanceIssueHandler = class RejectAttendanceIssueHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(command) {
+        const { command: cmd } = command;
+        const issue = await this.attendanceIssueService.ID로조회한다(cmd.id);
+        if (issue.status === attendance_issue_types_1.AttendanceIssueStatus.APPLIED) {
+            throw new common_1.BadRequestException('이미 반영된 이슈는 미반영 처리할 수 없습니다.');
+        }
+        const updatedIssue = await this.attendanceIssueService.미반영처리한다(cmd.id, cmd.rejectionReason, cmd.userId);
+        return { issue: updatedIssue };
+    }
+};
+exports.RejectAttendanceIssueHandler = RejectAttendanceIssueHandler;
+exports.RejectAttendanceIssueHandler = RejectAttendanceIssueHandler = __decorate([
+    (0, cqrs_1.CommandHandler)(reject_attendance_issue_command_1.RejectAttendanceIssueCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], RejectAttendanceIssueHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.command.ts":
+/*!*****************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.command.ts ***!
+  \*****************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateAttendanceIssueCorrectionCommand = void 0;
+class UpdateAttendanceIssueCorrectionCommand {
+    constructor(command) {
+        this.command = command;
+    }
+}
+exports.UpdateAttendanceIssueCorrectionCommand = UpdateAttendanceIssueCorrectionCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.handler.ts":
+/*!*****************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.handler.ts ***!
+  \*****************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateAttendanceIssueCorrectionHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const update_attendance_issue_correction_command_1 = __webpack_require__(/*! ./update-attendance-issue-correction.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-correction.command.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+let UpdateAttendanceIssueCorrectionHandler = class UpdateAttendanceIssueCorrectionHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(command) {
+        const { command: cmd } = command;
+        const issue = await this.attendanceIssueService.ID로조회한다(cmd.id);
+        if (issue.status === attendance_issue_types_1.AttendanceIssueStatus.APPLIED) {
+            throw new common_1.BadRequestException('이미 반영된 이슈는 수정할 수 없습니다.');
+        }
+        const isTimeUpdate = cmd.correctedEnterTime !== undefined || cmd.correctedLeaveTime !== undefined;
+        const isAttendanceTypeUpdate = cmd.correctedAttendanceTypeIds !== undefined;
+        if (!isTimeUpdate && !isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간(correctedEnterTime 또는 correctedLeaveTime) 또는 근태유형(correctedAttendanceTypeIds) 중 하나는 필수입니다.');
+        }
+        if (isTimeUpdate && isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없습니다.');
+        }
+        if (isAttendanceTypeUpdate && cmd.correctedAttendanceTypeIds.length > 2) {
+            throw new common_1.BadRequestException('근태유형은 최대 2개까지 설정 가능합니다.');
+        }
+        const updatedIssue = await this.attendanceIssueService.수정한다(cmd.id, {
+            correctedEnterTime: cmd.correctedEnterTime,
+            correctedLeaveTime: cmd.correctedLeaveTime,
+            correctedAttendanceTypeIds: cmd.correctedAttendanceTypeIds,
+            status: attendance_issue_types_1.AttendanceIssueStatus.NOT_APPLIED,
+        }, cmd.userId);
+        return { issue: updatedIssue };
+    }
+};
+exports.UpdateAttendanceIssueCorrectionHandler = UpdateAttendanceIssueCorrectionHandler;
+exports.UpdateAttendanceIssueCorrectionHandler = UpdateAttendanceIssueCorrectionHandler = __decorate([
+    (0, cqrs_1.CommandHandler)(update_attendance_issue_correction_command_1.UpdateAttendanceIssueCorrectionCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], UpdateAttendanceIssueCorrectionHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.command.ts":
+/*!******************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.command.ts ***!
+  \******************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateAttendanceIssueDescriptionCommand = void 0;
+class UpdateAttendanceIssueDescriptionCommand {
+    constructor(command) {
+        this.command = command;
+    }
+}
+exports.UpdateAttendanceIssueDescriptionCommand = UpdateAttendanceIssueDescriptionCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.handler.ts":
+/*!******************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.handler.ts ***!
+  \******************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateAttendanceIssueDescriptionHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const update_attendance_issue_description_command_1 = __webpack_require__(/*! ./update-attendance-issue-description.command */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/update-attendance-issue-description.command.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+let UpdateAttendanceIssueDescriptionHandler = class UpdateAttendanceIssueDescriptionHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(command) {
+        const { command: cmd } = command;
+        const issue = await this.attendanceIssueService.ID로조회한다(cmd.id);
+        if (issue.status === attendance_issue_types_1.AttendanceIssueStatus.APPLIED) {
+            throw new common_1.BadRequestException('이미 반영된 이슈는 수정할 수 없습니다.');
+        }
+        const updatedIssue = await this.attendanceIssueService.수정한다(cmd.id, {
+            description: cmd.description,
+            status: attendance_issue_types_1.AttendanceIssueStatus.NOT_APPLIED,
+        }, cmd.userId);
+        return { issue: updatedIssue };
+    }
+};
+exports.UpdateAttendanceIssueDescriptionHandler = UpdateAttendanceIssueDescriptionHandler;
+exports.UpdateAttendanceIssueDescriptionHandler = UpdateAttendanceIssueDescriptionHandler = __decorate([
+    (0, cqrs_1.CommandHandler)(update_attendance_issue_description_command_1.UpdateAttendanceIssueDescriptionCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], UpdateAttendanceIssueDescriptionHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/index.ts":
+/*!*******************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/index.ts ***!
+  \*******************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./commands */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/index.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetAttendanceIssueHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const get_attendance_issue_query_1 = __webpack_require__(/*! ./get-attendance-issue.query */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.query.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+let GetAttendanceIssueHandler = class GetAttendanceIssueHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(query) {
+        const { query: params } = query;
+        const issue = await this.attendanceIssueService.ID로조회한다(params.id);
+        return { issue };
+    }
+};
+exports.GetAttendanceIssueHandler = GetAttendanceIssueHandler;
+exports.GetAttendanceIssueHandler = GetAttendanceIssueHandler = __decorate([
+    (0, cqrs_1.QueryHandler)(get_attendance_issue_query_1.GetAttendanceIssueQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], GetAttendanceIssueHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.query.ts":
+/*!************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.query.ts ***!
+  \************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetAttendanceIssueQuery = void 0;
+class GetAttendanceIssueQuery {
+    constructor(query) {
+        this.query = query;
+    }
+}
+exports.GetAttendanceIssueQuery = GetAttendanceIssueQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.handler.ts":
+/*!***************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.handler.ts ***!
+  \***************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetAttendanceIssuesHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const get_attendance_issues_query_1 = __webpack_require__(/*! ./get-attendance-issues.query */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.query.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+let GetAttendanceIssuesHandler = class GetAttendanceIssuesHandler {
+    constructor(attendanceIssueService) {
+        this.attendanceIssueService = attendanceIssueService;
+    }
+    async execute(query) {
+        const { query: params } = query;
+        let issues = [];
+        if (params.employeeId) {
+            issues = await this.attendanceIssueService.직원ID로조회한다(params.employeeId);
+        }
+        else if (params.startDate && params.endDate) {
+            issues = await this.attendanceIssueService.날짜범위로조회한다(params.startDate, params.endDate);
+        }
+        else if (params.status) {
+            issues = await this.attendanceIssueService.상태별목록조회한다(params.status);
+        }
+        else {
+            issues = await this.attendanceIssueService.요청중목록조회한다();
+        }
+        if (params.status && (params.employeeId || (params.startDate && params.endDate))) {
+            issues = issues.filter((issue) => issue.status === params.status);
+        }
+        return {
+            issues,
+            total: issues.length,
+        };
+    }
+};
+exports.GetAttendanceIssuesHandler = GetAttendanceIssuesHandler;
+exports.GetAttendanceIssuesHandler = GetAttendanceIssuesHandler = __decorate([
+    (0, cqrs_1.QueryHandler)(get_attendance_issues_query_1.GetAttendanceIssuesQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _a : Object])
+], GetAttendanceIssuesHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.query.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.query.ts ***!
+  \*************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetAttendanceIssuesQuery = void 0;
+class GetAttendanceIssuesQuery {
+    constructor(query) {
+        this.query = query;
+    }
+}
+exports.GetAttendanceIssuesQuery = GetAttendanceIssuesQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/index.ts":
+/*!***************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/index.ts ***!
+  \***************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./get-attendance-issues.query */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-attendance-issues.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issues.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-attendance-issue.query */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-attendance-issue.handler */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/get-attendance-issue.handler.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/index.ts":
+/*!**************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/attendance-issue-context/handlers/index.ts ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.COMMAND_HANDLERS = exports.QUERY_HANDLERS = void 0;
+const queries_1 = __webpack_require__(/*! ./attendance-issue/queries */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/queries/index.ts");
+const commands_1 = __webpack_require__(/*! ./attendance-issue/commands */ "./apps/lams/src/refactoring/context/attendance-issue-context/handlers/attendance-issue/commands/index.ts");
+exports.QUERY_HANDLERS = [queries_1.GetAttendanceIssuesHandler, queries_1.GetAttendanceIssueHandler];
+exports.COMMAND_HANDLERS = [
+    commands_1.UpdateAttendanceIssueDescriptionHandler,
+    commands_1.UpdateAttendanceIssueCorrectionHandler,
+    commands_1.ApplyAttendanceIssueHandler,
+    commands_1.RejectAttendanceIssueHandler,
+];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.module.ts":
+/*!*************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.module.ts ***!
+  \*************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DataSnapshotContextModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const data_snapshot_context_service_1 = __webpack_require__(/*! ./data-snapshot-context.service */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.service.ts");
+const handlers_1 = __webpack_require__(/*! ./handlers */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/index.ts");
+const data_snapshot_info_module_1 = __webpack_require__(/*! ../../domain/data-snapshot-info/data-snapshot-info.module */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.module.ts");
+const attendance_issue_module_1 = __webpack_require__(/*! ../../domain/attendance-issue/attendance-issue.module */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.module.ts");
+const daily_summary_change_history_module_1 = __webpack_require__(/*! ../../domain/daily-summary-change-history/daily-summary-change-history.module */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.module.ts");
+const attendance_data_context_module_1 = __webpack_require__(/*! ../attendance-data-context/attendance-data-context.module */ "./apps/lams/src/refactoring/context/attendance-data-context/attendance-data-context.module.ts");
+const employee_department_position_history_module_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.module */ "./libs/modules/employee-department-position-history/employee-department-position-history.module.ts");
+let DataSnapshotContextModule = class DataSnapshotContextModule {
+};
+exports.DataSnapshotContextModule = DataSnapshotContextModule;
+exports.DataSnapshotContextModule = DataSnapshotContextModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            cqrs_1.CqrsModule,
+            data_snapshot_info_module_1.DomainDataSnapshotInfoModule,
+            attendance_issue_module_1.DomainAttendanceIssueModule,
+            daily_summary_change_history_module_1.DomainDailySummaryChangeHistoryModule,
+            attendance_data_context_module_1.AttendanceDataContextModule,
+            employee_department_position_history_module_1.DomainEmployeeDepartmentPositionHistoryModule,
+        ],
+        providers: [
+            data_snapshot_context_service_1.DataSnapshotContextService,
+            ...handlers_1.COMMAND_HANDLERS,
+            ...handlers_1.QUERY_HANDLERS,
+        ],
+        exports: [data_snapshot_context_service_1.DataSnapshotContextService],
+    })
+], DataSnapshotContextModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.service.ts":
+/*!**************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.service.ts ***!
+  \**************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DataSnapshotContextService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const handlers_1 = __webpack_require__(/*! ./handlers */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/index.ts");
+let DataSnapshotContextService = class DataSnapshotContextService {
+    constructor(commandBus, queryBus) {
+        this.commandBus = commandBus;
+        this.queryBus = queryBus;
+    }
+    async 근태스냅샷을저장한다(command) {
+        const commandInstance = new handlers_1.SaveAttendanceSnapshotCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 해당연월의모든부서기존월간요약스냅샷을저장한다(year, month, performedBy) {
+        const commandInstance = new handlers_1.SaveAllDepartmentsMonthlySnapshotCommand({
+            year,
+            month,
+            performedBy,
+        });
+        await this.commandBus.execute(commandInstance);
+    }
+    async 스냅샷으로부터복원한다(command) {
+        const commandInstance = new handlers_1.RestoreFromSnapshotCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 스냅샷목록을조회한다(query) {
+        const queryInstance = new handlers_1.GetSnapshotListQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+};
+exports.DataSnapshotContextService = DataSnapshotContextService;
+exports.DataSnapshotContextService = DataSnapshotContextService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _b : Object])
+], DataSnapshotContextService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/index.ts":
+/*!**********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/index.ts ***!
+  \**********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./save-attendance-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./save-attendance-snapshot.handler */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./save-all-departments-monthly-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./save-all-departments-monthly-snapshot.handler */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./restore-from-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./restore-from-snapshot.handler */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.handler.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.command.ts":
+/*!**********************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.command.ts ***!
+  \**********************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromSnapshotCommand = void 0;
+class RestoreFromSnapshotCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.RestoreFromSnapshotCommand = RestoreFromSnapshotCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.handler.ts":
+/*!**********************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.handler.ts ***!
+  \**********************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var RestoreFromSnapshotHandler_1;
+var _a, _b, _c, _d, _e, _f;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromSnapshotHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const restore_from_snapshot_command_1 = __webpack_require__(/*! ./restore-from-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/restore-from-snapshot.command.ts");
+const data_snapshot_info_service_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.service */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.service.ts");
+const data_snapshot_info_entity_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.entity */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.entity.ts");
+const attendance_issue_service_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.service */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.service.ts");
+const daily_summary_change_history_service_1 = __webpack_require__(/*! ../../../../../domain/daily-summary-change-history/daily-summary-change-history.service */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.service.ts");
+const attendance_issue_entity_1 = __webpack_require__(/*! ../../../../../domain/attendance-issue/attendance-issue.entity */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.entity.ts");
+const daily_summary_change_history_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-summary-change-history/daily-summary-change-history.entity */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.entity.ts");
+const daily_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/daily-event-summary/daily-event-summary.entity */ "./apps/lams/src/refactoring/domain/daily-event-summary/daily-event-summary.entity.ts");
+const typeorm_2 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const typeorm_3 = __webpack_require__(/*! typeorm */ "typeorm");
+const generate_daily_summaries_command_1 = __webpack_require__(/*! ../../../../attendance-data-context/handlers/attendance-data/commands/generate-daily-summaries.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-daily-summaries.command.ts");
+const generate_monthly_summaries_command_1 = __webpack_require__(/*! ../../../../attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.command */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/commands/generate-monthly-summaries.command.ts");
+let RestoreFromSnapshotHandler = RestoreFromSnapshotHandler_1 = class RestoreFromSnapshotHandler {
+    constructor(dataSnapshotInfoService, attendanceIssueService, dailySummaryChangeHistoryService, dataSnapshotInfoRepository, commandBus, dataSource) {
+        this.dataSnapshotInfoService = dataSnapshotInfoService;
+        this.attendanceIssueService = attendanceIssueService;
+        this.dailySummaryChangeHistoryService = dailySummaryChangeHistoryService;
+        this.dataSnapshotInfoRepository = dataSnapshotInfoRepository;
+        this.commandBus = commandBus;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(RestoreFromSnapshotHandler_1.name);
+    }
+    async execute(command) {
+        const { snapshotId, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`스냅샷으로부터 복원 시작: snapshotId=${snapshotId}`);
+                const snapshotEntity = await manager.findOne(data_snapshot_info_entity_1.DataSnapshotInfo, {
+                    where: { id: snapshotId },
+                    relations: ['dataSnapshotChildInfoList'],
+                });
+                if (!snapshotEntity) {
+                    throw new common_1.NotFoundException(`스냅샷을 찾을 수 없습니다. (snapshotId: ${snapshotId})`);
+                }
+                const { yyyy: year, mm: month } = snapshotEntity;
+                const yyyymm = `${year}-${month.padStart(2, '0')}`;
+                const snapshotChildren = snapshotEntity.dataSnapshotChildInfoList || [];
+                if (snapshotChildren.length === 0) {
+                    this.logger.warn(`스냅샷에 자식 데이터가 없습니다. snapshotId=${snapshotId}`);
+                    return {
+                        snapshotId,
+                        year,
+                        month,
+                        restoredCount: {
+                            monthlySummaryCount: 0,
+                            dailySummaryCount: 0,
+                        },
+                    };
+                }
+                const dailyEventSummaries = [];
+                const snapshotIssues = [];
+                const snapshotHistories = [];
+                snapshotChildren.forEach((child) => {
+                    try {
+                        const snapshotData = child.snapshot_data;
+                        if (snapshotData && snapshotData.dailySummaries && snapshotData.dailySummaries.length > 0) {
+                            snapshotData.dailySummaries.forEach((daily) => {
+                                dailyEventSummaries.push({
+                                    date: daily.date,
+                                    employee_id: daily.employeeId,
+                                    is_holiday: daily.isHoliday,
+                                    enter: daily.enter,
+                                    leave: daily.leave,
+                                    real_enter: daily.realEnter,
+                                    real_leave: daily.realLeave,
+                                    is_checked: daily.isChecked,
+                                    is_late: daily.isLate,
+                                    is_early_leave: daily.isEarlyLeave,
+                                    is_absent: daily.isAbsent,
+                                    work_time: daily.workTime,
+                                    note: daily.note,
+                                });
+                                const dailyWithIssues = daily;
+                                if (dailyWithIssues.issues &&
+                                    Array.isArray(dailyWithIssues.issues) &&
+                                    dailyWithIssues.issues.length > 0) {
+                                    dailyWithIssues.issues.forEach((issue) => {
+                                        snapshotIssues.push({
+                                            date: daily.date,
+                                            employee_id: daily.employeeId,
+                                            issue,
+                                        });
+                                    });
+                                }
+                                if (daily.history && daily.history.length > 0) {
+                                    daily.history.forEach((history) => {
+                                        snapshotHistories.push({
+                                            date: daily.date,
+                                            employee_id: daily.employeeId,
+                                            history,
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    }
+                    catch (error) {
+                        this.logger.error(`스냅샷 데이터 처리 실패 (childId=${child.id}): ${error.message}`, error.stack);
+                    }
+                });
+                if (dailyEventSummaries.length === 0) {
+                    this.logger.warn(`스냅샷에 일일 요약 데이터가 없습니다. snapshotId=${snapshotId}`);
+                    return {
+                        snapshotId,
+                        year,
+                        month,
+                        restoredCount: {
+                            monthlySummaryCount: 0,
+                            dailySummaryCount: 0,
+                        },
+                    };
+                }
+                const dailySummaryResult = await this.commandBus.execute(new generate_daily_summaries_command_1.GenerateDailySummariesCommand({
+                    year,
+                    month,
+                    performedBy,
+                    snapshotData: {
+                        dailyEventSummaries,
+                    },
+                }));
+                const restoredDailySummaries = await manager
+                    .createQueryBuilder(daily_event_summary_entity_1.DailyEventSummary, 'des')
+                    .where('des.deleted_at IS NULL')
+                    .andWhere('des.date >= :startDate', {
+                    startDate: `${year}-${month.padStart(2, '0')}-01`,
+                })
+                    .andWhere('des.date <= :endDate', {
+                    endDate: `${year}-${month.padStart(2, '0')}-31`,
+                })
+                    .getMany();
+                const dailySummaryMap = new Map();
+                restoredDailySummaries.forEach((summary) => {
+                    const key = `${summary.date}_${summary.employee_id}`;
+                    dailySummaryMap.set(key, summary);
+                });
+                let restoredIssueCount = 0;
+                for (const snapshotIssue of snapshotIssues) {
+                    const key = `${snapshotIssue.date}_${snapshotIssue.employee_id}`;
+                    const dailySummary = dailySummaryMap.get(key);
+                    if (!dailySummary) {
+                        continue;
+                    }
+                    try {
+                        let existingIssue = null;
+                        if (snapshotIssue.issue.id) {
+                            existingIssue = await manager.findOne(attendance_issue_entity_1.AttendanceIssue, {
+                                where: { id: snapshotIssue.issue.id },
+                                withDeleted: true,
+                            });
+                        }
+                        if (existingIssue) {
+                            existingIssue.deleted_at = null;
+                            existingIssue.employee_id = snapshotIssue.employee_id;
+                            existingIssue.date = snapshotIssue.date;
+                            existingIssue.daily_event_summary_id = dailySummary.id;
+                            existingIssue.problematic_enter_time = snapshotIssue.issue.problematicEnterTime;
+                            existingIssue.problematic_leave_time = snapshotIssue.issue.problematicLeaveTime;
+                            existingIssue.corrected_enter_time = snapshotIssue.issue.correctedEnterTime;
+                            existingIssue.corrected_leave_time = snapshotIssue.issue.correctedLeaveTime;
+                            existingIssue.problematic_attendance_type_ids =
+                                snapshotIssue.issue.problematicAttendanceTypeIds;
+                            existingIssue.corrected_attendance_type_ids =
+                                snapshotIssue.issue.correctedAttendanceTypeIds;
+                            existingIssue.description = snapshotIssue.issue.description;
+                            existingIssue.status = snapshotIssue.issue.status;
+                            existingIssue.confirmed_by = snapshotIssue.issue.confirmedBy;
+                            existingIssue.confirmed_at = snapshotIssue.issue.confirmedAt;
+                            existingIssue.resolved_at = snapshotIssue.issue.resolvedAt;
+                            existingIssue.rejection_reason = snapshotIssue.issue.rejectionReason;
+                            existingIssue.수정자설정한다(performedBy);
+                            existingIssue.메타데이터업데이트한다(performedBy);
+                            await manager.save(attendance_issue_entity_1.AttendanceIssue, existingIssue);
+                            restoredIssueCount++;
+                        }
+                        else {
+                            await this.attendanceIssueService.생성한다({
+                                employeeId: snapshotIssue.employee_id,
+                                date: snapshotIssue.date,
+                                dailyEventSummaryId: dailySummary.id,
+                                problematicEnterTime: snapshotIssue.issue.problematicEnterTime || undefined,
+                                problematicLeaveTime: snapshotIssue.issue.problematicLeaveTime || undefined,
+                                correctedEnterTime: snapshotIssue.issue.correctedEnterTime || undefined,
+                                correctedLeaveTime: snapshotIssue.issue.correctedLeaveTime || undefined,
+                                problematicAttendanceTypeIds: snapshotIssue.issue.problematicAttendanceTypeIds || undefined,
+                                correctedAttendanceTypeIds: snapshotIssue.issue.correctedAttendanceTypeIds || undefined,
+                                description: snapshotIssue.issue.description || undefined,
+                            }, manager);
+                            restoredIssueCount++;
+                        }
+                    }
+                    catch (error) {
+                        this.logger.error(`이슈 복원 실패 (date=${snapshotIssue.date}, employeeId=${snapshotIssue.employee_id}): ${error.message}`, error.stack);
+                    }
+                }
+                let restoredHistoryCount = 0;
+                for (const snapshotHistory of snapshotHistories) {
+                    const key = `${snapshotHistory.date}_${snapshotHistory.employee_id}`;
+                    const dailySummary = dailySummaryMap.get(key);
+                    if (!dailySummary) {
+                        continue;
+                    }
+                    try {
+                        let existingHistory = null;
+                        if (snapshotHistory.history.id) {
+                            existingHistory = await manager.findOne(daily_summary_change_history_entity_1.DailySummaryChangeHistory, {
+                                where: { id: snapshotHistory.history.id },
+                                withDeleted: true,
+                            });
+                        }
+                        if (existingHistory) {
+                            existingHistory.deleted_at = null;
+                            existingHistory.daily_event_summary_id = dailySummary.id;
+                            existingHistory.date = snapshotHistory.date;
+                            existingHistory.content = snapshotHistory.history.content;
+                            existingHistory.changed_by = snapshotHistory.history.changedBy;
+                            existingHistory.changed_at = snapshotHistory.history.changedAt;
+                            existingHistory.reason = snapshotHistory.history.reason;
+                            existingHistory.snapshot_id = snapshotId;
+                            existingHistory.수정자설정한다(performedBy);
+                            existingHistory.메타데이터업데이트한다(performedBy);
+                            await manager.save(daily_summary_change_history_entity_1.DailySummaryChangeHistory, existingHistory);
+                            restoredHistoryCount++;
+                        }
+                        else {
+                            await this.dailySummaryChangeHistoryService.생성한다({
+                                dailyEventSummaryId: dailySummary.id,
+                                date: snapshotHistory.date,
+                                content: snapshotHistory.history.content,
+                                changedBy: snapshotHistory.history.changedBy,
+                                reason: snapshotHistory.history.reason || undefined,
+                                snapshotId: snapshotId,
+                            }, manager);
+                            restoredHistoryCount++;
+                        }
+                    }
+                    catch (error) {
+                        this.logger.error(`변경이력 복원 실패 (date=${snapshotHistory.date}, employeeId=${snapshotHistory.employee_id}): ${error.message}`, error.stack);
+                    }
+                }
+                const monthlySummaryResult = await this.commandBus.execute(new generate_monthly_summaries_command_1.GenerateMonthlySummariesCommand({
+                    year,
+                    month,
+                    performedBy,
+                }));
+                this.logger.log(`스냅샷으로부터 복원 완료: snapshotId=${snapshotId}, daily=${dailySummaryResult.statistics.dailyEventSummaryCount}, monthly=${monthlySummaryResult.statistics.monthlyEventSummaryCount}, issues=${restoredIssueCount}, histories=${restoredHistoryCount}`);
+                return {
+                    snapshotId,
+                    year,
+                    month,
+                    restoredCount: {
+                        monthlySummaryCount: monthlySummaryResult.statistics.monthlyEventSummaryCount,
+                        dailySummaryCount: dailySummaryResult.statistics.dailyEventSummaryCount,
+                    },
+                };
+            }
+            catch (error) {
+                this.logger.error(`스냅샷으로부터 복원 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.RestoreFromSnapshotHandler = RestoreFromSnapshotHandler;
+exports.RestoreFromSnapshotHandler = RestoreFromSnapshotHandler = RestoreFromSnapshotHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(restore_from_snapshot_command_1.RestoreFromSnapshotCommand),
+    __param(3, (0, typeorm_2.InjectRepository)(data_snapshot_info_entity_1.DataSnapshotInfo)),
+    __metadata("design:paramtypes", [typeof (_a = typeof data_snapshot_info_service_1.DomainDataSnapshotInfoService !== "undefined" && data_snapshot_info_service_1.DomainDataSnapshotInfoService) === "function" ? _a : Object, typeof (_b = typeof attendance_issue_service_1.DomainAttendanceIssueService !== "undefined" && attendance_issue_service_1.DomainAttendanceIssueService) === "function" ? _b : Object, typeof (_c = typeof daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService !== "undefined" && daily_summary_change_history_service_1.DomainDailySummaryChangeHistoryService) === "function" ? _c : Object, typeof (_d = typeof typeorm_3.Repository !== "undefined" && typeorm_3.Repository) === "function" ? _d : Object, typeof (_e = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _e : Object, typeof (_f = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _f : Object])
+], RestoreFromSnapshotHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.command.ts":
+/*!**************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.command.ts ***!
+  \**************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SaveAllDepartmentsMonthlySnapshotCommand = void 0;
+class SaveAllDepartmentsMonthlySnapshotCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.SaveAllDepartmentsMonthlySnapshotCommand = SaveAllDepartmentsMonthlySnapshotCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.handler.ts":
+/*!**************************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.handler.ts ***!
+  \**************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var SaveAllDepartmentsMonthlySnapshotHandler_1;
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SaveAllDepartmentsMonthlySnapshotHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const save_all_departments_monthly_snapshot_command_1 = __webpack_require__(/*! ./save-all-departments-monthly-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-all-departments-monthly-snapshot.command.ts");
+const save_attendance_snapshot_command_1 = __webpack_require__(/*! ./save-attendance-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.command.ts");
+const employee_department_position_history_service_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.service */ "./libs/modules/employee-department-position-history/employee-department-position-history.service.ts");
+const monthly_event_summary_entity_1 = __webpack_require__(/*! ../../../../../domain/monthly-event-summary/monthly-event-summary.entity */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.entity.ts");
+let SaveAllDepartmentsMonthlySnapshotHandler = SaveAllDepartmentsMonthlySnapshotHandler_1 = class SaveAllDepartmentsMonthlySnapshotHandler {
+    constructor(commandBus, dataSource, employeeDepartmentPositionHistoryService) {
+        this.commandBus = commandBus;
+        this.dataSource = dataSource;
+        this.employeeDepartmentPositionHistoryService = employeeDepartmentPositionHistoryService;
+        this.logger = new common_1.Logger(SaveAllDepartmentsMonthlySnapshotHandler_1.name);
+    }
+    async execute(command) {
+        const { year, month, performedBy } = command.data;
+        const yyyymm = `${year}-${month.padStart(2, '0')}`;
+        const count = await this.dataSource.manager
+            .createQueryBuilder(monthly_event_summary_entity_1.MonthlyEventSummary, 'monthly')
+            .where('monthly.deleted_at IS NULL')
+            .andWhere('monthly.yyyymm = :yyyymm', { yyyymm })
+            .getCount();
+        if (count === 0) {
+            this.logger.log(`해당 연월에 월간 요약이 없습니다. year=${year}, month=${month}`);
+            return;
+        }
+        try {
+            const departments = await this.employeeDepartmentPositionHistoryService.특정연월의부서정보목록을조회한다(year, month);
+            this.logger.log(`해당 연월에 월간 요약이 있는 부서 수: ${departments.length}개 (year=${year}, month=${month})`);
+            for (const dept of departments) {
+                try {
+                    this.logger.log(`기존 월간 요약 스냅샷 저장 시도: departmentId=${dept.id}, departmentName=${dept.departmentName}`);
+                    await this.commandBus.execute(new save_attendance_snapshot_command_1.SaveAttendanceSnapshotCommand({
+                        year,
+                        month,
+                        departmentId: dept.id,
+                        snapshotName: `${year}년 ${month}월 근태 스냅샷 (${dept.departmentName}) - 파일 반영 전 백업`,
+                        description: `파일 내용 반영 전 기존 데이터 백업`,
+                        performedBy,
+                    }));
+                    this.logger.log(`기존 월간 요약 스냅샷 저장 완료: departmentId=${dept.id}`);
+                }
+                catch (error) {
+                    this.logger.warn(`부서별 스냅샷 저장 실패 (계속 진행): departmentId=${dept.id}, error=${error.message}`);
+                }
+            }
+        }
+        catch (error) {
+            this.logger.warn(`기존 월간 요약 스냅샷 저장 실패 (계속 진행): ${error.message}`);
+        }
+    }
+};
+exports.SaveAllDepartmentsMonthlySnapshotHandler = SaveAllDepartmentsMonthlySnapshotHandler;
+exports.SaveAllDepartmentsMonthlySnapshotHandler = SaveAllDepartmentsMonthlySnapshotHandler = SaveAllDepartmentsMonthlySnapshotHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(save_all_departments_monthly_snapshot_command_1.SaveAllDepartmentsMonthlySnapshotCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object, typeof (_c = typeof employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService !== "undefined" && employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService) === "function" ? _c : Object])
+], SaveAllDepartmentsMonthlySnapshotHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.command.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.command.ts ***!
+  \*************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SaveAttendanceSnapshotCommand = void 0;
+class SaveAttendanceSnapshotCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.SaveAttendanceSnapshotCommand = SaveAttendanceSnapshotCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.handler.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.handler.ts ***!
+  \*************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var SaveAttendanceSnapshotHandler_1;
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SaveAttendanceSnapshotHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const save_attendance_snapshot_command_1 = __webpack_require__(/*! ./save-attendance-snapshot.command */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/save-attendance-snapshot.command.ts");
+const data_snapshot_info_service_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.service */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.service.ts");
+const data_snapshot_info_types_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.types */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.types.ts");
+const get_monthly_summaries_query_1 = __webpack_require__(/*! ../../../../attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query */ "./apps/lams/src/refactoring/context/attendance-data-context/handlers/attendance-data/queries/get-monthly-summaries.query.ts");
+const data_snapshot_info_entity_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.entity */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.entity.ts");
+const data_snapshot_child_entity_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-child/data-snapshot-child.entity */ "./apps/lams/src/refactoring/domain/data-snapshot-child/data-snapshot-child.entity.ts");
+let SaveAttendanceSnapshotHandler = SaveAttendanceSnapshotHandler_1 = class SaveAttendanceSnapshotHandler {
+    constructor(dataSnapshotInfoService, queryBus, dataSource) {
+        this.dataSnapshotInfoService = dataSnapshotInfoService;
+        this.queryBus = queryBus;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(SaveAttendanceSnapshotHandler_1.name);
+    }
+    async execute(command) {
+        const { year, month, departmentId, snapshotName, description, performedBy, snapshotVersion, approvalDocumentId, submittedAt, approverName, approvalStatus, } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`근태 스냅샷 저장 시작: year=${year}, month=${month}, departmentId=${departmentId}`);
+                const monthlySummariesResponse = await this.queryBus.execute(new get_monthly_summaries_query_1.GetMonthlySummariesQuery({
+                    year,
+                    month,
+                    departmentId,
+                }));
+                if (monthlySummariesResponse.monthlySummaries.length === 0) {
+                    this.logger.log(`해당 연월에 월간 요약이 없습니다. year=${year}, month=${month}`);
+                    return {
+                        snapshot: null,
+                    };
+                }
+                const finalSnapshotName = snapshotName || `${year}년 ${month}월 근태 스냅샷 (부서: ${departmentId})`;
+                const finalSnapshotVersion = snapshotVersion || (await this.다음버전을결정한다(year, month, departmentId, manager));
+                const snapshotInfoEntity = new data_snapshot_info_entity_1.DataSnapshotInfo(finalSnapshotName, data_snapshot_info_types_1.SnapshotType.MONTHLY, year, month, departmentId, description || '', finalSnapshotVersion, approvalDocumentId || null, submittedAt || null, approverName || null, approvalStatus || null);
+                const snapshotChildren = this.월간요약을스냅샷자식으로변환한다(monthlySummariesResponse.monthlySummaries, year, month);
+                snapshotInfoEntity.dataSnapshotChildInfoList = snapshotChildren;
+                snapshotChildren.forEach((child) => {
+                    child.parentSnapshot = snapshotInfoEntity;
+                });
+                const savedSnapshot = await manager.save(snapshotInfoEntity);
+                const snapshotInfo = savedSnapshot.DTO변환한다();
+                this.logger.log(`근태 스냅샷 저장 완료: snapshotId=${snapshotInfo.id}, 자식 수=${snapshotChildren.length}`);
+                return {
+                    snapshot: snapshotInfo,
+                };
+            }
+            catch (error) {
+                this.logger.error(`근태 스냅샷 저장 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+    월간요약을스냅샷자식으로변환한다(monthlySummaries, year, month) {
+        const yyyymm = `${year}-${month.padStart(2, '0')}`;
+        return monthlySummaries.map((monthlySummary) => {
+            const snapshotData = JSON.stringify(monthlySummary);
+            const child = new data_snapshot_child_entity_1.DataSnapshotChild(monthlySummary.employeeId, monthlySummary.employeeName || '', monthlySummary.employeeNumber || '', year, month, snapshotData);
+            return child;
+        });
+    }
+    async 다음버전을결정한다(year, month, departmentId, manager) {
+        const existingSnapshots = await this.dataSnapshotInfoService.연월부서별목록조회한다(year, month, departmentId, data_snapshot_info_types_1.SnapshotType.MONTHLY, manager);
+        if (existingSnapshots.length === 0) {
+            return 'A';
+        }
+        const existingVersions = existingSnapshots
+            .map((s) => s.snapshotVersion)
+            .filter((v) => {
+            if (!v || v.length !== 1)
+                return false;
+            const code = v.charCodeAt(0);
+            return code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0);
+        })
+            .map((v) => v.charCodeAt(0))
+            .sort((a, b) => a - b);
+        if (existingVersions.length === 0) {
+            return 'A';
+        }
+        const highestVersionCode = existingVersions[existingVersions.length - 1];
+        if (highestVersionCode >= 'Z'.charCodeAt(0)) {
+            throw new Error('스냅샷 버전이 Z에 도달했습니다. 더 이상 버전을 생성할 수 없습니다.');
+        }
+        return String.fromCharCode(highestVersionCode + 1);
+    }
+};
+exports.SaveAttendanceSnapshotHandler = SaveAttendanceSnapshotHandler;
+exports.SaveAttendanceSnapshotHandler = SaveAttendanceSnapshotHandler = SaveAttendanceSnapshotHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(save_attendance_snapshot_command_1.SaveAttendanceSnapshotCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof data_snapshot_info_service_1.DomainDataSnapshotInfoService !== "undefined" && data_snapshot_info_service_1.DomainDataSnapshotInfoService) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _b : Object, typeof (_c = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _c : Object])
+], SaveAttendanceSnapshotHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/index.ts":
+/*!*************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/index.ts ***!
+  \*************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DATA_SNAPSHOT_QUERY_HANDLERS = exports.DATA_SNAPSHOT_COMMAND_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./commands */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/index.ts"), exports);
+const commands_1 = __webpack_require__(/*! ./commands */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/index.ts");
+const queries_1 = __webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/index.ts");
+exports.DATA_SNAPSHOT_COMMAND_HANDLERS = [commands_1.SaveAttendanceSnapshotHandler];
+exports.DATA_SNAPSHOT_QUERY_HANDLERS = [queries_1.GetSnapshotListHandler];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.handler.ts":
+/*!*****************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.handler.ts ***!
+  \*****************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetSnapshotListHandler_1;
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetSnapshotListHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const get_snapshot_list_query_1 = __webpack_require__(/*! ./get-snapshot-list.query */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.query.ts");
+const data_snapshot_info_service_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.service */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.service.ts");
+const data_snapshot_info_types_1 = __webpack_require__(/*! ../../../../../domain/data-snapshot-info/data-snapshot-info.types */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.types.ts");
+let GetSnapshotListHandler = GetSnapshotListHandler_1 = class GetSnapshotListHandler {
+    constructor(dataSnapshotInfoService) {
+        this.dataSnapshotInfoService = dataSnapshotInfoService;
+        this.logger = new common_1.Logger(GetSnapshotListHandler_1.name);
+    }
+    async execute(query) {
+        const { year, month, departmentId, sortBy = 'latest', filters } = query.data;
+        this.logger.log(`스냅샷 목록 조회 시작: year=${year}, month=${month}, departmentId=${departmentId}`);
+        const allSnapshots = await this.dataSnapshotInfoService.연월과타입으로목록조회한다(year, month, data_snapshot_info_types_1.SnapshotType.MONTHLY);
+        let filteredSnapshots = allSnapshots.filter((snapshot) => snapshot.departmentId === departmentId);
+        if (filters) {
+            filteredSnapshots = this.필터적용한다(filteredSnapshots, filters);
+        }
+        const sortedSnapshots = this.정렬적용한다(filteredSnapshots, sortBy);
+        const latestSnapshot = sortedSnapshots.length > 0 ? sortedSnapshots[0] : null;
+        this.logger.log(`스냅샷 목록 조회 완료: totalCount=${sortedSnapshots.length}, latestSnapshotId=${latestSnapshot?.id || '없음'}`);
+        return {
+            latestSnapshot,
+            snapshots: sortedSnapshots,
+            totalCount: sortedSnapshots.length,
+        };
+    }
+    필터적용한다(snapshots, filters) {
+        let filtered = [...snapshots];
+        if (filters.snapshotType) {
+            filtered = filtered.filter((snapshot) => snapshot.snapshotType === filters.snapshotType);
+        }
+        if (filters.dateRange) {
+            const { startDate, endDate } = filters.dateRange;
+            if (startDate) {
+                filtered = filtered.filter((snapshot) => {
+                    const createdAt = new Date(snapshot.createdAt);
+                    return createdAt >= new Date(startDate);
+                });
+            }
+            if (endDate) {
+                filtered = filtered.filter((snapshot) => {
+                    const createdAt = new Date(snapshot.createdAt);
+                    return createdAt <= new Date(endDate);
+                });
+            }
+        }
+        return filtered;
+    }
+    정렬적용한다(snapshots, sortBy) {
+        const sorted = [...snapshots];
+        switch (sortBy) {
+            case 'latest':
+                sorted.sort((a, b) => {
+                    const dateA = new Date(a.createdAt).getTime();
+                    const dateB = new Date(b.createdAt).getTime();
+                    return dateB - dateA;
+                });
+                break;
+            case 'oldest':
+                sorted.sort((a, b) => {
+                    const dateA = new Date(a.createdAt).getTime();
+                    const dateB = new Date(b.createdAt).getTime();
+                    return dateA - dateB;
+                });
+                break;
+            case 'name':
+                sorted.sort((a, b) => a.snapshotName.localeCompare(b.snapshotName, 'ko'));
+                break;
+            case 'type':
+                sorted.sort((a, b) => a.snapshotType.localeCompare(b.snapshotType));
+                break;
+            default:
+                sorted.sort((a, b) => {
+                    const dateA = new Date(a.createdAt).getTime();
+                    const dateB = new Date(b.createdAt).getTime();
+                    return dateB - dateA;
+                });
+        }
+        return sorted;
+    }
+};
+exports.GetSnapshotListHandler = GetSnapshotListHandler;
+exports.GetSnapshotListHandler = GetSnapshotListHandler = GetSnapshotListHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_snapshot_list_query_1.GetSnapshotListQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof data_snapshot_info_service_1.DomainDataSnapshotInfoService !== "undefined" && data_snapshot_info_service_1.DomainDataSnapshotInfoService) === "function" ? _a : Object])
+], GetSnapshotListHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.query.ts":
+/*!***************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.query.ts ***!
+  \***************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetSnapshotListQuery = void 0;
+class GetSnapshotListQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetSnapshotListQuery = GetSnapshotListQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/index.ts":
+/*!*********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/index.ts ***!
+  \*********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./get-snapshot-list.query */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-snapshot-list.handler */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/get-snapshot-list.handler.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/index.ts":
+/*!***********************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/data-snapshot-context/handlers/index.ts ***!
+  \***********************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QUERY_HANDLERS = exports.COMMAND_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./data-snapshot */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/index.ts"), exports);
+const commands_1 = __webpack_require__(/*! ./data-snapshot/commands */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/commands/index.ts");
+const queries_1 = __webpack_require__(/*! ./data-snapshot/queries */ "./apps/lams/src/refactoring/context/data-snapshot-context/handlers/data-snapshot/queries/index.ts");
+exports.COMMAND_HANDLERS = [
+    commands_1.SaveAttendanceSnapshotHandler,
+    commands_1.SaveAllDepartmentsMonthlySnapshotHandler,
+    commands_1.RestoreFromSnapshotHandler,
+];
+exports.QUERY_HANDLERS = [queries_1.GetSnapshotListHandler];
 
 
 /***/ }),
@@ -1432,6 +4297,7 @@ const event_info_module_1 = __webpack_require__(/*! ../../domain/event-info/even
 const used_attendance_module_1 = __webpack_require__(/*! ../../domain/used-attendance/used-attendance.module */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.module.ts");
 const attendance_type_module_1 = __webpack_require__(/*! ../../domain/attendance-type/attendance-type.module */ "./apps/lams/src/refactoring/domain/attendance-type/attendance-type.module.ts");
 const employee_module_1 = __webpack_require__(/*! @libs/modules/employee/employee.module */ "./libs/modules/employee/employee.module.ts");
+const data_snapshot_context_module_1 = __webpack_require__(/*! ../data-snapshot-context/data-snapshot-context.module */ "./apps/lams/src/refactoring/context/data-snapshot-context/data-snapshot-context.module.ts");
 const storage_1 = __webpack_require__(/*! ../../integrations/storage */ "./apps/lams/src/refactoring/integrations/storage/index.ts");
 let FileManagementContextModule = FileManagementContextModule_1 = class FileManagementContextModule {
     static forRoot() {
@@ -1448,6 +4314,7 @@ let FileManagementContextModule = FileManagementContextModule_1 = class FileMana
                 used_attendance_module_1.DomainUsedAttendanceModule,
                 attendance_type_module_1.DomainAttendanceTypeModule,
                 employee_module_1.DomainEmployeeModule,
+                data_snapshot_context_module_1.DataSnapshotContextModule,
                 s3_storage_module_1.S3StorageModule,
                 local_storage_module_1.LocalStorageModule,
             ],
@@ -1456,6 +4323,7 @@ let FileManagementContextModule = FileManagementContextModule_1 = class FileMana
                 storage_1.StorageServiceProvider,
                 ...handlers_1.FILE_UPLOAD_HANDLERS,
                 ...handlers_1.FILE_CONTENT_REFLECTION_HANDLERS,
+                ...handlers_1.FILE_LIST_QUERY_HANDLERS,
             ],
             exports: [file_management_context_service_1.FileManagementContextService],
         };
@@ -1485,17 +4353,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileManagementContextService = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
 const commands_1 = __webpack_require__(/*! ./handlers/file-upload/commands */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-upload/commands/index.ts");
 const commands_2 = __webpack_require__(/*! ./handlers/file-content-reflection/commands */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/index.ts");
+const queries_1 = __webpack_require__(/*! ./handlers/file-list/queries */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/index.ts");
+const file_content_reflection_history_service_1 = __webpack_require__(/*! ../../domain/file-content-reflection-history/file-content-reflection-history.service */ "./apps/lams/src/refactoring/domain/file-content-reflection-history/file-content-reflection-history.service.ts");
 let FileManagementContextService = class FileManagementContextService {
-    constructor(commandBus, queryBus) {
+    constructor(commandBus, queryBus, fileContentReflectionHistoryService) {
         this.commandBus = commandBus;
         this.queryBus = queryBus;
+        this.fileContentReflectionHistoryService = fileContentReflectionHistoryService;
     }
     async 파일을업로드한다(file, uploadBy, year, month) {
         const command = new commands_1.UploadFileCommand({
@@ -1516,11 +4387,22 @@ let FileManagementContextService = class FileManagementContextService {
         });
         return await this.commandBus.execute(command);
     }
+    async 이력을조회한다(reflectionHistoryId) {
+        return await this.fileContentReflectionHistoryService.ID로조회한다(reflectionHistoryId);
+    }
+    async 이력으로되돌리기(command) {
+        const commandInstance = new commands_2.RestoreFromHistoryCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+    async 파일목록과반영이력을조회한다(query) {
+        const queryInstance = new queries_1.GetFileListWithHistoryQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
 };
 exports.FileManagementContextService = FileManagementContextService;
 exports.FileManagementContextService = FileManagementContextService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _b : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _b : Object, typeof (_c = typeof file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService !== "undefined" && file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService) === "function" ? _c : Object])
 ], FileManagementContextService);
 
 
@@ -1550,6 +4432,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(/*! ./reflect-file-content.command */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/reflect-file-content.command.ts"), exports);
 __exportStar(__webpack_require__(/*! ./reflect-file-content.handler */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/reflect-file-content.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./restore-from-history.command */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.command.ts"), exports);
+__exportStar(__webpack_require__(/*! ./restore-from-history.handler */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.handler.ts"), exports);
 
 
 /***/ }),
@@ -1936,6 +4820,249 @@ exports.ReflectFileContentHandler = ReflectFileContentHandler = ReflectFileConte
 
 /***/ }),
 
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.command.ts":
+/*!*********************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.command.ts ***!
+  \*********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromHistoryCommand = void 0;
+class RestoreFromHistoryCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.RestoreFromHistoryCommand = RestoreFromHistoryCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.handler.ts":
+/*!*********************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.handler.ts ***!
+  \*********************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var RestoreFromHistoryHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromHistoryHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const restore_from_history_command_1 = __webpack_require__(/*! ./restore-from-history.command */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/restore-from-history.command.ts");
+const file_content_reflection_history_service_1 = __webpack_require__(/*! ../../../../../domain/file-content-reflection-history/file-content-reflection-history.service */ "./apps/lams/src/refactoring/domain/file-content-reflection-history/file-content-reflection-history.service.ts");
+const file_content_reflection_history_types_1 = __webpack_require__(/*! ../../../../../domain/file-content-reflection-history/file-content-reflection-history.types */ "./apps/lams/src/refactoring/domain/file-content-reflection-history/file-content-reflection-history.types.ts");
+const event_info_entity_1 = __webpack_require__(/*! ../../../../../domain/event-info/event-info.entity */ "./apps/lams/src/refactoring/domain/event-info/event-info.entity.ts");
+const used_attendance_entity_1 = __webpack_require__(/*! ../../../../../domain/used-attendance/used-attendance.entity */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.entity.ts");
+const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
+const typeorm_2 = __webpack_require__(/*! typeorm */ "typeorm");
+let RestoreFromHistoryHandler = RestoreFromHistoryHandler_1 = class RestoreFromHistoryHandler {
+    constructor(fileContentReflectionHistoryService, dataSource) {
+        this.fileContentReflectionHistoryService = fileContentReflectionHistoryService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(RestoreFromHistoryHandler_1.name);
+    }
+    async execute(command) {
+        const { reflectionHistoryId, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`이력으로 되돌리기 시작: reflectionHistoryId=${reflectionHistoryId}`);
+                const history = await this.fileContentReflectionHistoryService.ID로조회한다(reflectionHistoryId);
+                if (!history || !history.data) {
+                    throw new common_1.NotFoundException(`이력을 찾을 수 없거나 데이터가 없습니다. (id: ${reflectionHistoryId})`);
+                }
+                const historyData = history.data;
+                if (!historyData.year || !historyData.month || !historyData.dataType) {
+                    throw new common_1.BadRequestException('이력 데이터 형식이 올바르지 않습니다.');
+                }
+                const { year, month, dataType } = historyData;
+                const fileType = history.type;
+                this.logger.log(`이력 데이터 확인: year=${year}, month=${month}, fileType=${fileType}, dataType=${dataType}, dataCount=${historyData.data.length}`);
+                await this.해당연월기존데이터전체삭제한다(fileType, year, month, manager);
+                let insertedCount = 0;
+                if (fileType === file_content_reflection_history_types_1.ReflectionType.EVENT_HISTORY && dataType === 'eventInfo') {
+                    if (historyData.data.length > 0) {
+                        const EVENT_BATCH_SIZE = 10000;
+                        for (let i = 0; i < historyData.data.length; i += EVENT_BATCH_SIZE) {
+                            const batch = historyData.data.slice(i, i + EVENT_BATCH_SIZE);
+                            await manager.createQueryBuilder().insert().into(event_info_entity_1.EventInfo).values(batch).execute();
+                        }
+                        insertedCount = historyData.data.length;
+                    }
+                }
+                else if (fileType === file_content_reflection_history_types_1.ReflectionType.ATTENDANCE_DATA && dataType === 'usedAttendance') {
+                    if (historyData.data.length > 0) {
+                        const ATTENDANCE_BATCH_SIZE = 1000;
+                        for (let i = 0; i < historyData.data.length; i += ATTENDANCE_BATCH_SIZE) {
+                            const batch = historyData.data.slice(i, i + ATTENDANCE_BATCH_SIZE);
+                            await manager.createQueryBuilder().insert().into(used_attendance_entity_1.UsedAttendance).values(batch).execute();
+                        }
+                        insertedCount = historyData.data.length;
+                    }
+                }
+                else {
+                    throw new common_1.BadRequestException(`지원하지 않는 데이터 타입입니다. fileType=${fileType}, dataType=${dataType}`);
+                }
+                this.logger.log(`이력 데이터 삽입 완료: ${insertedCount}건`);
+                this.logger.log(`✅ 이력으로 되돌리기 완료: reflectionHistoryId=${reflectionHistoryId}`);
+                return {
+                    reflectionHistoryId,
+                    year,
+                    month,
+                };
+            }
+            catch (error) {
+                this.logger.error(`이력으로 되돌리기 실패: ${error.message}`, error.stack);
+                if (error instanceof common_1.NotFoundException || error instanceof common_1.BadRequestException) {
+                    throw error;
+                }
+                throw new common_1.BadRequestException(`이력으로 되돌리기 중 오류가 발생했습니다: ${error.message}`);
+            }
+        });
+    }
+    async 해당연월기존데이터전체삭제한다(fileType, year, month, manager) {
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const startDate = `${year}${month.padStart(2, '0')}01`;
+        const lastDay = new Date(yearNum, monthNum, 0).getDate();
+        const endDate = `${year}${month.padStart(2, '0')}${lastDay.toString().padStart(2, '0')}`;
+        if (fileType === file_content_reflection_history_types_1.ReflectionType.EVENT_HISTORY) {
+            const deleteResult = await manager
+                .createQueryBuilder()
+                .delete()
+                .from(event_info_entity_1.EventInfo)
+                .where('yyyymmdd >= :startDate', { startDate })
+                .andWhere('yyyymmdd <= :endDate', { endDate })
+                .execute();
+            this.logger.log(`기존 EventInfo 전체 삭제 완료: ${deleteResult.affected || 0}건 (연월: ${year}-${month})`);
+        }
+        else if (fileType === file_content_reflection_history_types_1.ReflectionType.ATTENDANCE_DATA) {
+            const startDateStr = `${year}-${month.padStart(2, '0')}-01`;
+            const endDateStr = `${year}-${month.padStart(2, '0')}-${lastDay.toString().padStart(2, '0')}`;
+            const deleteResult = await manager
+                .createQueryBuilder()
+                .delete()
+                .from(used_attendance_entity_1.UsedAttendance)
+                .where('used_at >= :startDate', { startDate: startDateStr })
+                .andWhere('used_at <= :endDate', { endDate: endDateStr })
+                .execute();
+            this.logger.log(`기존 UsedAttendance 전체 삭제 완료: ${deleteResult.affected || 0}건 (연월: ${year}-${month})`);
+        }
+    }
+    async 해당연월데이터를조회한다(fileType, year, month, manager) {
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const startDate = `${year}${month.padStart(2, '0')}01`;
+        const lastDay = new Date(yearNum, monthNum, 0).getDate();
+        const endDate = `${year}${month.padStart(2, '0')}${lastDay.toString().padStart(2, '0')}`;
+        if (fileType === file_content_reflection_history_types_1.ReflectionType.EVENT_HISTORY) {
+            const eventInfos = await manager
+                .createQueryBuilder(event_info_entity_1.EventInfo, 'ei')
+                .where('ei.yyyymmdd >= :startDate', { startDate })
+                .andWhere('ei.yyyymmdd <= :endDate', { endDate })
+                .andWhere('ei.deleted_at IS NULL')
+                .orderBy('ei.yyyymmdd', 'ASC')
+                .addOrderBy('ei.hhmmss', 'ASC')
+                .getMany();
+            const eventData = eventInfos.map((event) => ({
+                employee_name: event.employee_name,
+                employee_number: event.employee_number,
+                event_time: event.event_time,
+                yyyymmdd: event.yyyymmdd,
+                hhmmss: event.hhmmss,
+            }));
+            return {
+                dataType: 'eventInfo',
+                year,
+                month,
+                data: eventData,
+            };
+        }
+        else if (fileType === file_content_reflection_history_types_1.ReflectionType.ATTENDANCE_DATA) {
+            const usedAttendances = await manager
+                .createQueryBuilder(used_attendance_entity_1.UsedAttendance, 'ua')
+                .leftJoinAndSelect('ua.attendanceType', 'at')
+                .where('ua.used_at >= :startDate', { startDate: `${year}-${month.padStart(2, '0')}-01` })
+                .andWhere('ua.used_at <= :endDate', {
+                endDate: `${year}-${month.padStart(2, '0')}-${lastDay.toString().padStart(2, '0')}`,
+            })
+                .andWhere('ua.deleted_at IS NULL')
+                .orderBy('ua.used_at', 'ASC')
+                .getMany();
+            const attendanceData = usedAttendances.map((ua) => ({
+                used_at: ua.used_at,
+                employee_id: ua.employee_id,
+                attendance_type_id: ua.attendance_type_id,
+                attendance_type_title: ua.attendanceType?.title || null,
+            }));
+            return {
+                dataType: 'usedAttendance',
+                year,
+                month,
+                data: attendanceData,
+            };
+        }
+        else {
+            return {
+                dataType: 'unknown',
+                year,
+                month,
+                data: [],
+            };
+        }
+    }
+    async 이력에서직원ID목록을추출한다(historyData, fileType, manager) {
+        const employeeIds = new Set();
+        if (fileType === file_content_reflection_history_types_1.ReflectionType.EVENT_HISTORY && historyData.dataType === 'eventInfo') {
+            const employeeNumbers = new Set();
+            historyData.data.forEach((item) => {
+                if (item.employee_number) {
+                    employeeNumbers.add(item.employee_number);
+                }
+            });
+            if (employeeNumbers.size > 0) {
+                const employees = await manager.find(employee_entity_1.Employee, {
+                    where: { employeeNumber: (0, typeorm_2.In)(Array.from(employeeNumbers)) },
+                });
+                employees.forEach((emp) => {
+                    if (emp.id) {
+                        employeeIds.add(emp.id);
+                    }
+                });
+            }
+        }
+        else if (fileType === file_content_reflection_history_types_1.ReflectionType.ATTENDANCE_DATA && historyData.dataType === 'usedAttendance') {
+            historyData.data.forEach((item) => {
+                if (item.employee_id) {
+                    employeeIds.add(item.employee_id);
+                }
+            });
+        }
+        return Array.from(employeeIds);
+    }
+};
+exports.RestoreFromHistoryHandler = RestoreFromHistoryHandler;
+exports.RestoreFromHistoryHandler = RestoreFromHistoryHandler = RestoreFromHistoryHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(restore_from_history_command_1.RestoreFromHistoryCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService !== "undefined" && file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], RestoreFromHistoryHandler);
+
+
+/***/ }),
+
 /***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/index.ts":
 /*!*************************************************************************************************************!*\
   !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/index.ts ***!
@@ -1946,7 +5073,141 @@ exports.ReflectFileContentHandler = ReflectFileContentHandler = ReflectFileConte
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FILE_CONTENT_REFLECTION_HANDLERS = void 0;
 const commands_1 = __webpack_require__(/*! ./commands */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/commands/index.ts");
-exports.FILE_CONTENT_REFLECTION_HANDLERS = [commands_1.ReflectFileContentHandler];
+exports.FILE_CONTENT_REFLECTION_HANDLERS = [commands_1.ReflectFileContentHandler, commands_1.RestoreFromHistoryHandler];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/index.ts":
+/*!***********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/index.ts ***!
+  \***********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QUERY_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/index.ts"), exports);
+const queries_1 = __webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/index.ts");
+exports.QUERY_HANDLERS = [queries_1.GetFileListWithHistoryHandler];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.handler.ts":
+/*!************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.handler.ts ***!
+  \************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetFileListWithHistoryHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetFileListWithHistoryHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const get_file_list_with_history_query_1 = __webpack_require__(/*! ./get-file-list-with-history.query */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.query.ts");
+const file_service_1 = __webpack_require__(/*! ../../../../../domain/file/file.service */ "./apps/lams/src/refactoring/domain/file/file.service.ts");
+const file_content_reflection_history_service_1 = __webpack_require__(/*! ../../../../../domain/file-content-reflection-history/file-content-reflection-history.service */ "./apps/lams/src/refactoring/domain/file-content-reflection-history/file-content-reflection-history.service.ts");
+let GetFileListWithHistoryHandler = GetFileListWithHistoryHandler_1 = class GetFileListWithHistoryHandler {
+    constructor(fileService, fileContentReflectionHistoryService) {
+        this.fileService = fileService;
+        this.fileContentReflectionHistoryService = fileContentReflectionHistoryService;
+        this.logger = new common_1.Logger(GetFileListWithHistoryHandler_1.name);
+    }
+    async execute(query) {
+        const { year, month } = query.data;
+        this.logger.log(`파일 목록과 반영이력 조회 시작: year=${year}, month=${month}`);
+        const files = await this.fileService.연도월별목록조회한다(year, month);
+        const filesWithHistory = await Promise.all(files.map(async (file) => {
+            const reflectionHistories = await this.fileContentReflectionHistoryService.파일ID로목록조회한다(file.id);
+            return {
+                ...file,
+                reflectionHistories,
+            };
+        }));
+        this.logger.log(`파일 목록과 반영이력 조회 완료: files=${filesWithHistory.length}건`);
+        return {
+            files: filesWithHistory,
+        };
+    }
+};
+exports.GetFileListWithHistoryHandler = GetFileListWithHistoryHandler;
+exports.GetFileListWithHistoryHandler = GetFileListWithHistoryHandler = GetFileListWithHistoryHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_file_list_with_history_query_1.GetFileListWithHistoryQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof file_service_1.DomainFileService !== "undefined" && file_service_1.DomainFileService) === "function" ? _a : Object, typeof (_b = typeof file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService !== "undefined" && file_content_reflection_history_service_1.DomainFileContentReflectionHistoryService) === "function" ? _b : Object])
+], GetFileListWithHistoryHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.query.ts":
+/*!**********************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.query.ts ***!
+  \**********************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetFileListWithHistoryQuery = void 0;
+class GetFileListWithHistoryQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetFileListWithHistoryQuery = GetFileListWithHistoryQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/index.ts":
+/*!*******************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/index.ts ***!
+  \*******************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./get-file-list-with-history.query */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-file-list-with-history.handler */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/queries/get-file-list-with-history.handler.ts"), exports);
 
 
 /***/ }),
@@ -2258,13 +5519,1511 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.FILE_CONTENT_REFLECTION_HANDLERS = exports.FILE_UPLOAD_HANDLERS = void 0;
+exports.FILE_LIST_QUERY_HANDLERS = exports.FILE_CONTENT_REFLECTION_HANDLERS = exports.FILE_UPLOAD_HANDLERS = void 0;
 __exportStar(__webpack_require__(/*! ./file-upload */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-upload/index.ts"), exports);
 __exportStar(__webpack_require__(/*! ./file-content-reflection */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./file-list */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/index.ts"), exports);
 var file_upload_1 = __webpack_require__(/*! ./file-upload */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-upload/index.ts");
 Object.defineProperty(exports, "FILE_UPLOAD_HANDLERS", ({ enumerable: true, get: function () { return file_upload_1.FILE_UPLOAD_HANDLERS; } }));
 var file_content_reflection_1 = __webpack_require__(/*! ./file-content-reflection */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-content-reflection/index.ts");
 Object.defineProperty(exports, "FILE_CONTENT_REFLECTION_HANDLERS", ({ enumerable: true, get: function () { return file_content_reflection_1.FILE_CONTENT_REFLECTION_HANDLERS; } }));
+var file_list_1 = __webpack_require__(/*! ./file-list */ "./apps/lams/src/refactoring/context/file-management-context/handlers/file-list/index.ts");
+Object.defineProperty(exports, "FILE_LIST_QUERY_HANDLERS", ({ enumerable: true, get: function () { return file_list_1.QUERY_HANDLERS; } }));
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/index.ts":
+/*!********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/handlers/department/index.ts ***!
+  \********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QUERY_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/index.ts"), exports);
+const queries_1 = __webpack_require__(/*! ./queries */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/index.ts");
+exports.QUERY_HANDLERS = [queries_1.GetDepartmentListHandler];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetDepartmentListHandler_1;
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetDepartmentListHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_department_list_query_1 = __webpack_require__(/*! ./get-department-list.query */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.query.ts");
+const department_service_1 = __webpack_require__(/*! @libs/modules/department/department.service */ "./libs/modules/department/department.service.ts");
+const employee_department_position_history_service_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.service */ "./libs/modules/employee-department-position-history/employee-department-position-history.service.ts");
+const department_entity_1 = __webpack_require__(/*! @libs/modules/department/department.entity */ "./libs/modules/department/department.entity.ts");
+const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
+let GetDepartmentListHandler = GetDepartmentListHandler_1 = class GetDepartmentListHandler {
+    constructor(departmentService, employeeDepartmentPositionHistoryService, dataSource) {
+        this.departmentService = departmentService;
+        this.employeeDepartmentPositionHistoryService = employeeDepartmentPositionHistoryService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetDepartmentListHandler_1.name);
+    }
+    async execute(query) {
+        const { year, month } = query.data;
+        this.logger.log(`부서 목록 조회 시작: year=${year}, month=${month}`);
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = (0, date_fns_1.startOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = (0, date_fns_1.endOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const endDate = (0, date_fns_1.format)(monthEnd, 'yyyy-MM-dd');
+        const employeeHistories = await this.employeeDepartmentPositionHistoryService.특정연월의배치이력목록을조회한다(year, month);
+        if (employeeHistories.length === 0) {
+            this.logger.warn(`해당 연월에 유효한 배치이력이 없습니다. year=${year}, month=${month}`);
+            return {
+                hierarchy: [],
+                flatList: [],
+                totalDepartments: 0,
+                totalEmployees: 0,
+            };
+        }
+        const departmentEmployeeCountMap = new Map();
+        const allRequiredDepartmentIds = new Set();
+        for (const history of employeeHistories) {
+            if (history.departmentId) {
+                allRequiredDepartmentIds.add(history.departmentId);
+                if (history.parentDepartmentId) {
+                    allRequiredDepartmentIds.add(history.parentDepartmentId);
+                }
+                const currentCount = departmentEmployeeCountMap.get(history.departmentId) || 0;
+                departmentEmployeeCountMap.set(history.departmentId, currentCount + 1);
+            }
+        }
+        const allDepartments = await this.dataSource.manager
+            .createQueryBuilder(department_entity_1.Department, 'dept')
+            .where('dept.id IN (:...ids)', { ids: Array.from(allRequiredDepartmentIds) })
+            .andWhere('dept.departmentName != :excludedDepartmentName', { excludedDepartmentName: '퇴사자' })
+            .orderBy('dept.order', 'ASC')
+            .getMany();
+        const departmentMapById = new Map();
+        for (const dept of allDepartments) {
+            departmentMapById.set(dept.id, dept);
+        }
+        const departmentParentMap = new Map();
+        for (const history of employeeHistories) {
+            if (history.departmentId) {
+                const parentId = history.parentDepartmentId || null;
+                if (!departmentParentMap.has(history.departmentId)) {
+                    departmentParentMap.set(history.departmentId, parentId);
+                }
+            }
+        }
+        for (const dept of allDepartments) {
+            if (!departmentEmployeeCountMap.has(dept.id)) {
+                departmentEmployeeCountMap.set(dept.id, 0);
+            }
+        }
+        const flatList = allDepartments.map((dept) => ({
+            id: dept.id,
+            departmentCode: dept.departmentCode,
+            departmentName: dept.departmentName,
+            parentDepartmentId: departmentParentMap.get(dept.id) || null,
+            type: dept.type,
+            order: dept.order,
+            employeeCount: departmentEmployeeCountMap.get(dept.id) || 0,
+        }));
+        const departmentNodeMap = new Map();
+        const rootDepartments = [];
+        for (const dept of allDepartments) {
+            const parentId = departmentParentMap.get(dept.id) || null;
+            const node = {
+                id: dept.id,
+                departmentCode: dept.departmentCode,
+                departmentName: dept.departmentName,
+                parentDepartmentId: parentId,
+                type: dept.type,
+                order: dept.order,
+                employeeCount: departmentEmployeeCountMap.get(dept.id) || 0,
+                children: [],
+            };
+            departmentNodeMap.set(dept.id, node);
+        }
+        for (const dept of allDepartments) {
+            const node = departmentNodeMap.get(dept.id);
+            const parentId = departmentParentMap.get(dept.id);
+            if (parentId && departmentNodeMap.has(parentId)) {
+                const parent = departmentNodeMap.get(parentId);
+                parent.children.push(node);
+                parent.children.sort((a, b) => a.order - b.order);
+            }
+            else {
+                rootDepartments.push(node);
+            }
+        }
+        rootDepartments.sort((a, b) => a.order - b.order);
+        const totalEmployees = Array.from(departmentEmployeeCountMap.values()).reduce((sum, count) => sum + count, 0);
+        this.logger.log(`부서 목록 조회 완료: totalDepartments=${allDepartments.length}, totalEmployees=${totalEmployees}`);
+        return {
+            hierarchy: rootDepartments,
+            flatList,
+            totalDepartments: allDepartments.length,
+            totalEmployees,
+        };
+    }
+};
+exports.GetDepartmentListHandler = GetDepartmentListHandler;
+exports.GetDepartmentListHandler = GetDepartmentListHandler = GetDepartmentListHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_department_list_query_1.GetDepartmentListQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof department_service_1.DomainDepartmentService !== "undefined" && department_service_1.DomainDepartmentService) === "function" ? _a : Object, typeof (_b = typeof employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService !== "undefined" && employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService) === "function" ? _b : Object, typeof (_c = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _c : Object])
+], GetDepartmentListHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.query.ts":
+/*!************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.query.ts ***!
+  \************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetDepartmentListQuery = void 0;
+class GetDepartmentListQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetDepartmentListQuery = GetDepartmentListQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/index.ts":
+/*!****************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/index.ts ***!
+  \****************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./get-department-list.query */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.query.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-department-list.handler */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/get-department-list.handler.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/handlers/index.ts":
+/*!*********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/handlers/index.ts ***!
+  \*********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DEPARTMENT_QUERY_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./department */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/index.ts"), exports);
+var department_1 = __webpack_require__(/*! ./department */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/index.ts");
+Object.defineProperty(exports, "DEPARTMENT_QUERY_HANDLERS", ({ enumerable: true, get: function () { return department_1.QUERY_HANDLERS; } }));
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.module.ts":
+/*!*********************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.module.ts ***!
+  \*********************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementContextModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const organization_management_context_service_1 = __webpack_require__(/*! ./organization-management-context.service */ "./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.service.ts");
+const handlers_1 = __webpack_require__(/*! ./handlers */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/index.ts");
+const department_module_1 = __webpack_require__(/*! @libs/modules/department/department.module */ "./libs/modules/department/department.module.ts");
+const employee_department_position_history_module_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.module */ "./libs/modules/employee-department-position-history/employee-department-position-history.module.ts");
+let OrganizationManagementContextModule = class OrganizationManagementContextModule {
+};
+exports.OrganizationManagementContextModule = OrganizationManagementContextModule;
+exports.OrganizationManagementContextModule = OrganizationManagementContextModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            cqrs_1.CqrsModule,
+            typeorm_1.TypeOrmModule.forFeature([]),
+            department_module_1.DomainDepartmentModule,
+            employee_department_position_history_module_1.DomainEmployeeDepartmentPositionHistoryModule,
+        ],
+        providers: [
+            organization_management_context_service_1.OrganizationManagementContextService,
+            ...handlers_1.DEPARTMENT_QUERY_HANDLERS,
+        ],
+        exports: [organization_management_context_service_1.OrganizationManagementContextService],
+    })
+], OrganizationManagementContextModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.service.ts":
+/*!**********************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/organization-management-context/organization-management-context.service.ts ***!
+  \**********************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementContextService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const queries_1 = __webpack_require__(/*! ./handlers/department/queries */ "./apps/lams/src/refactoring/context/organization-management-context/handlers/department/queries/index.ts");
+let OrganizationManagementContextService = class OrganizationManagementContextService {
+    constructor(queryBus) {
+        this.queryBus = queryBus;
+    }
+    async 부서목록을조회한다(query) {
+        const queryInstance = new queries_1.GetDepartmentListQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+};
+exports.OrganizationManagementContextService = OrganizationManagementContextService;
+exports.OrganizationManagementContextService = OrganizationManagementContextService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object])
+], OrganizationManagementContextService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetDepartmentListForPermissionHandler_1;
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetDepartmentListForPermissionHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_department_list_for_permission_query_1 = __webpack_require__(/*! ./get-department-list-for-permission.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.query.ts");
+const department_entity_1 = __webpack_require__(/*! @libs/modules/department/department.entity */ "./libs/modules/department/department.entity.ts");
+let GetDepartmentListForPermissionHandler = GetDepartmentListForPermissionHandler_1 = class GetDepartmentListForPermissionHandler {
+    constructor(dataSource) {
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetDepartmentListForPermissionHandler_1.name);
+    }
+    async execute(query) {
+        this.logger.log('권한 관리용 부서 목록 조회 시작');
+        const departments = await this.dataSource.manager
+            .createQueryBuilder(department_entity_1.Department, 'dept')
+            .where('dept.departmentName != :excludedDepartmentName', { excludedDepartmentName: '퇴사자' })
+            .orderBy('dept.order', 'ASC')
+            .getMany();
+        const departmentList = departments.map((dept) => ({
+            id: dept.id,
+            departmentCode: dept.departmentCode,
+            departmentName: dept.departmentName,
+            type: dept.type,
+            order: dept.order,
+        }));
+        this.logger.log(`권한 관리용 부서 목록 조회 완료: totalCount=${departmentList.length}`);
+        return {
+            departments: departmentList,
+            totalCount: departmentList.length,
+        };
+    }
+};
+exports.GetDepartmentListForPermissionHandler = GetDepartmentListForPermissionHandler;
+exports.GetDepartmentListForPermissionHandler = GetDepartmentListForPermissionHandler = GetDepartmentListForPermissionHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_department_list_for_permission_query_1.GetDepartmentListForPermissionQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _a : Object])
+], GetDepartmentListForPermissionHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.query.ts":
+/*!************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.query.ts ***!
+  \************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetDepartmentListForPermissionQuery = void 0;
+class GetDepartmentListForPermissionQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetDepartmentListForPermissionQuery = GetDepartmentListForPermissionQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.command.ts":
+/*!****************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.command.ts ***!
+  \****************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateEmployeeExtraInfoCommand = void 0;
+class UpdateEmployeeExtraInfoCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.UpdateEmployeeExtraInfoCommand = UpdateEmployeeExtraInfoCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.handler.ts":
+/*!****************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.handler.ts ***!
+  \****************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UpdateEmployeeExtraInfoHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateEmployeeExtraInfoHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const update_employee_extra_info_command_1 = __webpack_require__(/*! ./update-employee-extra-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.command.ts");
+const employee_extra_info_service_1 = __webpack_require__(/*! ../../../../../domain/employee-extra-info/employee-extra-info.service */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.service.ts");
+let UpdateEmployeeExtraInfoHandler = UpdateEmployeeExtraInfoHandler_1 = class UpdateEmployeeExtraInfoHandler {
+    constructor(employeeExtraInfoService, dataSource) {
+        this.employeeExtraInfoService = employeeExtraInfoService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(UpdateEmployeeExtraInfoHandler_1.name);
+    }
+    async execute(command) {
+        const { employeeId, isExcludedFromSummary, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`직원 추가 정보 변경 시작: employeeId=${employeeId}, isExcludedFromSummary=${isExcludedFromSummary}`);
+                const extraInfo = await this.employeeExtraInfoService.직원ID로생성또는수정한다(employeeId, {
+                    isExcludedFromSummary,
+                }, performedBy, manager);
+                this.logger.log(`직원 추가 정보 변경 완료: extraInfoId=${extraInfo.id}`);
+                return {
+                    extraInfo,
+                };
+            }
+            catch (error) {
+                this.logger.error(`직원 추가 정보 변경 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.UpdateEmployeeExtraInfoHandler = UpdateEmployeeExtraInfoHandler;
+exports.UpdateEmployeeExtraInfoHandler = UpdateEmployeeExtraInfoHandler = UpdateEmployeeExtraInfoHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(update_employee_extra_info_command_1.UpdateEmployeeExtraInfoCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof employee_extra_info_service_1.DomainEmployeeExtraInfoService !== "undefined" && employee_extra_info_service_1.DomainEmployeeExtraInfoService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], UpdateEmployeeExtraInfoHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.handler.ts":
+/*!***************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.handler.ts ***!
+  \***************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetManagerEmployeeListHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetManagerEmployeeListHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_manager_employee_list_query_1 = __webpack_require__(/*! ./get-manager-employee-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.query.ts");
+const employee_department_position_history_service_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.service */ "./libs/modules/employee-department-position-history/employee-department-position-history.service.ts");
+const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
+let GetManagerEmployeeListHandler = GetManagerEmployeeListHandler_1 = class GetManagerEmployeeListHandler {
+    constructor(employeeDepartmentPositionHistoryService, dataSource) {
+        this.employeeDepartmentPositionHistoryService = employeeDepartmentPositionHistoryService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetManagerEmployeeListHandler_1.name);
+    }
+    async execute(query) {
+        this.logger.log('관리자 직원 목록 조회 시작');
+        const managerHistories = await this.dataSource.manager
+            .createQueryBuilder()
+            .select('DISTINCT eh.employeeId', 'employeeId')
+            .from('employee_department_position_history', 'eh')
+            .leftJoin('employee', 'emp', 'emp.id = eh.employeeId')
+            .where('eh.isManager = :isManager', { isManager: true })
+            .andWhere('emp.terminationDate IS NULL')
+            .getRawMany();
+        if (managerHistories.length === 0) {
+            this.logger.warn('관리자였던 적이 있는 직원이 없습니다.');
+            return { employees: [], totalCount: 0 };
+        }
+        const employeeIds = managerHistories.map((h) => h.employeeId);
+        const employees = await this.dataSource.manager
+            .createQueryBuilder(employee_entity_1.Employee, 'emp')
+            .where('emp.id IN (:...ids)', { ids: employeeIds })
+            .andWhere('emp.terminationDate IS NULL')
+            .orderBy('emp.employeeNumber', 'ASC')
+            .getMany();
+        const employeeList = employees.map((emp) => ({
+            id: emp.id,
+            employeeNumber: emp.employeeNumber,
+            employeeName: emp.name,
+        }));
+        this.logger.log(`관리자 직원 목록 조회 완료: totalCount=${employeeList.length}`);
+        return {
+            employees: employeeList,
+            totalCount: employeeList.length,
+        };
+    }
+};
+exports.GetManagerEmployeeListHandler = GetManagerEmployeeListHandler;
+exports.GetManagerEmployeeListHandler = GetManagerEmployeeListHandler = GetManagerEmployeeListHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_manager_employee_list_query_1.GetManagerEmployeeListQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService !== "undefined" && employee_department_position_history_service_1.DomainEmployeeDepartmentPositionHistoryService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], GetManagerEmployeeListHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.query.ts":
+/*!*************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.query.ts ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetManagerEmployeeListQuery = void 0;
+class GetManagerEmployeeListQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetManagerEmployeeListQuery = GetManagerEmployeeListQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.command.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.command.ts ***!
+  \**************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateHolidayInfoCommand = void 0;
+class CreateHolidayInfoCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.CreateHolidayInfoCommand = CreateHolidayInfoCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.handler.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.handler.ts ***!
+  \**************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var CreateHolidayInfoHandler_1;
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateHolidayInfoHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const create_holiday_info_command_1 = __webpack_require__(/*! ./create-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.command.ts");
+const holiday_info_entity_1 = __webpack_require__(/*! ../../../../../domain/holiday-info/holiday-info.entity */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.entity.ts");
+let CreateHolidayInfoHandler = CreateHolidayInfoHandler_1 = class CreateHolidayInfoHandler {
+    constructor(dataSource) {
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(CreateHolidayInfoHandler_1.name);
+    }
+    async execute(command) {
+        const { holidayName, holidayDate, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`휴일 정보 생성 시작: holidayName=${holidayName}, holidayDate=${holidayDate}`);
+                const holidayInfoEntity = new holiday_info_entity_1.HolidayInfo(holidayName, holidayDate);
+                holidayInfoEntity.생성자설정한다(performedBy);
+                holidayInfoEntity.메타데이터업데이트한다(performedBy);
+                const saved = await manager.save(holidayInfoEntity);
+                const holidayInfo = saved.DTO변환한다();
+                this.logger.log(`휴일 정보 생성 완료: holidayInfoId=${holidayInfo.id}`);
+                return {
+                    holidayInfo,
+                };
+            }
+            catch (error) {
+                this.logger.error(`휴일 정보 생성 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.CreateHolidayInfoHandler = CreateHolidayInfoHandler;
+exports.CreateHolidayInfoHandler = CreateHolidayInfoHandler = CreateHolidayInfoHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(create_holiday_info_command_1.CreateHolidayInfoCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _a : Object])
+], CreateHolidayInfoHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.command.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.command.ts ***!
+  \**************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeleteHolidayInfoCommand = void 0;
+class DeleteHolidayInfoCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.DeleteHolidayInfoCommand = DeleteHolidayInfoCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.handler.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.handler.ts ***!
+  \**************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var DeleteHolidayInfoHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeleteHolidayInfoHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const delete_holiday_info_command_1 = __webpack_require__(/*! ./delete-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.command.ts");
+const holiday_info_service_1 = __webpack_require__(/*! ../../../../../domain/holiday-info/holiday-info.service */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.service.ts");
+let DeleteHolidayInfoHandler = DeleteHolidayInfoHandler_1 = class DeleteHolidayInfoHandler {
+    constructor(holidayInfoService, dataSource) {
+        this.holidayInfoService = holidayInfoService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(DeleteHolidayInfoHandler_1.name);
+    }
+    async execute(command) {
+        const { id, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`휴일 정보 삭제 시작: id=${id}`);
+                await this.holidayInfoService.삭제한다(id, performedBy, manager);
+                this.logger.log(`휴일 정보 삭제 완료: id=${id}`);
+                return {
+                    success: true,
+                };
+            }
+            catch (error) {
+                this.logger.error(`휴일 정보 삭제 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.DeleteHolidayInfoHandler = DeleteHolidayInfoHandler;
+exports.DeleteHolidayInfoHandler = DeleteHolidayInfoHandler = DeleteHolidayInfoHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(delete_holiday_info_command_1.DeleteHolidayInfoCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], DeleteHolidayInfoHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.command.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.command.ts ***!
+  \**************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateHolidayInfoCommand = void 0;
+class UpdateHolidayInfoCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.UpdateHolidayInfoCommand = UpdateHolidayInfoCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.handler.ts":
+/*!**************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.handler.ts ***!
+  \**************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UpdateHolidayInfoHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateHolidayInfoHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const update_holiday_info_command_1 = __webpack_require__(/*! ./update-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.command.ts");
+const holiday_info_service_1 = __webpack_require__(/*! ../../../../../domain/holiday-info/holiday-info.service */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.service.ts");
+let UpdateHolidayInfoHandler = UpdateHolidayInfoHandler_1 = class UpdateHolidayInfoHandler {
+    constructor(holidayInfoService, dataSource) {
+        this.holidayInfoService = holidayInfoService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(UpdateHolidayInfoHandler_1.name);
+    }
+    async execute(command) {
+        const { id, holidayName, holidayDate, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`휴일 정보 수정 시작: id=${id}`);
+                const holidayInfo = await this.holidayInfoService.수정한다(id, {
+                    holidayName,
+                    holidayDate,
+                }, performedBy, manager);
+                this.logger.log(`휴일 정보 수정 완료: holidayInfoId=${holidayInfo.id}`);
+                return {
+                    holidayInfo,
+                };
+            }
+            catch (error) {
+                this.logger.error(`휴일 정보 수정 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.UpdateHolidayInfoHandler = UpdateHolidayInfoHandler;
+exports.UpdateHolidayInfoHandler = UpdateHolidayInfoHandler = UpdateHolidayInfoHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(update_holiday_info_command_1.UpdateHolidayInfoCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], UpdateHolidayInfoHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.handler.ts":
+/*!**********************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.handler.ts ***!
+  \**********************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetHolidayListHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetHolidayListHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_holiday_list_query_1 = __webpack_require__(/*! ./get-holiday-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.query.ts");
+const holiday_info_service_1 = __webpack_require__(/*! ../../../../../domain/holiday-info/holiday-info.service */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.service.ts");
+let GetHolidayListHandler = GetHolidayListHandler_1 = class GetHolidayListHandler {
+    constructor(holidayInfoService, dataSource) {
+        this.holidayInfoService = holidayInfoService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetHolidayListHandler_1.name);
+    }
+    async execute(query) {
+        this.logger.log('휴일 목록 조회 시작');
+        const holidays = await this.holidayInfoService.목록조회한다();
+        this.logger.log(`휴일 목록 조회 완료: totalCount=${holidays.length}`);
+        return {
+            holidays,
+            totalCount: holidays.length,
+        };
+    }
+};
+exports.GetHolidayListHandler = GetHolidayListHandler;
+exports.GetHolidayListHandler = GetHolidayListHandler = GetHolidayListHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_holiday_list_query_1.GetHolidayListQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof holiday_info_service_1.DomainHolidayInfoService !== "undefined" && holiday_info_service_1.DomainHolidayInfoService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], GetHolidayListHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.query.ts":
+/*!********************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.query.ts ***!
+  \********************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetHolidayListQuery = void 0;
+class GetHolidayListQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetHolidayListQuery = GetHolidayListQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/index.ts":
+/*!******************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/index.ts ***!
+  \******************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.COMMAND_HANDLERS = exports.QUERY_HANDLERS = void 0;
+__exportStar(__webpack_require__(/*! ./employee/queries/get-manager-employee-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./department/queries/get-department-list-for-permission.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./holiday-info/queries/get-holiday-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./work-time-override/queries/get-work-time-override-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./permission/commands/update-employee-department-permission.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./employee-extra-info/commands/update-employee-extra-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./holiday-info/commands/create-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./holiday-info/commands/update-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./holiday-info/commands/delete-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./work-time-override/commands/create-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./work-time-override/commands/update-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.handler.ts"), exports);
+__exportStar(__webpack_require__(/*! ./work-time-override/commands/delete-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.handler.ts"), exports);
+const get_manager_employee_list_handler_1 = __webpack_require__(/*! ./employee/queries/get-manager-employee-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.handler.ts");
+const get_department_list_for_permission_handler_1 = __webpack_require__(/*! ./department/queries/get-department-list-for-permission.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.handler.ts");
+const get_holiday_list_handler_1 = __webpack_require__(/*! ./holiday-info/queries/get-holiday-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.handler.ts");
+const get_work_time_override_list_handler_1 = __webpack_require__(/*! ./work-time-override/queries/get-work-time-override-list.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.handler.ts");
+const update_employee_department_permission_handler_1 = __webpack_require__(/*! ./permission/commands/update-employee-department-permission.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.handler.ts");
+const update_employee_extra_info_handler_1 = __webpack_require__(/*! ./employee-extra-info/commands/update-employee-extra-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.handler.ts");
+const create_holiday_info_handler_1 = __webpack_require__(/*! ./holiday-info/commands/create-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.handler.ts");
+const update_holiday_info_handler_1 = __webpack_require__(/*! ./holiday-info/commands/update-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.handler.ts");
+const delete_holiday_info_handler_1 = __webpack_require__(/*! ./holiday-info/commands/delete-holiday-info.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.handler.ts");
+const create_work_time_override_handler_1 = __webpack_require__(/*! ./work-time-override/commands/create-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.handler.ts");
+const update_work_time_override_handler_1 = __webpack_require__(/*! ./work-time-override/commands/update-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.handler.ts");
+const delete_work_time_override_handler_1 = __webpack_require__(/*! ./work-time-override/commands/delete-work-time-override.handler */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.handler.ts");
+exports.QUERY_HANDLERS = [
+    get_manager_employee_list_handler_1.GetManagerEmployeeListHandler,
+    get_department_list_for_permission_handler_1.GetDepartmentListForPermissionHandler,
+    get_holiday_list_handler_1.GetHolidayListHandler,
+    get_work_time_override_list_handler_1.GetWorkTimeOverrideListHandler,
+];
+exports.COMMAND_HANDLERS = [
+    update_employee_department_permission_handler_1.UpdateEmployeeDepartmentPermissionHandler,
+    update_employee_extra_info_handler_1.UpdateEmployeeExtraInfoHandler,
+    create_holiday_info_handler_1.CreateHolidayInfoHandler,
+    update_holiday_info_handler_1.UpdateHolidayInfoHandler,
+    delete_holiday_info_handler_1.DeleteHolidayInfoHandler,
+    create_work_time_override_handler_1.CreateWorkTimeOverrideHandler,
+    update_work_time_override_handler_1.UpdateWorkTimeOverrideHandler,
+    delete_work_time_override_handler_1.DeleteWorkTimeOverrideHandler,
+];
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.command.ts":
+/*!******************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.command.ts ***!
+  \******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateEmployeeDepartmentPermissionCommand = void 0;
+class UpdateEmployeeDepartmentPermissionCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.UpdateEmployeeDepartmentPermissionCommand = UpdateEmployeeDepartmentPermissionCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.handler.ts":
+/*!******************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.handler.ts ***!
+  \******************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UpdateEmployeeDepartmentPermissionHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateEmployeeDepartmentPermissionHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const update_employee_department_permission_command_1 = __webpack_require__(/*! ./update-employee-department-permission.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.command.ts");
+const employee_department_permission_service_1 = __webpack_require__(/*! ../../../../../domain/employee-department-permission/employee-department-permission.service */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.service.ts");
+let UpdateEmployeeDepartmentPermissionHandler = UpdateEmployeeDepartmentPermissionHandler_1 = class UpdateEmployeeDepartmentPermissionHandler {
+    constructor(permissionService, dataSource) {
+        this.permissionService = permissionService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(UpdateEmployeeDepartmentPermissionHandler_1.name);
+    }
+    async execute(command) {
+        const { employeeId, departmentId, hasAccessPermission, hasReviewPermission, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`직원-부서 권한 변경 시작: employeeId=${employeeId}, departmentId=${departmentId}, hasAccessPermission=${hasAccessPermission}, hasReviewPermission=${hasReviewPermission}`);
+                const existingPermission = await this.permissionService.직원과부서로조회한다(employeeId, departmentId, manager);
+                let permission;
+                if (existingPermission) {
+                    permission = await this.permissionService.수정한다(existingPermission.id, {
+                        hasAccessPermission,
+                        hasReviewPermission,
+                    }, performedBy, manager);
+                }
+                else {
+                    permission = await this.permissionService.생성한다({
+                        employeeId,
+                        departmentId,
+                        hasAccessPermission,
+                        hasReviewPermission,
+                    }, manager);
+                }
+                this.logger.log(`직원-부서 권한 변경 완료: permissionId=${permission.id}`);
+                return {
+                    permission,
+                };
+            }
+            catch (error) {
+                this.logger.error(`직원-부서 권한 변경 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.UpdateEmployeeDepartmentPermissionHandler = UpdateEmployeeDepartmentPermissionHandler;
+exports.UpdateEmployeeDepartmentPermissionHandler = UpdateEmployeeDepartmentPermissionHandler = UpdateEmployeeDepartmentPermissionHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(update_employee_department_permission_command_1.UpdateEmployeeDepartmentPermissionCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof employee_department_permission_service_1.DomainEmployeeDepartmentPermissionService !== "undefined" && employee_department_permission_service_1.DomainEmployeeDepartmentPermissionService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], UpdateEmployeeDepartmentPermissionHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.command.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.command.ts ***!
+  \**************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateWorkTimeOverrideCommand = void 0;
+class CreateWorkTimeOverrideCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.CreateWorkTimeOverrideCommand = CreateWorkTimeOverrideCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var CreateWorkTimeOverrideHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateWorkTimeOverrideHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const create_work_time_override_command_1 = __webpack_require__(/*! ./create-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.command.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+let CreateWorkTimeOverrideHandler = CreateWorkTimeOverrideHandler_1 = class CreateWorkTimeOverrideHandler {
+    constructor(workTimeOverrideService, dataSource) {
+        this.workTimeOverrideService = workTimeOverrideService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(CreateWorkTimeOverrideHandler_1.name);
+    }
+    async execute(command) {
+        const { date, startWorkTime, endWorkTime, reason, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`특별근태시간 생성 시작: date=${date}`);
+                const workTimeOverride = await this.workTimeOverrideService.생성한다({
+                    date,
+                    startWorkTime,
+                    endWorkTime,
+                    reason,
+                }, performedBy, manager);
+                this.logger.log(`특별근태시간 생성 완료: workTimeOverrideId=${workTimeOverride.id}`);
+                return {
+                    workTimeOverride,
+                };
+            }
+            catch (error) {
+                this.logger.error(`특별근태시간 생성 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.CreateWorkTimeOverrideHandler = CreateWorkTimeOverrideHandler;
+exports.CreateWorkTimeOverrideHandler = CreateWorkTimeOverrideHandler = CreateWorkTimeOverrideHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(create_work_time_override_command_1.CreateWorkTimeOverrideCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], CreateWorkTimeOverrideHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.command.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.command.ts ***!
+  \**************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeleteWorkTimeOverrideCommand = void 0;
+class DeleteWorkTimeOverrideCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.DeleteWorkTimeOverrideCommand = DeleteWorkTimeOverrideCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var DeleteWorkTimeOverrideHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeleteWorkTimeOverrideHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const delete_work_time_override_command_1 = __webpack_require__(/*! ./delete-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.command.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+let DeleteWorkTimeOverrideHandler = DeleteWorkTimeOverrideHandler_1 = class DeleteWorkTimeOverrideHandler {
+    constructor(workTimeOverrideService, dataSource) {
+        this.workTimeOverrideService = workTimeOverrideService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(DeleteWorkTimeOverrideHandler_1.name);
+    }
+    async execute(command) {
+        const { id, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`특별근태시간 삭제 시작: id=${id}`);
+                await this.workTimeOverrideService.삭제한다(id, performedBy, manager);
+                this.logger.log(`특별근태시간 삭제 완료: id=${id}`);
+                return {
+                    success: true,
+                };
+            }
+            catch (error) {
+                this.logger.error(`특별근태시간 삭제 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.DeleteWorkTimeOverrideHandler = DeleteWorkTimeOverrideHandler;
+exports.DeleteWorkTimeOverrideHandler = DeleteWorkTimeOverrideHandler = DeleteWorkTimeOverrideHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(delete_work_time_override_command_1.DeleteWorkTimeOverrideCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], DeleteWorkTimeOverrideHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.command.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.command.ts ***!
+  \**************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateWorkTimeOverrideCommand = void 0;
+class UpdateWorkTimeOverrideCommand {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.UpdateWorkTimeOverrideCommand = UpdateWorkTimeOverrideCommand;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.handler.ts":
+/*!**************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.handler.ts ***!
+  \**************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UpdateWorkTimeOverrideHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateWorkTimeOverrideHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const update_work_time_override_command_1 = __webpack_require__(/*! ./update-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.command.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+let UpdateWorkTimeOverrideHandler = UpdateWorkTimeOverrideHandler_1 = class UpdateWorkTimeOverrideHandler {
+    constructor(workTimeOverrideService, dataSource) {
+        this.workTimeOverrideService = workTimeOverrideService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(UpdateWorkTimeOverrideHandler_1.name);
+    }
+    async execute(command) {
+        const { id, startWorkTime, endWorkTime, reason, performedBy } = command.data;
+        return await this.dataSource.transaction(async (manager) => {
+            try {
+                this.logger.log(`특별근태시간 수정 시작: id=${id}`);
+                const workTimeOverride = await this.workTimeOverrideService.수정한다(id, {
+                    startWorkTime,
+                    endWorkTime,
+                    reason,
+                }, performedBy, manager);
+                this.logger.log(`특별근태시간 수정 완료: workTimeOverrideId=${workTimeOverride.id}`);
+                return {
+                    workTimeOverride,
+                };
+            }
+            catch (error) {
+                this.logger.error(`특별근태시간 수정 실패: ${error.message}`, error.stack);
+                throw error;
+            }
+        });
+    }
+};
+exports.UpdateWorkTimeOverrideHandler = UpdateWorkTimeOverrideHandler;
+exports.UpdateWorkTimeOverrideHandler = UpdateWorkTimeOverrideHandler = UpdateWorkTimeOverrideHandler_1 = __decorate([
+    (0, cqrs_1.CommandHandler)(update_work_time_override_command_1.UpdateWorkTimeOverrideCommand),
+    __metadata("design:paramtypes", [typeof (_a = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], UpdateWorkTimeOverrideHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.handler.ts":
+/*!***************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.handler.ts ***!
+  \***************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var GetWorkTimeOverrideListHandler_1;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetWorkTimeOverrideListHandler = void 0;
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const get_work_time_override_list_query_1 = __webpack_require__(/*! ./get-work-time-override-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.query.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ../../../../../domain/work-time-override/work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+let GetWorkTimeOverrideListHandler = GetWorkTimeOverrideListHandler_1 = class GetWorkTimeOverrideListHandler {
+    constructor(workTimeOverrideService, dataSource) {
+        this.workTimeOverrideService = workTimeOverrideService;
+        this.dataSource = dataSource;
+        this.logger = new common_1.Logger(GetWorkTimeOverrideListHandler_1.name);
+    }
+    async execute(query) {
+        this.logger.log('특별근태시간 목록 조회 시작');
+        const workTimeOverrides = await this.workTimeOverrideService.목록조회한다();
+        this.logger.log(`특별근태시간 목록 조회 완료: totalCount=${workTimeOverrides.length}`);
+        return {
+            workTimeOverrides,
+            totalCount: workTimeOverrides.length,
+        };
+    }
+};
+exports.GetWorkTimeOverrideListHandler = GetWorkTimeOverrideListHandler;
+exports.GetWorkTimeOverrideListHandler = GetWorkTimeOverrideListHandler = GetWorkTimeOverrideListHandler_1 = __decorate([
+    (0, cqrs_1.QueryHandler)(get_work_time_override_list_query_1.GetWorkTimeOverrideListQuery),
+    __metadata("design:paramtypes", [typeof (_a = typeof work_time_override_service_1.DomainWorkTimeOverrideService !== "undefined" && work_time_override_service_1.DomainWorkTimeOverrideService) === "function" ? _a : Object, typeof (_b = typeof typeorm_1.DataSource !== "undefined" && typeorm_1.DataSource) === "function" ? _b : Object])
+], GetWorkTimeOverrideListHandler);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.query.ts":
+/*!*************************************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.query.ts ***!
+  \*************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetWorkTimeOverrideListQuery = void 0;
+class GetWorkTimeOverrideListQuery {
+    constructor(data) {
+        this.data = data;
+    }
+}
+exports.GetWorkTimeOverrideListQuery = GetWorkTimeOverrideListQuery;
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/settings-context.module.ts":
+/*!***************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/settings-context.module.ts ***!
+  \***************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsContextModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const settings_context_service_1 = __webpack_require__(/*! ./settings-context.service */ "./apps/lams/src/refactoring/context/settings-context/settings-context.service.ts");
+const handlers_1 = __webpack_require__(/*! ./handlers */ "./apps/lams/src/refactoring/context/settings-context/handlers/index.ts");
+const employee_department_permission_module_1 = __webpack_require__(/*! ../../domain/employee-department-permission/employee-department-permission.module */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.module.ts");
+const employee_extra_info_module_1 = __webpack_require__(/*! ../../domain/employee-extra-info/employee-extra-info.module */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.module.ts");
+const holiday_info_module_1 = __webpack_require__(/*! ../../domain/holiday-info/holiday-info.module */ "./apps/lams/src/refactoring/domain/holiday-info/holiday-info.module.ts");
+const work_time_override_module_1 = __webpack_require__(/*! ../../domain/work-time-override/work-time-override.module */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.module.ts");
+const employee_module_1 = __webpack_require__(/*! @libs/modules/employee/employee.module */ "./libs/modules/employee/employee.module.ts");
+const department_module_1 = __webpack_require__(/*! @libs/modules/department/department.module */ "./libs/modules/department/department.module.ts");
+const employee_department_position_history_module_1 = __webpack_require__(/*! @libs/modules/employee-department-position-history/employee-department-position-history.module */ "./libs/modules/employee-department-position-history/employee-department-position-history.module.ts");
+let SettingsContextModule = class SettingsContextModule {
+};
+exports.SettingsContextModule = SettingsContextModule;
+exports.SettingsContextModule = SettingsContextModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            cqrs_1.CqrsModule,
+            employee_department_permission_module_1.DomainEmployeeDepartmentPermissionModule,
+            employee_extra_info_module_1.DomainEmployeeExtraInfoModule,
+            holiday_info_module_1.DomainHolidayInfoModule,
+            work_time_override_module_1.WorkTimeOverrideModule,
+            employee_module_1.DomainEmployeeModule,
+            department_module_1.DomainDepartmentModule,
+            employee_department_position_history_module_1.DomainEmployeeDepartmentPositionHistoryModule,
+        ],
+        providers: [settings_context_service_1.SettingsContextService, ...handlers_1.QUERY_HANDLERS, ...handlers_1.COMMAND_HANDLERS],
+        exports: [settings_context_service_1.SettingsContextService],
+    })
+], SettingsContextModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/context/settings-context/settings-context.service.ts":
+/*!****************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/context/settings-context/settings-context.service.ts ***!
+  \****************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsContextService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const cqrs_1 = __webpack_require__(/*! @nestjs/cqrs */ "@nestjs/cqrs");
+const get_manager_employee_list_query_1 = __webpack_require__(/*! ./handlers/employee/queries/get-manager-employee-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee/queries/get-manager-employee-list.query.ts");
+const get_department_list_for_permission_query_1 = __webpack_require__(/*! ./handlers/department/queries/get-department-list-for-permission.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/department/queries/get-department-list-for-permission.query.ts");
+const get_holiday_list_query_1 = __webpack_require__(/*! ./handlers/holiday-info/queries/get-holiday-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/queries/get-holiday-list.query.ts");
+const get_work_time_override_list_query_1 = __webpack_require__(/*! ./handlers/work-time-override/queries/get-work-time-override-list.query */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/queries/get-work-time-override-list.query.ts");
+const update_employee_department_permission_command_1 = __webpack_require__(/*! ./handlers/permission/commands/update-employee-department-permission.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/permission/commands/update-employee-department-permission.command.ts");
+const update_employee_extra_info_command_1 = __webpack_require__(/*! ./handlers/employee-extra-info/commands/update-employee-extra-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/employee-extra-info/commands/update-employee-extra-info.command.ts");
+const create_holiday_info_command_1 = __webpack_require__(/*! ./handlers/holiday-info/commands/create-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/create-holiday-info.command.ts");
+const update_holiday_info_command_1 = __webpack_require__(/*! ./handlers/holiday-info/commands/update-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/update-holiday-info.command.ts");
+const delete_holiday_info_command_1 = __webpack_require__(/*! ./handlers/holiday-info/commands/delete-holiday-info.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/holiday-info/commands/delete-holiday-info.command.ts");
+const create_work_time_override_command_1 = __webpack_require__(/*! ./handlers/work-time-override/commands/create-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/create-work-time-override.command.ts");
+const update_work_time_override_command_1 = __webpack_require__(/*! ./handlers/work-time-override/commands/update-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/update-work-time-override.command.ts");
+const delete_work_time_override_command_1 = __webpack_require__(/*! ./handlers/work-time-override/commands/delete-work-time-override.command */ "./apps/lams/src/refactoring/context/settings-context/handlers/work-time-override/commands/delete-work-time-override.command.ts");
+let SettingsContextService = class SettingsContextService {
+    constructor(queryBus, commandBus) {
+        this.queryBus = queryBus;
+        this.commandBus = commandBus;
+    }
+    async 관리자직원목록을조회한다(query) {
+        return await this.queryBus.execute(new get_manager_employee_list_query_1.GetManagerEmployeeListQuery(query));
+    }
+    async 권한관리용부서목록을조회한다(query) {
+        return await this.queryBus.execute(new get_department_list_for_permission_query_1.GetDepartmentListForPermissionQuery(query));
+    }
+    async 휴일목록을조회한다(query) {
+        return await this.queryBus.execute(new get_holiday_list_query_1.GetHolidayListQuery(query));
+    }
+    async 특별근태시간목록을조회한다(query) {
+        return await this.queryBus.execute(new get_work_time_override_list_query_1.GetWorkTimeOverrideListQuery(query));
+    }
+    async 직원부서권한을변경한다(command) {
+        return await this.commandBus.execute(new update_employee_department_permission_command_1.UpdateEmployeeDepartmentPermissionCommand(command));
+    }
+    async 직원추가정보를변경한다(command) {
+        return await this.commandBus.execute(new update_employee_extra_info_command_1.UpdateEmployeeExtraInfoCommand(command));
+    }
+    async 휴일정보를생성한다(command) {
+        return await this.commandBus.execute(new create_holiday_info_command_1.CreateHolidayInfoCommand(command));
+    }
+    async 휴일정보를수정한다(command) {
+        return await this.commandBus.execute(new update_holiday_info_command_1.UpdateHolidayInfoCommand(command));
+    }
+    async 휴일정보를삭제한다(command) {
+        return await this.commandBus.execute(new delete_holiday_info_command_1.DeleteHolidayInfoCommand(command));
+    }
+    async 특별근태시간을생성한다(command) {
+        return await this.commandBus.execute(new create_work_time_override_command_1.CreateWorkTimeOverrideCommand(command));
+    }
+    async 특별근태시간을수정한다(command) {
+        return await this.commandBus.execute(new update_work_time_override_command_1.UpdateWorkTimeOverrideCommand(command));
+    }
+    async 특별근태시간을삭제한다(command) {
+        return await this.commandBus.execute(new delete_work_time_override_command_1.DeleteWorkTimeOverrideCommand(command));
+    }
+};
+exports.SettingsContextService = SettingsContextService;
+exports.SettingsContextService = SettingsContextService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _b : Object])
+], SettingsContextService);
 
 
 /***/ }),
@@ -2648,16 +7407,32 @@ let AttendanceIssue = class AttendanceIssue extends base_entity_1.BaseEntity {
         if (this.daily_event_summary_id) {
             this.validateUuidFormat(this.daily_event_summary_id, 'daily_event_summary_id');
         }
-        if (this.problematic_attendance_type_id) {
-            this.validateUuidFormat(this.problematic_attendance_type_id, 'problematic_attendance_type_id');
+        if (this.problematic_attendance_type_ids) {
+            if (!Array.isArray(this.problematic_attendance_type_ids)) {
+                throw new Error('문제가 된 근태 유형 ID는 배열이어야 합니다.');
+            }
+            if (this.problematic_attendance_type_ids.length > 2) {
+                throw new Error('문제가 된 근태 유형 ID는 최대 2개까지 가능합니다.');
+            }
+            this.problematic_attendance_type_ids.forEach((id, index) => {
+                this.validateUuidFormat(id, `problematic_attendance_type_ids[${index}]`);
+            });
         }
-        if (this.corrected_attendance_type_id) {
-            this.validateUuidFormat(this.corrected_attendance_type_id, 'corrected_attendance_type_id');
+        if (this.corrected_attendance_type_ids) {
+            if (!Array.isArray(this.corrected_attendance_type_ids)) {
+                throw new Error('변경할 근태 유형 ID는 배열이어야 합니다.');
+            }
+            if (this.corrected_attendance_type_ids.length > 2) {
+                throw new Error('변경할 근태 유형 ID는 최대 2개까지 가능합니다.');
+            }
+            this.corrected_attendance_type_ids.forEach((id, index) => {
+                this.validateUuidFormat(id, `corrected_attendance_type_ids[${index}]`);
+            });
         }
     }
     validateLogicalConsistency() {
     }
-    constructor(employee_id, date, daily_event_summary_id, problematic_enter_time, problematic_leave_time, corrected_enter_time, corrected_leave_time, problematic_attendance_type_id, corrected_attendance_type_id, description) {
+    constructor(employee_id, date, daily_event_summary_id, problematic_enter_time, problematic_leave_time, corrected_enter_time, corrected_leave_time, problematic_attendance_type_ids, corrected_attendance_type_ids, description) {
         super();
         this.employee_id = employee_id;
         this.date = date;
@@ -2666,17 +7441,17 @@ let AttendanceIssue = class AttendanceIssue extends base_entity_1.BaseEntity {
         this.problematic_leave_time = problematic_leave_time || null;
         this.corrected_enter_time = corrected_enter_time || null;
         this.corrected_leave_time = corrected_leave_time || null;
-        this.problematic_attendance_type_id = problematic_attendance_type_id || null;
-        this.corrected_attendance_type_id = corrected_attendance_type_id || null;
+        this.problematic_attendance_type_ids = problematic_attendance_type_ids || null;
+        this.corrected_attendance_type_ids = corrected_attendance_type_ids || null;
         this.description = description || null;
-        this.status = attendance_issue_types_1.AttendanceIssueStatus.PENDING;
+        this.status = attendance_issue_types_1.AttendanceIssueStatus.REQUEST;
         this.confirmed_by = null;
         this.confirmed_at = null;
         this.resolved_at = null;
         this.rejection_reason = null;
         this.validateInvariants();
     }
-    업데이트한다(problematic_enter_time, problematic_leave_time, corrected_enter_time, corrected_leave_time, problematic_attendance_type_id, corrected_attendance_type_id, description, status, rejection_reason) {
+    업데이트한다(problematic_enter_time, problematic_leave_time, corrected_enter_time, corrected_leave_time, problematic_attendance_type_ids, corrected_attendance_type_ids, description, status, rejection_reason) {
         if (problematic_enter_time !== undefined) {
             this.problematic_enter_time = problematic_enter_time;
         }
@@ -2689,11 +7464,11 @@ let AttendanceIssue = class AttendanceIssue extends base_entity_1.BaseEntity {
         if (corrected_leave_time !== undefined) {
             this.corrected_leave_time = corrected_leave_time;
         }
-        if (problematic_attendance_type_id !== undefined) {
-            this.problematic_attendance_type_id = problematic_attendance_type_id;
+        if (problematic_attendance_type_ids !== undefined) {
+            this.problematic_attendance_type_ids = problematic_attendance_type_ids;
         }
-        if (corrected_attendance_type_id !== undefined) {
-            this.corrected_attendance_type_id = corrected_attendance_type_id;
+        if (corrected_attendance_type_ids !== undefined) {
+            this.corrected_attendance_type_ids = corrected_attendance_type_ids;
         }
         if (description !== undefined) {
             this.description = description;
@@ -2706,17 +7481,14 @@ let AttendanceIssue = class AttendanceIssue extends base_entity_1.BaseEntity {
         }
         this.validateInvariants();
     }
-    확인처리한다(confirmed_by) {
-        this.status = attendance_issue_types_1.AttendanceIssueStatus.CONFIRMED;
+    반영처리한다(confirmed_by) {
+        this.status = attendance_issue_types_1.AttendanceIssueStatus.APPLIED;
         this.confirmed_by = confirmed_by;
         this.confirmed_at = new Date();
-    }
-    해결처리한다() {
-        this.status = attendance_issue_types_1.AttendanceIssueStatus.RESOLVED;
         this.resolved_at = new Date();
     }
-    거부처리한다(rejection_reason) {
-        this.status = attendance_issue_types_1.AttendanceIssueStatus.REJECTED;
+    미반영처리한다(rejection_reason) {
+        this.status = attendance_issue_types_1.AttendanceIssueStatus.NOT_APPLIED;
         this.rejection_reason = rejection_reason;
     }
     DTO변환한다() {
@@ -2729,8 +7501,8 @@ let AttendanceIssue = class AttendanceIssue extends base_entity_1.BaseEntity {
             problematicLeaveTime: this.problematic_leave_time,
             correctedEnterTime: this.corrected_enter_time,
             correctedLeaveTime: this.corrected_leave_time,
-            problematicAttendanceTypeId: this.problematic_attendance_type_id,
-            correctedAttendanceTypeId: this.corrected_attendance_type_id,
+            problematicAttendanceTypeIds: this.problematic_attendance_type_ids,
+            correctedAttendanceTypeIds: this.corrected_attendance_type_ids,
             status: this.status,
             description: this.description,
             confirmedBy: this.confirmed_by,
@@ -2821,28 +7593,28 @@ __decorate([
 ], AttendanceIssue.prototype, "corrected_leave_time", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        name: 'problematic_attendance_type_id',
-        type: 'uuid',
+        name: 'problematic_attendance_type_ids',
+        type: 'json',
         nullable: true,
-        comment: '문제가 된 근태 유형 ID',
+        comment: '문제가 된 근태 유형 ID 목록 (최대 2개)',
     }),
-    __metadata("design:type", String)
-], AttendanceIssue.prototype, "problematic_attendance_type_id", void 0);
+    __metadata("design:type", Array)
+], AttendanceIssue.prototype, "problematic_attendance_type_ids", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        name: 'corrected_attendance_type_id',
-        type: 'uuid',
+        name: 'corrected_attendance_type_ids',
+        type: 'json',
         nullable: true,
-        comment: '변경할 근태 유형 ID',
+        comment: '변경할 근태 유형 ID 목록 (최대 2개)',
     }),
-    __metadata("design:type", String)
-], AttendanceIssue.prototype, "corrected_attendance_type_id", void 0);
+    __metadata("design:type", Array)
+], AttendanceIssue.prototype, "corrected_attendance_type_ids", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: 'status',
         type: 'enum',
         enum: attendance_issue_types_1.AttendanceIssueStatus,
-        default: attendance_issue_types_1.AttendanceIssueStatus.PENDING,
+        default: attendance_issue_types_1.AttendanceIssueStatus.REQUEST,
         comment: '상태',
     }),
     __metadata("design:type", typeof (_c = typeof attendance_issue_types_1.AttendanceIssueStatus !== "undefined" && attendance_issue_types_1.AttendanceIssueStatus) === "function" ? _c : Object)
@@ -2897,7 +7669,7 @@ exports.AttendanceIssue = AttendanceIssue = __decorate([
     (0, typeorm_1.Entity)('attendance_issue'),
     (0, typeorm_1.Index)(['employee_id', 'date']),
     (0, typeorm_1.Index)(['status', 'created_at']),
-    __metadata("design:paramtypes", [String, String, String, String, String, String, String, String, String, String])
+    __metadata("design:paramtypes", [String, String, String, String, String, String, String, Array, Array, String])
 ], AttendanceIssue);
 
 
@@ -2972,7 +7744,7 @@ let DomainAttendanceIssueService = class DomainAttendanceIssueService {
     }
     async 생성한다(data, manager) {
         const repository = this.getRepository(manager);
-        const issue = new attendance_issue_entity_1.AttendanceIssue(data.employeeId, data.date, data.dailyEventSummaryId, data.problematicEnterTime, data.problematicLeaveTime, data.correctedEnterTime, data.correctedLeaveTime, data.problematicAttendanceTypeId, data.correctedAttendanceTypeId, data.description);
+        const issue = new attendance_issue_entity_1.AttendanceIssue(data.employeeId, data.date, data.dailyEventSummaryId, data.problematicEnterTime, data.problematicLeaveTime, data.correctedEnterTime, data.correctedLeaveTime, data.problematicAttendanceTypeIds, data.correctedAttendanceTypeIds, data.description);
         const saved = await repository.save(issue);
         return saved.DTO변환한다();
     }
@@ -3018,17 +7790,38 @@ let DomainAttendanceIssueService = class DomainAttendanceIssueService {
         });
         return issues.map((issue) => issue.DTO변환한다());
     }
-    async 대기중목록조회한다() {
-        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.PENDING);
+    async 일간요약ID목록으로목록조회한다(dailyEventSummaryIds, manager) {
+        if (dailyEventSummaryIds.length === 0) {
+            return new Map();
+        }
+        const repository = this.getRepository(manager);
+        const issues = await repository
+            .createQueryBuilder('issue')
+            .where('issue.daily_event_summary_id IN (:...ids)', { ids: dailyEventSummaryIds })
+            .andWhere('issue.deleted_at IS NULL')
+            .orderBy('issue.daily_event_summary_id', 'ASC')
+            .addOrderBy('issue.created_at', 'DESC')
+            .getMany();
+        const issueMap = new Map();
+        issues.forEach((issue) => {
+            const id = issue.daily_event_summary_id;
+            if (!id)
+                return;
+            if (!issueMap.has(id)) {
+                issueMap.set(id, []);
+            }
+            issueMap.get(id).push(issue.DTO변환한다());
+        });
+        return issueMap;
     }
-    async 확인된목록조회한다() {
-        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.CONFIRMED);
+    async 요청중목록조회한다() {
+        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.REQUEST);
     }
-    async 해결된목록조회한다() {
-        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.RESOLVED);
+    async 반영된목록조회한다() {
+        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.APPLIED);
     }
-    async 거부된목록조회한다() {
-        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.REJECTED);
+    async 미반영된목록조회한다() {
+        return this.상태별목록조회한다(attendance_issue_types_1.AttendanceIssueStatus.NOT_APPLIED);
     }
     async 날짜로조회한다(date) {
         const issues = await this.repository.find({
@@ -3043,43 +7836,31 @@ let DomainAttendanceIssueService = class DomainAttendanceIssueService {
         if (!issue) {
             throw new common_1.NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
         }
-        issue.업데이트한다(data.problematicEnterTime, data.problematicLeaveTime, data.correctedEnterTime, data.correctedLeaveTime, data.problematicAttendanceTypeId, data.correctedAttendanceTypeId, data.description, data.status, data.rejectionReason);
+        issue.업데이트한다(data.problematicEnterTime, data.problematicLeaveTime, data.correctedEnterTime, data.correctedLeaveTime, data.problematicAttendanceTypeIds, data.correctedAttendanceTypeIds, data.description, data.status, data.rejectionReason);
         issue.수정자설정한다(userId);
         issue.메타데이터업데이트한다(userId);
         const saved = await repository.save(issue);
         return saved.DTO변환한다();
     }
-    async 확인처리한다(id, confirmedBy, userId, manager) {
+    async 반영처리한다(id, confirmedBy, userId, manager) {
         const repository = this.getRepository(manager);
         const issue = await repository.findOne({ where: { id } });
         if (!issue) {
             throw new common_1.NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
         }
-        issue.확인처리한다(confirmedBy);
+        issue.반영처리한다(confirmedBy);
         issue.수정자설정한다(userId);
         issue.메타데이터업데이트한다(userId);
         const saved = await repository.save(issue);
         return saved.DTO변환한다();
     }
-    async 해결처리한다(id, userId, manager) {
+    async 미반영처리한다(id, rejectionReason, userId, manager) {
         const repository = this.getRepository(manager);
         const issue = await repository.findOne({ where: { id } });
         if (!issue) {
             throw new common_1.NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
         }
-        issue.해결처리한다();
-        issue.수정자설정한다(userId);
-        issue.메타데이터업데이트한다(userId);
-        const saved = await repository.save(issue);
-        return saved.DTO변환한다();
-    }
-    async 거부처리한다(id, rejectionReason, userId, manager) {
-        const repository = this.getRepository(manager);
-        const issue = await repository.findOne({ where: { id } });
-        if (!issue) {
-            throw new common_1.NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
-        }
-        issue.거부처리한다(rejectionReason);
+        issue.미반영처리한다(rejectionReason);
         issue.수정자설정한다(userId);
         issue.메타데이터업데이트한다(userId);
         const saved = await repository.save(issue);
@@ -3129,10 +7910,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AttendanceIssueStatus = void 0;
 var AttendanceIssueStatus;
 (function (AttendanceIssueStatus) {
-    AttendanceIssueStatus["PENDING"] = "pending";
-    AttendanceIssueStatus["CONFIRMED"] = "confirmed";
-    AttendanceIssueStatus["RESOLVED"] = "resolved";
-    AttendanceIssueStatus["REJECTED"] = "rejected";
+    AttendanceIssueStatus["REQUEST"] = "request";
+    AttendanceIssueStatus["APPLIED"] = "applied";
+    AttendanceIssueStatus["NOT_APPLIED"] = "not_applied";
 })(AttendanceIssueStatus || (exports.AttendanceIssueStatus = AttendanceIssueStatus = {}));
 
 
@@ -3475,7 +8255,7 @@ let DailyEventSummary = class DailyEventSummary extends base_entity_1.BaseEntity
     }
     validateLogicalConsistency() {
     }
-    constructor(date, employee_id, monthly_event_summary_id, is_holiday = false, enter, leave, real_enter, real_leave, is_checked = true, is_late = false, is_early_leave = false, is_absent = false, work_time, note, used_attendances) {
+    constructor(date, employee_id, monthly_event_summary_id, is_holiday = false, enter, leave, real_enter, real_leave, is_checked = true, is_late = false, is_early_leave = false, is_absent = false, has_attendance_conflict = false, has_attendance_overlap = false, work_time, note, used_attendances) {
         super();
         this.date = date;
         this.employee_id = employee_id || null;
@@ -3489,12 +8269,14 @@ let DailyEventSummary = class DailyEventSummary extends base_entity_1.BaseEntity
         this.is_late = is_late;
         this.is_early_leave = is_early_leave;
         this.is_absent = is_absent;
+        this.has_attendance_conflict = has_attendance_conflict;
+        this.has_attendance_overlap = has_attendance_overlap;
         this.work_time = work_time || null;
         this.note = note || null;
         this.used_attendances = used_attendances || null;
         this.validateInvariants();
     }
-    업데이트한다(monthly_event_summary_id, is_holiday, enter, leave, real_enter, real_leave, is_checked, is_late, is_early_leave, is_absent, work_time, note, used_attendances) {
+    업데이트한다(monthly_event_summary_id, is_holiday, enter, leave, real_enter, real_leave, is_checked, is_late, is_early_leave, is_absent, has_attendance_conflict, has_attendance_overlap, work_time, note, used_attendances) {
         if (monthly_event_summary_id !== undefined) {
             this.monthly_event_summary_id = monthly_event_summary_id;
         }
@@ -3525,6 +8307,12 @@ let DailyEventSummary = class DailyEventSummary extends base_entity_1.BaseEntity
         if (is_absent !== undefined) {
             this.is_absent = is_absent;
         }
+        if (has_attendance_conflict !== undefined) {
+            this.has_attendance_conflict = has_attendance_conflict;
+        }
+        if (has_attendance_overlap !== undefined) {
+            this.has_attendance_overlap = has_attendance_overlap;
+        }
         if (work_time !== undefined) {
             this.work_time = work_time;
         }
@@ -3535,17 +8323,6 @@ let DailyEventSummary = class DailyEventSummary extends base_entity_1.BaseEntity
             this.used_attendances = used_attendances;
         }
         this.validateInvariants();
-    }
-    근무시간계산한다() {
-        if (this.enter && this.leave && this.date) {
-            const enterDate = new Date(`${this.date}T${this.enter}`);
-            const leaveDate = new Date(`${this.date}T${this.leave}`);
-            const diff = leaveDate.getTime() - enterDate.getTime();
-            this.work_time = Math.floor(diff / (1000 * 60));
-        }
-        else {
-            this.work_time = null;
-        }
     }
     이벤트시간입력한다(earliest, latest) {
         this.enter = earliest;
@@ -3587,6 +8364,8 @@ let DailyEventSummary = class DailyEventSummary extends base_entity_1.BaseEntity
             isLate: this.is_late,
             isEarlyLeave: this.is_early_leave,
             isAbsent: this.is_absent,
+            hasAttendanceConflict: this.has_attendance_conflict,
+            hasAttendanceOverlap: this.has_attendance_overlap,
             workTime: this.work_time,
             note: this.note,
             usedAttendances: this.used_attendances,
@@ -3665,6 +8444,14 @@ __decorate([
     __metadata("design:type", Boolean)
 ], DailyEventSummary.prototype, "is_absent", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'has_attendance_conflict', default: false }),
+    __metadata("design:type", Boolean)
+], DailyEventSummary.prototype, "has_attendance_conflict", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'has_attendance_overlap', default: false }),
+    __metadata("design:type", Boolean)
+], DailyEventSummary.prototype, "has_attendance_overlap", void 0);
+__decorate([
     (0, typeorm_1.Column)({ name: 'work_time', type: 'int', nullable: true }),
     __metadata("design:type", Number)
 ], DailyEventSummary.prototype, "work_time", void 0);
@@ -3676,17 +8463,10 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'used_attendances', type: 'jsonb', nullable: true }),
     __metadata("design:type", typeof (_c = typeof Array !== "undefined" && Array) === "function" ? _c : Object)
 ], DailyEventSummary.prototype, "used_attendances", void 0);
-__decorate([
-    (0, typeorm_1.BeforeInsert)(),
-    (0, typeorm_1.BeforeUpdate)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], DailyEventSummary.prototype, "\uADFC\uBB34\uC2DC\uAC04\uACC4\uC0B0\uD55C\uB2E4", null);
 exports.DailyEventSummary = DailyEventSummary = __decorate([
     (0, typeorm_1.Entity)('daily_event_summaries'),
     (0, typeorm_1.Index)(['date', 'employee_id'], { unique: true }),
-    __metadata("design:paramtypes", [String, String, String, Boolean, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Number, String, typeof (_a = typeof Array !== "undefined" && Array) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [String, String, String, Boolean, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Number, String, typeof (_a = typeof Array !== "undefined" && Array) === "function" ? _a : Object])
 ], DailyEventSummary);
 
 
@@ -3761,7 +8541,7 @@ let DomainDailyEventSummaryService = class DomainDailyEventSummaryService {
     }
     async 생성한다(data, manager) {
         const repository = this.getRepository(manager);
-        const summary = new daily_event_summary_entity_1.DailyEventSummary(data.date, data.employeeId, data.monthlyEventSummaryId, data.isHoliday !== undefined ? data.isHoliday : false, data.enter, data.leave, data.realEnter, data.realLeave, data.isChecked !== undefined ? data.isChecked : true, data.isLate !== undefined ? data.isLate : false, data.isEarlyLeave !== undefined ? data.isEarlyLeave : false, data.isAbsent !== undefined ? data.isAbsent : false, data.workTime, data.note);
+        const summary = new daily_event_summary_entity_1.DailyEventSummary(data.date, data.employeeId, data.monthlyEventSummaryId, data.isHoliday !== undefined ? data.isHoliday : false, data.enter, data.leave, data.realEnter, data.realLeave, data.isChecked !== undefined ? data.isChecked : true, data.isLate !== undefined ? data.isLate : false, data.isEarlyLeave !== undefined ? data.isEarlyLeave : false, data.isAbsent !== undefined ? data.isAbsent : false, data.hasAttendanceConflict !== undefined ? data.hasAttendanceConflict : false, data.hasAttendanceOverlap !== undefined ? data.hasAttendanceOverlap : false, data.workTime, data.note, data.usedAttendances);
         const saved = await repository.save(summary);
         return saved.DTO변환한다();
     }
@@ -3803,7 +8583,7 @@ let DomainDailyEventSummaryService = class DomainDailyEventSummaryService {
         if (!summary) {
             throw new common_1.NotFoundException(`일간 요약을 찾을 수 없습니다. (id: ${id})`);
         }
-        summary.업데이트한다(data.monthlyEventSummaryId, data.isHoliday, data.enter, data.leave, data.realEnter, data.realLeave, data.isChecked, data.isLate, data.isEarlyLeave, data.isAbsent, data.workTime, data.note);
+        summary.업데이트한다(data.monthlyEventSummaryId, data.isHoliday, data.enter, data.leave, data.realEnter, data.realLeave, data.isChecked, data.isLate, data.isEarlyLeave, data.isAbsent, data.hasAttendanceConflict, data.hasAttendanceOverlap, data.workTime, data.note, data.usedAttendances);
         summary.수정자설정한다(userId);
         summary.메타데이터업데이트한다(userId);
         const saved = await repository.save(summary);
@@ -4098,6 +8878,28 @@ let DomainDailySummaryChangeHistoryService = class DomainDailySummaryChangeHisto
             order: { changed_at: 'DESC' },
         });
         return histories.map((history) => history.DTO변환한다());
+    }
+    async 일간요약ID목록으로목록조회한다(dailyEventSummaryIds, manager) {
+        if (dailyEventSummaryIds.length === 0) {
+            return new Map();
+        }
+        const repository = this.getRepository(manager);
+        const histories = await repository
+            .createQueryBuilder('history')
+            .where('history.daily_event_summary_id IN (:...ids)', { ids: dailyEventSummaryIds })
+            .andWhere('history.deleted_at IS NULL')
+            .orderBy('history.daily_event_summary_id', 'ASC')
+            .addOrderBy('history.changed_at', 'DESC')
+            .getMany();
+        const historyMap = new Map();
+        histories.forEach((history) => {
+            const id = history.daily_event_summary_id;
+            if (!historyMap.has(id)) {
+                historyMap.set(id, []);
+            }
+            historyMap.get(id).push(history.DTO변환한다());
+        });
+        return historyMap;
     }
     async 날짜범위로목록조회한다(startDate, endDate) {
         const histories = await this.repository
@@ -4489,7 +9291,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b, _c;
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DataSnapshotInfo = void 0;
 const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
@@ -4519,10 +9321,23 @@ let DataSnapshotInfo = class DataSnapshotInfo extends base_entity_1.BaseEntity {
         this.validateUuidFormat(this.department_id, 'department_id');
     }
     validateDataFormat() {
+        if (this.snapshot_version !== null && this.snapshot_version !== undefined) {
+            if (!/^[A-Z]$/.test(this.snapshot_version)) {
+                throw new Error('스냅샷 버전은 A-Z 사이의 단일 문자만 허용됩니다.');
+            }
+        }
+        if (this.approval_document_id !== null && this.approval_document_id !== undefined) {
+            this.validateUuidFormat(this.approval_document_id, 'approval_document_id');
+        }
+        if (this.approver_name !== null && this.approver_name !== undefined) {
+            if (this.approver_name.trim().length === 0) {
+                throw new Error('결재자 이름은 빈 문자열일 수 없습니다.');
+            }
+        }
     }
     validateLogicalConsistency() {
     }
-    constructor(snapshot_name, snapshot_type, yyyy, mm, department_id, description = '') {
+    constructor(snapshot_name, snapshot_type, yyyy, mm, department_id, description = '', snapshot_version = null, approval_document_id = null, submitted_at = null, approver_name = null, approval_status = null) {
         super();
         this.snapshot_name = snapshot_name;
         this.snapshot_type = snapshot_type;
@@ -4530,14 +9345,34 @@ let DataSnapshotInfo = class DataSnapshotInfo extends base_entity_1.BaseEntity {
         this.mm = mm;
         this.department_id = department_id;
         this.description = description;
+        this.snapshot_version = snapshot_version;
+        this.approval_document_id = approval_document_id;
+        this.submitted_at = submitted_at;
+        this.approver_name = approver_name;
+        this.approval_status = approval_status;
         this.validateInvariants();
     }
-    업데이트한다(snapshot_name, description) {
+    업데이트한다(snapshot_name, description, snapshot_version, approval_document_id, submitted_at, approver_name, approval_status) {
         if (snapshot_name !== undefined) {
             this.snapshot_name = snapshot_name;
         }
         if (description !== undefined) {
             this.description = description;
+        }
+        if (snapshot_version !== undefined) {
+            this.snapshot_version = snapshot_version;
+        }
+        if (approval_document_id !== undefined) {
+            this.approval_document_id = approval_document_id;
+        }
+        if (submitted_at !== undefined) {
+            this.submitted_at = submitted_at;
+        }
+        if (approver_name !== undefined) {
+            this.approver_name = approver_name;
+        }
+        if (approval_status !== undefined) {
+            this.approval_status = approval_status;
         }
         this.validateInvariants();
     }
@@ -4550,12 +9385,20 @@ let DataSnapshotInfo = class DataSnapshotInfo extends base_entity_1.BaseEntity {
             yyyy: this.yyyy,
             mm: this.mm,
             departmentId: this.department_id,
+            snapshotVersion: this.snapshot_version || undefined,
+            approvalDocumentId: this.approval_document_id || undefined,
+            submittedAt: this.submitted_at || undefined,
+            approverName: this.approver_name || undefined,
+            approvalStatus: this.approval_status || undefined,
             createdAt: this.created_at,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,
             createdBy: this.created_by,
             updatedBy: this.updated_by,
             version: this.version,
+            children: this.dataSnapshotChildInfoList
+                ? this.dataSnapshotChildInfoList.map((child) => child.DTO변환한다())
+                : undefined,
         };
     }
     로드후처리한다() {
@@ -4589,7 +9432,7 @@ __decorate([
         type: 'text',
         comment: '스냅샷 타입',
     }),
-    __metadata("design:type", typeof (_b = typeof data_snapshot_info_types_1.SnapshotType !== "undefined" && data_snapshot_info_types_1.SnapshotType) === "function" ? _b : Object)
+    __metadata("design:type", typeof (_d = typeof data_snapshot_info_types_1.SnapshotType !== "undefined" && data_snapshot_info_types_1.SnapshotType) === "function" ? _d : Object)
 ], DataSnapshotInfo.prototype, "snapshot_type", void 0);
 __decorate([
     (0, typeorm_1.Column)({
@@ -4610,6 +9453,54 @@ __decorate([
     __metadata("design:type", String)
 ], DataSnapshotInfo.prototype, "department_id", void 0);
 __decorate([
+    (0, typeorm_1.Column)({
+        name: 'snapshot_version',
+        type: 'varchar',
+        length: 1,
+        nullable: true,
+        comment: '스냅샷 버전 (A-Z)',
+    }),
+    __metadata("design:type", String)
+], DataSnapshotInfo.prototype, "snapshot_version", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'approval_document_id',
+        type: 'uuid',
+        nullable: true,
+        comment: '결재 문서 ID',
+    }),
+    __metadata("design:type", String)
+], DataSnapshotInfo.prototype, "approval_document_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'submitted_at',
+        type: 'timestamp',
+        nullable: true,
+        comment: '제출 시간',
+    }),
+    __metadata("design:type", typeof (_e = typeof Date !== "undefined" && Date) === "function" ? _e : Object)
+], DataSnapshotInfo.prototype, "submitted_at", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'approver_name',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+        comment: '결재자 이름',
+    }),
+    __metadata("design:type", String)
+], DataSnapshotInfo.prototype, "approver_name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'approval_status',
+        type: 'varchar',
+        length: 10,
+        nullable: true,
+        comment: '결재 상태 (미제출, 제출됨)',
+    }),
+    __metadata("design:type", typeof (_f = typeof data_snapshot_info_types_1.ApprovalStatus !== "undefined" && data_snapshot_info_types_1.ApprovalStatus) === "function" ? _f : Object)
+], DataSnapshotInfo.prototype, "approval_status", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => data_snapshot_child_entity_1.DataSnapshotChild, (child) => child.parentSnapshot, {
         cascade: ['insert', 'update', 'remove'],
     }),
@@ -4618,7 +9509,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => department_entity_1.Department),
     (0, typeorm_1.JoinColumn)({ name: 'department_id' }),
-    __metadata("design:type", typeof (_c = typeof department_entity_1.Department !== "undefined" && department_entity_1.Department) === "function" ? _c : Object)
+    __metadata("design:type", typeof (_g = typeof department_entity_1.Department !== "undefined" && department_entity_1.Department) === "function" ? _g : Object)
 ], DataSnapshotInfo.prototype, "department", void 0);
 __decorate([
     (0, typeorm_1.AfterLoad)(),
@@ -4628,7 +9519,7 @@ __decorate([
 ], DataSnapshotInfo.prototype, "\uB85C\uB4DC\uD6C4\uCC98\uB9AC\uD55C\uB2E4", null);
 exports.DataSnapshotInfo = DataSnapshotInfo = __decorate([
     (0, typeorm_1.Entity)('data_snapshot_info'),
-    __metadata("design:paramtypes", [String, typeof (_a = typeof data_snapshot_info_types_1.SnapshotType !== "undefined" && data_snapshot_info_types_1.SnapshotType) === "function" ? _a : Object, String, String, String, String])
+    __metadata("design:paramtypes", [String, typeof (_a = typeof data_snapshot_info_types_1.SnapshotType !== "undefined" && data_snapshot_info_types_1.SnapshotType) === "function" ? _a : Object, String, String, String, String, String, String, typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object, String, typeof (_c = typeof data_snapshot_info_types_1.ApprovalStatus !== "undefined" && data_snapshot_info_types_1.ApprovalStatus) === "function" ? _c : Object])
 ], DataSnapshotInfo);
 
 
@@ -4702,7 +9593,7 @@ let DomainDataSnapshotInfoService = class DomainDataSnapshotInfoService {
     }
     async 생성한다(data, manager) {
         const repository = this.getRepository(manager);
-        const snapshot = new data_snapshot_info_entity_1.DataSnapshotInfo(data.snapshotName, data.snapshotType, data.yyyy, data.mm, data.departmentId, data.description || '');
+        const snapshot = new data_snapshot_info_entity_1.DataSnapshotInfo(data.snapshotName, data.snapshotType, data.yyyy, data.mm, data.departmentId, data.description || '', data.snapshotVersion || null, data.approvalDocumentId || null, data.submittedAt || null, data.approverName || null, data.approvalStatus || null);
         const saved = await repository.save(snapshot);
         return saved.DTO변환한다();
     }
@@ -4763,13 +9654,23 @@ let DomainDataSnapshotInfoService = class DomainDataSnapshotInfoService {
         });
         return snapshots.map((snapshot) => snapshot.DTO변환한다());
     }
+    async 연월부서별목록조회한다(yyyy, mm, departmentId, snapshotType, manager) {
+        const repository = this.getRepository(manager);
+        const snapshots = await repository.find({
+            where: { yyyy, mm, department_id: departmentId, snapshot_type: snapshotType, deleted_at: (0, typeorm_2.IsNull)() },
+            order: {
+                snapshot_version: 'ASC',
+            },
+        });
+        return snapshots.map((snapshot) => snapshot.DTO변환한다());
+    }
     async 수정한다(id, data, userId, manager) {
         const repository = this.getRepository(manager);
         const snapshot = await repository.findOne({ where: { id } });
         if (!snapshot) {
             throw new common_1.NotFoundException(`데이터 스냅샷 정보를 찾을 수 없습니다. (id: ${id})`);
         }
-        snapshot.업데이트한다(data.snapshotName, data.description);
+        snapshot.업데이트한다(data.snapshotName, data.description, data.snapshotVersion !== undefined ? data.snapshotVersion : undefined, data.approvalDocumentId !== undefined ? data.approvalDocumentId : undefined, data.submittedAt !== undefined ? data.submittedAt : undefined, data.approverName !== undefined ? data.approverName : undefined, data.approvalStatus !== undefined ? data.approvalStatus : undefined);
         snapshot.수정자설정한다(userId);
         snapshot.메타데이터업데이트한다(userId);
         const saved = await repository.save(snapshot);
@@ -4816,7 +9717,7 @@ exports.DomainDataSnapshotInfoService = DomainDataSnapshotInfoService = __decora
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SnapshotType = void 0;
+exports.ApprovalStatus = exports.SnapshotType = void 0;
 var SnapshotType;
 (function (SnapshotType) {
     SnapshotType["DAILY"] = "DAILY";
@@ -4824,6 +9725,11 @@ var SnapshotType;
     SnapshotType["MONTHLY"] = "MONTHLY";
     SnapshotType["ANNUAL"] = "ANNUAL_LEAVE";
 })(SnapshotType || (exports.SnapshotType = SnapshotType = {}));
+var ApprovalStatus;
+(function (ApprovalStatus) {
+    ApprovalStatus["NOT_SUBMITTED"] = "\uBBF8\uC81C\uCD9C";
+    ApprovalStatus["SUBMITTED"] = "\uC81C\uCD9C\uB428";
+})(ApprovalStatus || (exports.ApprovalStatus = ApprovalStatus = {}));
 
 
 /***/ }),
@@ -4856,9 +9762,12 @@ const holiday_info_module_1 = __webpack_require__(/*! ./holiday-info/holiday-inf
 const monthly_event_summary_module_1 = __webpack_require__(/*! ./monthly-event-summary/monthly-event-summary.module */ "./apps/lams/src/refactoring/domain/monthly-event-summary/monthly-event-summary.module.ts");
 const used_attendance_module_1 = __webpack_require__(/*! ./used-attendance/used-attendance.module */ "./apps/lams/src/refactoring/domain/used-attendance/used-attendance.module.ts");
 const daily_summary_change_history_module_1 = __webpack_require__(/*! ./daily-summary-change-history/daily-summary-change-history.module */ "./apps/lams/src/refactoring/domain/daily-summary-change-history/daily-summary-change-history.module.ts");
+const work_time_override_module_1 = __webpack_require__(/*! ./work-time-override/work-time-override.module */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.module.ts");
 const project_module_1 = __webpack_require__(/*! ./project/project.module */ "./apps/lams/src/refactoring/domain/project/project.module.ts");
 const assigned_project_module_1 = __webpack_require__(/*! ./assigned-project/assigned-project.module */ "./apps/lams/src/refactoring/domain/assigned-project/assigned-project.module.ts");
 const work_hours_module_1 = __webpack_require__(/*! ./work-hours/work-hours.module */ "./apps/lams/src/refactoring/domain/work-hours/work-hours.module.ts");
+const employee_department_permission_module_1 = __webpack_require__(/*! ./employee-department-permission/employee-department-permission.module */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.module.ts");
+const employee_extra_info_module_1 = __webpack_require__(/*! ./employee-extra-info/employee-extra-info.module */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.module.ts");
 const employee_module_1 = __webpack_require__(/*! @libs/modules/employee/employee.module */ "./libs/modules/employee/employee.module.ts");
 const department_module_1 = __webpack_require__(/*! @libs/modules/department/department.module */ "./libs/modules/department/department.module.ts");
 const position_module_1 = __webpack_require__(/*! @libs/modules/position/position.module */ "./libs/modules/position/position.module.ts");
@@ -4882,6 +9791,7 @@ exports.DomainModule = DomainModule = __decorate([
             holiday_info_module_1.DomainHolidayInfoModule,
             used_attendance_module_1.DomainUsedAttendanceModule,
             monthly_event_summary_module_1.DomainMonthlyEventSummaryModule,
+            work_time_override_module_1.WorkTimeOverrideModule,
             data_snapshot_info_module_1.DomainDataSnapshotInfoModule,
             data_snapshot_child_module_1.DomainDataSnapshotChildModule,
             file_module_1.DomainFileModule,
@@ -4890,10 +9800,557 @@ exports.DomainModule = DomainModule = __decorate([
             project_module_1.DomainProjectModule,
             assigned_project_module_1.DomainAssignedProjectModule,
             work_hours_module_1.DomainWorkHoursModule,
+            employee_department_permission_module_1.DomainEmployeeDepartmentPermissionModule,
+            employee_extra_info_module_1.DomainEmployeeExtraInfoModule,
         ],
         exports: [],
     })
 ], DomainModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.entity.ts":
+/*!******************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.entity.ts ***!
+  \******************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EmployeeDepartmentPermission = void 0;
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const base_entity_1 = __webpack_require__(/*! @libs/database/base/base.entity */ "./libs/database/base/base.entity.ts");
+const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
+const department_entity_1 = __webpack_require__(/*! @libs/modules/department/department.entity */ "./libs/modules/department/department.entity.ts");
+let EmployeeDepartmentPermission = class EmployeeDepartmentPermission extends base_entity_1.BaseEntity {
+    validateInvariants() {
+        this.validateRequiredData();
+        this.validateDataFormat();
+        this.validateLogicalConsistency();
+    }
+    validateRequiredData() {
+        if (!this.employee_id || !this.department_id) {
+            return;
+        }
+        this.validateUuidFormat(this.employee_id, 'employee_id');
+        this.validateUuidFormat(this.department_id, 'department_id');
+    }
+    validateDataFormat() {
+    }
+    validateLogicalConsistency() {
+    }
+    constructor(employee_id, department_id, has_access_permission = false, has_review_permission = false) {
+        super();
+        this.employee_id = employee_id;
+        this.department_id = department_id;
+        this.has_access_permission = has_access_permission;
+        this.has_review_permission = has_review_permission;
+        this.validateInvariants();
+    }
+    업데이트한다(has_access_permission, has_review_permission) {
+        if (has_access_permission !== undefined) {
+            this.has_access_permission = has_access_permission;
+        }
+        if (has_review_permission !== undefined) {
+            this.has_review_permission = has_review_permission;
+        }
+        this.validateInvariants();
+    }
+    DTO변환한다() {
+        return {
+            id: this.id,
+            employeeId: this.employee_id,
+            departmentId: this.department_id,
+            hasAccessPermission: this.has_access_permission,
+            hasReviewPermission: this.has_review_permission,
+            createdAt: this.created_at,
+            updatedAt: this.updated_at,
+            deletedAt: this.deleted_at,
+            createdBy: this.created_by,
+            updatedBy: this.updated_by,
+            version: this.version,
+        };
+    }
+};
+exports.EmployeeDepartmentPermission = EmployeeDepartmentPermission;
+__decorate([
+    (0, typeorm_1.Column)({ name: 'employee_id', type: 'uuid' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermission.prototype, "employee_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => employee_entity_1.Employee, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'employee_id' }),
+    __metadata("design:type", typeof (_a = typeof employee_entity_1.Employee !== "undefined" && employee_entity_1.Employee) === "function" ? _a : Object)
+], EmployeeDepartmentPermission.prototype, "employee", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'department_id', type: 'uuid' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermission.prototype, "department_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => department_entity_1.Department, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'department_id' }),
+    __metadata("design:type", typeof (_b = typeof department_entity_1.Department !== "undefined" && department_entity_1.Department) === "function" ? _b : Object)
+], EmployeeDepartmentPermission.prototype, "department", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'has_access_permission',
+        type: 'boolean',
+        default: false,
+        comment: '접근 권한',
+    }),
+    __metadata("design:type", Boolean)
+], EmployeeDepartmentPermission.prototype, "has_access_permission", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'has_review_permission',
+        type: 'boolean',
+        default: false,
+        comment: '검토 권한',
+    }),
+    __metadata("design:type", Boolean)
+], EmployeeDepartmentPermission.prototype, "has_review_permission", void 0);
+exports.EmployeeDepartmentPermission = EmployeeDepartmentPermission = __decorate([
+    (0, typeorm_1.Entity)('employee_department_permission'),
+    (0, typeorm_1.Unique)(['employee_id', 'department_id']),
+    (0, typeorm_1.Index)(['employee_id']),
+    (0, typeorm_1.Index)(['department_id']),
+    (0, typeorm_1.Index)(['has_access_permission']),
+    (0, typeorm_1.Index)(['has_review_permission']),
+    __metadata("design:paramtypes", [String, String, Boolean, Boolean])
+], EmployeeDepartmentPermission);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.module.ts":
+/*!******************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.module.ts ***!
+  \******************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainEmployeeDepartmentPermissionModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const employee_department_permission_entity_1 = __webpack_require__(/*! ./employee-department-permission.entity */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.entity.ts");
+const employee_department_permission_service_1 = __webpack_require__(/*! ./employee-department-permission.service */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.service.ts");
+let DomainEmployeeDepartmentPermissionModule = class DomainEmployeeDepartmentPermissionModule {
+};
+exports.DomainEmployeeDepartmentPermissionModule = DomainEmployeeDepartmentPermissionModule;
+exports.DomainEmployeeDepartmentPermissionModule = DomainEmployeeDepartmentPermissionModule = __decorate([
+    (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([employee_department_permission_entity_1.EmployeeDepartmentPermission])],
+        providers: [employee_department_permission_service_1.DomainEmployeeDepartmentPermissionService],
+        exports: [employee_department_permission_service_1.DomainEmployeeDepartmentPermissionService, typeorm_1.TypeOrmModule],
+    })
+], DomainEmployeeDepartmentPermissionModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.service.ts":
+/*!*******************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.service.ts ***!
+  \*******************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainEmployeeDepartmentPermissionService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const typeorm_2 = __webpack_require__(/*! typeorm */ "typeorm");
+const employee_department_permission_entity_1 = __webpack_require__(/*! ./employee-department-permission.entity */ "./apps/lams/src/refactoring/domain/employee-department-permission/employee-department-permission.entity.ts");
+let DomainEmployeeDepartmentPermissionService = class DomainEmployeeDepartmentPermissionService {
+    constructor(repository) {
+        this.repository = repository;
+    }
+    getRepository(manager) {
+        return manager ? manager.getRepository(employee_department_permission_entity_1.EmployeeDepartmentPermission) : this.repository;
+    }
+    async 생성한다(data, manager) {
+        const repository = this.getRepository(manager);
+        const permission = new employee_department_permission_entity_1.EmployeeDepartmentPermission(data.employeeId, data.departmentId, data.hasAccessPermission, data.hasReviewPermission);
+        const saved = await repository.save(permission);
+        return saved.DTO변환한다();
+    }
+    async ID로조회한다(id) {
+        const permission = await this.repository.findOne({
+            where: { id },
+            relations: ['employee', 'department'],
+        });
+        if (!permission) {
+            throw new common_1.NotFoundException(`직원-부서 권한을 찾을 수 없습니다. (id: ${id})`);
+        }
+        return permission.DTO변환한다();
+    }
+    async 직원과부서로조회한다(employeeId, departmentId, manager) {
+        const repository = this.getRepository(manager);
+        const permission = await repository.findOne({
+            where: { employee_id: employeeId, department_id: departmentId, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee', 'department'],
+        });
+        return permission ? permission.DTO변환한다() : null;
+    }
+    async 직원으로목록조회한다(employeeId) {
+        const permissions = await this.repository.find({
+            where: { employee_id: employeeId, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee', 'department'],
+            order: {
+                created_at: 'DESC',
+            },
+        });
+        return permissions.map((permission) => permission.DTO변환한다());
+    }
+    async 부서로목록조회한다(departmentId) {
+        const permissions = await this.repository.find({
+            where: { department_id: departmentId, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee', 'department'],
+            order: {
+                created_at: 'DESC',
+            },
+        });
+        return permissions.map((permission) => permission.DTO변환한다());
+    }
+    async 접근권한이있는직원목록조회한다(departmentId) {
+        const permissions = await this.repository.find({
+            where: { department_id: departmentId, has_access_permission: true, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee', 'department'],
+            order: {
+                created_at: 'DESC',
+            },
+        });
+        return permissions.map((permission) => permission.DTO변환한다());
+    }
+    async 검토권한이있는직원목록조회한다(departmentId) {
+        const permissions = await this.repository.find({
+            where: { department_id: departmentId, has_review_permission: true, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee', 'department'],
+            order: {
+                created_at: 'DESC',
+            },
+        });
+        return permissions.map((permission) => permission.DTO변환한다());
+    }
+    async 수정한다(id, data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const permission = await repository.findOne({ where: { id } });
+        if (!permission) {
+            throw new common_1.NotFoundException(`직원-부서 권한을 찾을 수 없습니다. (id: ${id})`);
+        }
+        permission.업데이트한다(data.hasAccessPermission, data.hasReviewPermission);
+        permission.수정자설정한다(userId);
+        permission.메타데이터업데이트한다(userId);
+        const saved = await repository.save(permission);
+        return saved.DTO변환한다();
+    }
+    async 삭제한다(id, userId, manager) {
+        const repository = this.getRepository(manager);
+        const permission = await repository.findOne({ where: { id } });
+        if (!permission) {
+            throw new common_1.NotFoundException(`직원-부서 권한을 찾을 수 없습니다. (id: ${id})`);
+        }
+        permission.deleted_at = new Date();
+        permission.수정자설정한다(userId);
+        permission.메타데이터업데이트한다(userId);
+        await repository.save(permission);
+    }
+    async 완전삭제한다(id, userId, manager) {
+        const repository = this.getRepository(manager);
+        const permission = await repository.findOne({
+            where: { id },
+            withDeleted: true,
+        });
+        if (!permission) {
+            throw new common_1.NotFoundException(`직원-부서 권한을 찾을 수 없습니다. (id: ${id})`);
+        }
+        await repository.remove(permission);
+    }
+};
+exports.DomainEmployeeDepartmentPermissionService = DomainEmployeeDepartmentPermissionService;
+exports.DomainEmployeeDepartmentPermissionService = DomainEmployeeDepartmentPermissionService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(employee_department_permission_entity_1.EmployeeDepartmentPermission)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], DomainEmployeeDepartmentPermissionService);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.entity.ts":
+/*!********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.entity.ts ***!
+  \********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EmployeeExtraInfo = void 0;
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const base_entity_1 = __webpack_require__(/*! @libs/database/base/base.entity */ "./libs/database/base/base.entity.ts");
+const employee_entity_1 = __webpack_require__(/*! @libs/modules/employee/employee.entity */ "./libs/modules/employee/employee.entity.ts");
+let EmployeeExtraInfo = class EmployeeExtraInfo extends base_entity_1.BaseEntity {
+    validateInvariants() {
+        this.validateRequiredData();
+        this.validateDataFormat();
+        this.validateLogicalConsistency();
+    }
+    validateRequiredData() {
+        if (!this.employee_id) {
+            return;
+        }
+        this.validateUuidFormat(this.employee_id, 'employee_id');
+    }
+    validateDataFormat() {
+    }
+    validateLogicalConsistency() {
+    }
+    constructor(employee_id, is_excluded_from_summary = false) {
+        super();
+        this.employee_id = employee_id;
+        this.is_excluded_from_summary = is_excluded_from_summary;
+        this.validateInvariants();
+    }
+    업데이트한다(is_excluded_from_summary) {
+        if (is_excluded_from_summary !== undefined) {
+            this.is_excluded_from_summary = is_excluded_from_summary;
+        }
+        this.validateInvariants();
+    }
+    DTO변환한다() {
+        return {
+            id: this.id,
+            employeeId: this.employee_id,
+            isExcludedFromSummary: this.is_excluded_from_summary,
+            createdAt: this.created_at,
+            updatedAt: this.updated_at,
+            deletedAt: this.deleted_at,
+            createdBy: this.created_by,
+            updatedBy: this.updated_by,
+            version: this.version,
+        };
+    }
+};
+exports.EmployeeExtraInfo = EmployeeExtraInfo;
+__decorate([
+    (0, typeorm_1.Column)({ name: 'employee_id', type: 'uuid' }),
+    __metadata("design:type", String)
+], EmployeeExtraInfo.prototype, "employee_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => employee_entity_1.Employee, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'employee_id' }),
+    __metadata("design:type", typeof (_a = typeof employee_entity_1.Employee !== "undefined" && employee_entity_1.Employee) === "function" ? _a : Object)
+], EmployeeExtraInfo.prototype, "employee", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'is_excluded_from_summary',
+        type: 'boolean',
+        default: false,
+        comment: '대시보드 요약에서 제외 여부',
+    }),
+    __metadata("design:type", Boolean)
+], EmployeeExtraInfo.prototype, "is_excluded_from_summary", void 0);
+exports.EmployeeExtraInfo = EmployeeExtraInfo = __decorate([
+    (0, typeorm_1.Entity)('employee_extra_info'),
+    (0, typeorm_1.Unique)(['employee_id']),
+    (0, typeorm_1.Index)(['employee_id']),
+    (0, typeorm_1.Index)(['is_excluded_from_summary']),
+    __metadata("design:paramtypes", [String, Boolean])
+], EmployeeExtraInfo);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.module.ts":
+/*!********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.module.ts ***!
+  \********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainEmployeeExtraInfoModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const employee_extra_info_entity_1 = __webpack_require__(/*! ./employee-extra-info.entity */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.entity.ts");
+const employee_extra_info_service_1 = __webpack_require__(/*! ./employee-extra-info.service */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.service.ts");
+let DomainEmployeeExtraInfoModule = class DomainEmployeeExtraInfoModule {
+};
+exports.DomainEmployeeExtraInfoModule = DomainEmployeeExtraInfoModule;
+exports.DomainEmployeeExtraInfoModule = DomainEmployeeExtraInfoModule = __decorate([
+    (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([employee_extra_info_entity_1.EmployeeExtraInfo])],
+        providers: [employee_extra_info_service_1.DomainEmployeeExtraInfoService],
+        exports: [employee_extra_info_service_1.DomainEmployeeExtraInfoService, typeorm_1.TypeOrmModule],
+    })
+], DomainEmployeeExtraInfoModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.service.ts":
+/*!*********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.service.ts ***!
+  \*********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainEmployeeExtraInfoService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const typeorm_2 = __webpack_require__(/*! typeorm */ "typeorm");
+const employee_extra_info_entity_1 = __webpack_require__(/*! ./employee-extra-info.entity */ "./apps/lams/src/refactoring/domain/employee-extra-info/employee-extra-info.entity.ts");
+let DomainEmployeeExtraInfoService = class DomainEmployeeExtraInfoService {
+    constructor(repository) {
+        this.repository = repository;
+    }
+    getRepository(manager) {
+        return manager ? manager.getRepository(employee_extra_info_entity_1.EmployeeExtraInfo) : this.repository;
+    }
+    async 생성한다(data, manager) {
+        const repository = this.getRepository(manager);
+        const extraInfo = new employee_extra_info_entity_1.EmployeeExtraInfo(data.employeeId, data.isExcludedFromSummary);
+        const saved = await repository.save(extraInfo);
+        return saved.DTO변환한다();
+    }
+    async ID로조회한다(id) {
+        const extraInfo = await this.repository.findOne({
+            where: { id },
+            relations: ['employee'],
+        });
+        if (!extraInfo) {
+            throw new common_1.NotFoundException(`직원 추가 정보를 찾을 수 없습니다. (id: ${id})`);
+        }
+        return extraInfo.DTO변환한다();
+    }
+    async 직원ID로조회한다(employeeId, manager) {
+        const repository = this.getRepository(manager);
+        const extraInfo = await repository.findOne({
+            where: { employee_id: employeeId, deleted_at: (0, typeorm_2.IsNull)() },
+            relations: ['employee'],
+        });
+        return extraInfo ? extraInfo.DTO변환한다() : null;
+    }
+    async 수정한다(id, data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const extraInfo = await repository.findOne({ where: { id } });
+        if (!extraInfo) {
+            throw new common_1.NotFoundException(`직원 추가 정보를 찾을 수 없습니다. (id: ${id})`);
+        }
+        extraInfo.업데이트한다(data.isExcludedFromSummary);
+        extraInfo.수정자설정한다(userId);
+        extraInfo.메타데이터업데이트한다(userId);
+        const saved = await repository.save(extraInfo);
+        return saved.DTO변환한다();
+    }
+    async 직원ID로생성또는수정한다(employeeId, data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const existing = await repository.findOne({
+            where: { employee_id: employeeId, deleted_at: (0, typeorm_2.IsNull)() },
+        });
+        if (existing) {
+            existing.업데이트한다(data.isExcludedFromSummary);
+            existing.수정자설정한다(userId);
+            existing.메타데이터업데이트한다(userId);
+            const saved = await repository.save(existing);
+            return saved.DTO변환한다();
+        }
+        else {
+            const newExtraInfo = new employee_extra_info_entity_1.EmployeeExtraInfo(employeeId, data.isExcludedFromSummary ?? false);
+            newExtraInfo.생성자설정한다(userId);
+            newExtraInfo.메타데이터업데이트한다(userId);
+            const saved = await repository.save(newExtraInfo);
+            return saved.DTO변환한다();
+        }
+    }
+    async 삭제한다(id, userId, manager) {
+        const repository = this.getRepository(manager);
+        const extraInfo = await repository.findOne({ where: { id } });
+        if (!extraInfo) {
+            throw new common_1.NotFoundException(`직원 추가 정보를 찾을 수 없습니다. (id: ${id})`);
+        }
+        extraInfo.deleted_at = new Date();
+        extraInfo.수정자설정한다(userId);
+        extraInfo.메타데이터업데이트한다(userId);
+        await repository.save(extraInfo);
+    }
+};
+exports.DomainEmployeeExtraInfoService = DomainEmployeeExtraInfoService;
+exports.DomainEmployeeExtraInfoService = DomainEmployeeExtraInfoService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(employee_extra_info_entity_1.EmployeeExtraInfo)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], DomainEmployeeExtraInfoService);
 
 
 /***/ }),
@@ -6645,12 +12102,13 @@ let DomainMonthlyEventSummaryService = DomainMonthlyEventSummaryService_1 = clas
             .getMany();
         return summaries.map((summary) => summary.DTO변환한다());
     }
-    async 생성또는갱신한다(employeeId, yyyymm, dailySummaries, usedAttendances, allAttendanceTypes, queryRunner) {
+    async 생성또는갱신한다(employeeId, yyyymm, dailySummaries, usedAttendances, allAttendanceTypes, queryRunnerOrManager) {
         try {
             const [year, month] = yyyymm.split('-');
             if (dailySummaries.length === 0) {
                 throw new Error(`${yyyymm}의 일일 요약 데이터가 없습니다.`);
             }
+            const manager = queryRunnerOrManager?.manager || queryRunnerOrManager;
             const workDays = dailySummaries.filter((d) => {
                 if (d.work_time !== null)
                     return true;
@@ -6689,28 +12147,7 @@ let DomainMonthlyEventSummaryService = DomainMonthlyEventSummaryService_1 = clas
                 if (d.is_early_leave)
                     attendanceTypeCount['조퇴']++;
             });
-            const dailyEventSummary = dailySummaries.map((d) => ({
-                dailyEventSummaryId: d.id,
-                date: d.date,
-                isHoliday: d.is_holiday,
-                enter: d.enter,
-                leave: d.leave,
-                realEnter: d.real_enter,
-                realLeave: d.real_leave,
-                isChecked: d.is_checked,
-                isLate: d.is_late,
-                isEarlyLeave: d.is_early_leave,
-                isAbsent: d.is_absent,
-                workTime: d.work_time,
-                note: d.note || '',
-                usedAttendances: usedAttendances
-                    .filter((ua) => ua.used_at === d.date)
-                    .map((ua) => ({
-                    usedAttendanceId: ua.id,
-                    attendanceTypeId: ua.attendanceType?.id,
-                    title: ua.attendanceType?.title,
-                })),
-            }));
+            const dailyEventSummary = null;
             const lateDetails = dailySummaries
                 .filter((d) => d.is_late)
                 .map((d) => ({
@@ -6783,13 +12220,15 @@ let DomainMonthlyEventSummaryService = DomainMonthlyEventSummaryService_1 = clas
                     title: ua.attendanceType?.title,
                 })),
             }));
-            let summary = await queryRunner.manager.findOne(monthly_event_summary_entity_1.MonthlyEventSummary, {
+            let summary = await manager.findOne(monthly_event_summary_entity_1.MonthlyEventSummary, {
                 where: { employee_id: employeeId, yyyymm },
+                withDeleted: true,
             });
             if (!summary) {
                 summary = new monthly_event_summary_entity_1.MonthlyEventSummary(dailySummaries[0].employee?.employeeNumber || '', employeeId, yyyymm, workDays.length, totalWorkTime, avgWorkTimes, attendanceTypeCount, dailySummaries[0].employee?.name || null, totalWorkableTime, weeklyWorkTimeSummary, dailyEventSummary, lateDetails, absenceDetails, earlyLeaveDetails);
             }
             else {
+                summary.deleted_at = null;
                 summary.요약업데이트한다({
                     employeeInfo: {
                         employeeNumber: dailySummaries[0].employee?.employeeNumber || '',
@@ -6810,7 +12249,7 @@ let DomainMonthlyEventSummaryService = DomainMonthlyEventSummaryService_1 = clas
                     note: summary.note || '',
                 });
             }
-            const saved = await queryRunner.manager.save(monthly_event_summary_entity_1.MonthlyEventSummary, summary);
+            const saved = await manager.save(monthly_event_summary_entity_1.MonthlyEventSummary, summary);
             return saved.DTO변환한다();
         }
         catch (error) {
@@ -8025,6 +13464,332 @@ exports.DomainWorkHoursService = DomainWorkHoursService = __decorate([
 
 /***/ }),
 
+/***/ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.entity.ts":
+/*!******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/work-time-override/work-time-override.entity.ts ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WorkTimeOverride = void 0;
+const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+const base_entity_1 = __webpack_require__(/*! @libs/database/base/base.entity */ "./libs/database/base/base.entity.ts");
+let WorkTimeOverride = class WorkTimeOverride extends base_entity_1.BaseEntity {
+    validateInvariants() {
+        this.validateRequiredData();
+        this.validateDataFormat();
+        this.validateLogicalConsistency();
+    }
+    validateRequiredData() {
+        if (!this.date) {
+            return;
+        }
+        if (this.date.trim().length === 0) {
+            throw new Error('날짜는 필수입니다.');
+        }
+    }
+    validateDataFormat() {
+        if (this.date) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(this.date)) {
+                throw new Error('날짜는 yyyy-MM-dd 형식이어야 합니다.');
+            }
+        }
+        if (this.start_work_time) {
+            const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
+            if (!timeRegex.test(this.start_work_time)) {
+                throw new Error('시작 시간은 HH:MM:SS 형식이어야 합니다.');
+            }
+        }
+        if (this.end_work_time) {
+            const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
+            if (!timeRegex.test(this.end_work_time)) {
+                throw new Error('종료 시간은 HH:MM:SS 형식이어야 합니다.');
+            }
+        }
+    }
+    validateLogicalConsistency() {
+        if (this.start_work_time && this.end_work_time) {
+            const startParts = this.start_work_time.split(':').map(Number);
+            const endParts = this.end_work_time.split(':').map(Number);
+            const startMinutes = startParts[0] * 60 + startParts[1];
+            const endMinutes = endParts[0] * 60 + endParts[1];
+            if (startMinutes >= endMinutes) {
+                throw new Error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+            }
+        }
+    }
+    constructor(date, start_work_time, end_work_time, reason) {
+        super();
+        this.date = date;
+        this.start_work_time = start_work_time || null;
+        this.end_work_time = end_work_time || null;
+        this.reason = reason || null;
+        this.validateInvariants();
+    }
+    업데이트한다(start_work_time, end_work_time, reason) {
+        if (start_work_time !== undefined) {
+            this.start_work_time = start_work_time;
+        }
+        if (end_work_time !== undefined) {
+            this.end_work_time = end_work_time;
+        }
+        if (reason !== undefined) {
+            this.reason = reason;
+        }
+        this.validateInvariants();
+    }
+    DTO변환한다() {
+        return {
+            id: this.id,
+            date: this.date,
+            startWorkTime: this.start_work_time,
+            endWorkTime: this.end_work_time,
+            reason: this.reason,
+            createdAt: this.created_at,
+            updatedAt: this.updated_at,
+            deletedAt: this.deleted_at,
+            createdBy: this.created_by,
+            updatedBy: this.updated_by,
+            version: this.version,
+        };
+    }
+};
+exports.WorkTimeOverride = WorkTimeOverride;
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'date',
+        type: 'date',
+        unique: true,
+        comment: '적용 날짜 (yyyy-MM-dd)',
+    }),
+    __metadata("design:type", String)
+], WorkTimeOverride.prototype, "date", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'start_work_time',
+        nullable: true,
+        comment: '정상근무 시작 시간 (HH:MM:SS 형식, null이면 기본값 사용)',
+    }),
+    __metadata("design:type", String)
+], WorkTimeOverride.prototype, "start_work_time", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'end_work_time',
+        nullable: true,
+        comment: '정상근무 종료 시간 (HH:MM:SS 형식, null이면 기본값 사용)',
+    }),
+    __metadata("design:type", String)
+], WorkTimeOverride.prototype, "end_work_time", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        name: 'reason',
+        nullable: true,
+        comment: '변경 사유',
+    }),
+    __metadata("design:type", String)
+], WorkTimeOverride.prototype, "reason", void 0);
+exports.WorkTimeOverride = WorkTimeOverride = __decorate([
+    (0, typeorm_1.Entity)('work_time_overrides'),
+    (0, typeorm_1.Index)(['date'], { unique: true }),
+    __metadata("design:paramtypes", [String, String, String, String])
+], WorkTimeOverride);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.module.ts":
+/*!******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/work-time-override/work-time-override.module.ts ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WorkTimeOverrideModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const work_time_override_entity_1 = __webpack_require__(/*! ./work-time-override.entity */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.entity.ts");
+const work_time_override_service_1 = __webpack_require__(/*! ./work-time-override.service */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts");
+let WorkTimeOverrideModule = class WorkTimeOverrideModule {
+};
+exports.WorkTimeOverrideModule = WorkTimeOverrideModule;
+exports.WorkTimeOverrideModule = WorkTimeOverrideModule = __decorate([
+    (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([work_time_override_entity_1.WorkTimeOverride])],
+        providers: [work_time_override_service_1.DomainWorkTimeOverrideService],
+        exports: [work_time_override_service_1.DomainWorkTimeOverrideService, typeorm_1.TypeOrmModule],
+    })
+], WorkTimeOverrideModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts":
+/*!*******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/domain/work-time-override/work-time-override.service.ts ***!
+  \*******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainWorkTimeOverrideService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
+const typeorm_2 = __webpack_require__(/*! typeorm */ "typeorm");
+const work_time_override_entity_1 = __webpack_require__(/*! ./work-time-override.entity */ "./apps/lams/src/refactoring/domain/work-time-override/work-time-override.entity.ts");
+let DomainWorkTimeOverrideService = class DomainWorkTimeOverrideService {
+    constructor(repository) {
+        this.repository = repository;
+    }
+    getRepository(manager) {
+        return manager ? manager.getRepository(work_time_override_entity_1.WorkTimeOverride) : this.repository;
+    }
+    async 생성한다(data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = new work_time_override_entity_1.WorkTimeOverride(data.date, data.startWorkTime, data.endWorkTime, data.reason);
+        workTimeOverride.생성자설정한다(userId);
+        workTimeOverride.메타데이터업데이트한다(userId);
+        const saved = await repository.save(workTimeOverride);
+        return saved.DTO변환한다();
+    }
+    async ID로조회한다(id) {
+        const workTimeOverride = await this.repository.findOne({ where: { id } });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (id: ${id})`);
+        }
+        return workTimeOverride.DTO변환한다();
+    }
+    async 날짜로조회한다(date, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({
+            where: { date, deleted_at: (0, typeorm_2.IsNull)() },
+        });
+        return workTimeOverride ? workTimeOverride.DTO변환한다() : null;
+    }
+    async 날짜목록으로조회한다(dates, manager) {
+        if (dates.length === 0) {
+            return new Map();
+        }
+        const repository = this.getRepository(manager);
+        const workTimeOverrides = await repository.find({
+            where: { date: (0, typeorm_2.In)(dates), deleted_at: (0, typeorm_2.IsNull)() },
+        });
+        const result = new Map();
+        workTimeOverrides.forEach((override) => {
+            result.set(override.date, override.DTO변환한다());
+        });
+        return result;
+    }
+    async 목록조회한다(manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverrides = await repository.find({
+            where: { deleted_at: (0, typeorm_2.IsNull)() },
+            order: { date: 'ASC' },
+        });
+        return workTimeOverrides.map((wto) => wto.DTO변환한다());
+    }
+    async 수정한다(id, data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({ where: { id } });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (id: ${id})`);
+        }
+        workTimeOverride.업데이트한다(data.startWorkTime, data.endWorkTime, data.reason);
+        workTimeOverride.수정자설정한다(userId);
+        workTimeOverride.메타데이터업데이트한다(userId);
+        const saved = await repository.save(workTimeOverride);
+        return saved.DTO변환한다();
+    }
+    async 날짜로수정한다(date, data, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({
+            where: { date, deleted_at: (0, typeorm_2.IsNull)() },
+        });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (date: ${date})`);
+        }
+        workTimeOverride.업데이트한다(data.startWorkTime, data.endWorkTime, data.reason);
+        workTimeOverride.수정자설정한다(userId);
+        workTimeOverride.메타데이터업데이트한다(userId);
+        const saved = await repository.save(workTimeOverride);
+        return saved.DTO변환한다();
+    }
+    async 삭제한다(id, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({ where: { id } });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (id: ${id})`);
+        }
+        workTimeOverride.deleted_at = new Date();
+        workTimeOverride.수정자설정한다(userId);
+        workTimeOverride.메타데이터업데이트한다(userId);
+        await repository.save(workTimeOverride);
+    }
+    async 날짜로삭제한다(date, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({
+            where: { date, deleted_at: (0, typeorm_2.IsNull)() },
+        });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (date: ${date})`);
+        }
+        workTimeOverride.deleted_at = new Date();
+        workTimeOverride.수정자설정한다(userId);
+        workTimeOverride.메타데이터업데이트한다(userId);
+        await repository.save(workTimeOverride);
+    }
+    async 완전삭제한다(id, userId, manager) {
+        const repository = this.getRepository(manager);
+        const workTimeOverride = await repository.findOne({
+            where: { id },
+            withDeleted: true,
+        });
+        if (!workTimeOverride) {
+            throw new common_1.NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (id: ${id})`);
+        }
+        await repository.remove(workTimeOverride);
+    }
+};
+exports.DomainWorkTimeOverrideService = DomainWorkTimeOverrideService;
+exports.DomainWorkTimeOverrideService = DomainWorkTimeOverrideService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(work_time_override_entity_1.WorkTimeOverride)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], DomainWorkTimeOverrideService);
+
+
+/***/ }),
+
 /***/ "./apps/lams/src/refactoring/integrations/excel-reader/excel-reader.constants.ts":
 /*!***************************************************************************************!*\
   !*** ./apps/lams/src/refactoring/integrations/excel-reader/excel-reader.constants.ts ***!
@@ -8772,7 +14537,10 @@ let InitService = InitService_1 = class InitService {
         }
         try {
             this.logger.log('조직 데이터가 없습니다. SSO에서 데이터를 가져와서 마이그레이션을 시작합니다.');
-            const result = await this.organizationMigrationService.마이그레이션한다();
+            const result = await this.organizationMigrationService.마이그레이션한다({
+                includeTerminated: true,
+                includeInactiveDepartments: true,
+            });
             this.logger.log(`✅ 조직 데이터 마이그레이션 완료: 직급 ${result.statistics.ranks}개, 직책 ${result.statistics.positions}개, 부서 ${result.statistics.departments}개, 직원 ${result.statistics.employees}명`);
         }
         catch (error) {
@@ -9850,6 +15618,1429 @@ exports.StorageServiceProvider = {
 
 /***/ }),
 
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/attendance-data-interface.module.ts":
+/*!*************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/attendance-data-interface.module.ts ***!
+  \*************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceDataInterfaceModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_data_controller_1 = __webpack_require__(/*! ./attendance-data.controller */ "./apps/lams/src/refactoring/interface/attendance-data/attendance-data.controller.ts");
+const attendance_data_business_module_1 = __webpack_require__(/*! ../../business/attendance-data-business/attendance-data-business.module */ "./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.module.ts");
+let AttendanceDataInterfaceModule = class AttendanceDataInterfaceModule {
+};
+exports.AttendanceDataInterfaceModule = AttendanceDataInterfaceModule;
+exports.AttendanceDataInterfaceModule = AttendanceDataInterfaceModule = __decorate([
+    (0, common_1.Module)({
+        imports: [attendance_data_business_module_1.AttendanceDataBusinessModule],
+        controllers: [attendance_data_controller_1.AttendanceDataController],
+        providers: [],
+        exports: [],
+    })
+], AttendanceDataInterfaceModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/attendance-data.controller.ts":
+/*!*******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/attendance-data.controller.ts ***!
+  \*******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceDataController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const user_decorator_1 = __webpack_require__(/*! ../../../common/decorators/user.decorator */ "./apps/lams/src/common/decorators/user.decorator.ts");
+const attendance_data_business_service_1 = __webpack_require__(/*! ../../business/attendance-data-business/attendance-data-business.service */ "./apps/lams/src/refactoring/business/attendance-data-business/attendance-data-business.service.ts");
+const get_monthly_summaries_dto_1 = __webpack_require__(/*! ./dto/get-monthly-summaries.dto */ "./apps/lams/src/refactoring/interface/attendance-data/dto/get-monthly-summaries.dto.ts");
+const update_daily_summary_dto_1 = __webpack_require__(/*! ./dto/update-daily-summary.dto */ "./apps/lams/src/refactoring/interface/attendance-data/dto/update-daily-summary.dto.ts");
+const save_attendance_snapshot_dto_1 = __webpack_require__(/*! ./dto/save-attendance-snapshot.dto */ "./apps/lams/src/refactoring/interface/attendance-data/dto/save-attendance-snapshot.dto.ts");
+const restore_from_snapshot_dto_1 = __webpack_require__(/*! ./dto/restore-from-snapshot.dto */ "./apps/lams/src/refactoring/interface/attendance-data/dto/restore-from-snapshot.dto.ts");
+const get_snapshot_list_dto_1 = __webpack_require__(/*! ./dto/get-snapshot-list.dto */ "./apps/lams/src/refactoring/interface/attendance-data/dto/get-snapshot-list.dto.ts");
+let AttendanceDataController = class AttendanceDataController {
+    constructor(attendanceDataBusinessService) {
+        this.attendanceDataBusinessService = attendanceDataBusinessService;
+    }
+    async getMonthlySummaries(year, month, departmentId) {
+        if (!year || !month || !departmentId) {
+            throw new common_1.BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        }
+        const result = await this.attendanceDataBusinessService.월간요약을조회한다({
+            year,
+            month,
+            departmentId,
+        });
+        return result;
+    }
+    async updateDailySummary(id, dto, performedBy) {
+        if (!performedBy) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        const isTimeUpdate = dto.enter !== undefined || dto.leave !== undefined;
+        const isAttendanceTypeUpdate = dto.attendanceTypeIds !== undefined && dto.attendanceTypeIds.length > 0;
+        if (!isTimeUpdate && !isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간(enter 또는 leave) 또는 근태유형(attendanceTypeIds) 중 하나는 필수입니다.');
+        }
+        if (isTimeUpdate && isAttendanceTypeUpdate) {
+            throw new common_1.BadRequestException('출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없습니다.');
+        }
+        if (isAttendanceTypeUpdate && dto.attendanceTypeIds.length > 2) {
+            throw new common_1.BadRequestException('근태유형은 최대 2개까지 설정 가능합니다.');
+        }
+        const result = await this.attendanceDataBusinessService.일간요약을수정한다({
+            dailySummaryId: id,
+            enter: dto.enter,
+            leave: dto.leave,
+            attendanceTypeIds: dto.attendanceTypeIds,
+            reason: dto.reason,
+            performedBy,
+        });
+        return result;
+    }
+    async saveAttendanceSnapshot(dto, performedBy) {
+        if (!performedBy) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        if (!dto.year || !dto.month || !dto.departmentId) {
+            throw new common_1.BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        }
+        const result = await this.attendanceDataBusinessService.근태스냅샷을저장한다({
+            year: dto.year,
+            month: dto.month,
+            departmentId: dto.departmentId,
+            snapshotName: dto.snapshotName,
+            description: dto.description,
+            performedBy,
+        });
+        return result;
+    }
+    async restoreFromSnapshot(dto, performedBy) {
+        if (!performedBy) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        if (!dto.snapshotId) {
+            throw new common_1.BadRequestException('스냅샷 ID는 필수입니다.');
+        }
+        const result = await this.attendanceDataBusinessService.스냅샷으로부터복원한다({
+            snapshotId: dto.snapshotId,
+            performedBy,
+        });
+        return result;
+    }
+    async getSnapshotList(dto) {
+        if (!dto.year || !dto.month || !dto.departmentId) {
+            throw new common_1.BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        }
+        const result = await this.attendanceDataBusinessService.스냅샷목록을조회한다({
+            year: dto.year,
+            month: dto.month,
+            departmentId: dto.departmentId,
+            sortBy: dto.sortBy || 'latest',
+            filters: dto.filters,
+        });
+        return result;
+    }
+};
+exports.AttendanceDataController = AttendanceDataController;
+__decorate([
+    (0, common_1.Get)('monthly-summaries'),
+    (0, swagger_1.ApiOperation)({
+        summary: '월간 요약 조회',
+        description: '연도, 월, 부서ID를 기준으로 월간 요약, 일간 요약, 일간 요약의 수정이력을 조회합니다.',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'year', description: '연도', example: '2024', required: true }),
+    (0, swagger_1.ApiQuery)({ name: 'month', description: '월', example: '01', required: true }),
+    (0, swagger_1.ApiQuery)({
+        name: 'departmentId',
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '월간 요약 조회 성공',
+        type: get_monthly_summaries_dto_1.GetMonthlySummariesResponseDto,
+    }),
+    __param(0, (0, common_1.Query)('year')),
+    __param(1, (0, common_1.Query)('month')),
+    __param(2, (0, common_1.Query)('departmentId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+], AttendanceDataController.prototype, "getMonthlySummaries", null);
+__decorate([
+    (0, common_1.Patch)('daily-summaries/:id'),
+    (0, swagger_1.ApiOperation)({
+        summary: '일간 요약 수정',
+        description: `일간 요약의 출근시간/퇴근시간 또는 근태유형을 수정하고 수정이력을 생성합니다.
+
+**수정 유형:**
+- 출퇴근 시간 수정: enter와 leave를 함께 제공
+- 근태유형 수정: attendanceTypeId를 제공
+
+**근태 유형 ID 목록:**
+- 7d45683d-7476-4e86-859f-961637e48526: 연차
+- 1d6c5ba5-aeca-470b-9277-259d673b5e0d: 오전반차
+- 71f93733-6cab-4cab-bbaa-95a95814dc0c: 오후반차
+- a9c8ff8a-c352-4049-be2b-3a0d27f3d380: 공가
+- 9aaf5f97-ecdf-47b0-89c5-a7bd92da8655: 오전공가
+- 75160594-81c4-48b3-bb80-6c1ab9082536: 오후공가
+- b3b3be88-100c-436d-a772-3b0daeecf352: 출장
+- f4482432-fab2-4b2d-8efc-fe3a216d3015: 오전출장
+- 1d35f520-7f61-47f1-ab7d-0d7ad8e70725: 오후출장
+- 55181add-95a5-4908-95de-0a4b77ac5e07: 교육
+- 33e5d2ad-7481-4f27-97f4-59b708a53f98: 오전교육
+- bb07d807-1a25-4164-a1ee-ffe64ab277ea: 오후교육
+- 287c156f-70d4-4eca-b482-d17b0be6d620: 경조휴가
+- 6f97ad90-1b39-4450-9d92-7517bdaed833: 보건휴가(오전 반차)
+- 7e098c10-880b-463f-85b2-88d11f541249: 병가
+- 3eb5efba-a7d4-4828-9118-0d360f55a7d7: 생일오전반차
+- bc84e4a1-bb97-4a8f-b04b-88d0d65e4895: 생일오후반차
+- f99cbfc9-456e-43a0-bf60-717b9bf65dc5: 대체휴가
+- c5d8642a-6697-44b9-9eab-715ac3aa2198: 오전대체휴가
+- 140bcff6-c34f-419c-8ea6-826e4243d0c3: 오후대체휴가
+- fd7dee04-cfc1-4c8f-9aea-c8d8876aa6cb: 무급휴가
+- 3d2f3517-8aef-4277-b055-bb5d7a0b5e22: 보건휴가(오전반차)
+- ec38a9d6-0c28-4d4b-bd0d-6fb6e173f479: 국내출장
+- e5242c22-9be8-4fb3-b041-dfa01614539d: 국외출장
+- 012db601-840d-4777-b1ee-4eecdd7df041: 사외교육
+- fe305bb7-f228-4695-90af-9ad46fd57424: 사내교육`,
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: '일간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_c = typeof update_daily_summary_dto_1.UpdateDailySummaryRequestDto !== "undefined" && update_daily_summary_dto_1.UpdateDailySummaryRequestDto) === "function" ? _c : Object, String]),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], AttendanceDataController.prototype, "updateDailySummary", null);
+__decorate([
+    (0, common_1.Post)('snapshots'),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 스냅샷 저장',
+        description: '월간 요약 데이터를 기준으로 스냅샷을 생성합니다. 연월과 부서ID를 기준으로 해당 부서의 월간 요약 데이터를 스냅샷으로 저장합니다.',
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_e = typeof save_attendance_snapshot_dto_1.SaveAttendanceSnapshotRequestDto !== "undefined" && save_attendance_snapshot_dto_1.SaveAttendanceSnapshotRequestDto) === "function" ? _e : Object, String]),
+    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+], AttendanceDataController.prototype, "saveAttendanceSnapshot", null);
+__decorate([
+    (0, common_1.Post)('snapshots/restore'),
+    (0, swagger_1.ApiOperation)({
+        summary: '스냅샷으로부터 복원',
+        description: '선택된 스냅샷 데이터를 기반으로 월간/일간 요약 데이터를 덮어씌웁니다. 스냅샷에 저장된 데이터를 기반으로 해당 연월의 요약 데이터를 재생성합니다.',
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_g = typeof restore_from_snapshot_dto_1.RestoreFromSnapshotRequestDto !== "undefined" && restore_from_snapshot_dto_1.RestoreFromSnapshotRequestDto) === "function" ? _g : Object, String]),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], AttendanceDataController.prototype, "restoreFromSnapshot", null);
+__decorate([
+    (0, common_1.Get)('snapshots'),
+    (0, swagger_1.ApiOperation)({
+        summary: '스냅샷 목록 조회',
+        description: '연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다. 기본적으로 가장 최신 스냅샷을 반환하며, 정렬 및 필터 조건을 통해 유연하게 조회할 수 있습니다.',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'year', description: '연도', example: '2024', required: true }),
+    (0, swagger_1.ApiQuery)({ name: 'month', description: '월', example: '01', required: true }),
+    (0, swagger_1.ApiQuery)({
+        name: 'departmentId',
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    }),
+    (0, swagger_1.ApiQuery)({
+        name: 'sortBy',
+        description: '정렬 기준',
+        enum: ['latest', 'oldest', 'name', 'type'],
+        example: 'latest',
+        required: false,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '스냅샷 목록 조회 성공',
+        type: get_snapshot_list_dto_1.GetSnapshotListResponseDto,
+    }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_j = typeof get_snapshot_list_dto_1.GetSnapshotListRequestDto !== "undefined" && get_snapshot_list_dto_1.GetSnapshotListRequestDto) === "function" ? _j : Object]),
+    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+], AttendanceDataController.prototype, "getSnapshotList", null);
+exports.AttendanceDataController = AttendanceDataController = __decorate([
+    (0, swagger_1.ApiTags)('출입/근태 데이터'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.Controller)('attendance-data'),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_data_business_service_1.AttendanceDataBusinessService !== "undefined" && attendance_data_business_service_1.AttendanceDataBusinessService) === "function" ? _a : Object])
+], AttendanceDataController);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/dto/get-monthly-summaries.dto.ts":
+/*!**********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/dto/get-monthly-summaries.dto.ts ***!
+  \**********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d, _e, _f, _g;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetMonthlySummariesResponseDto = exports.MonthlyEventSummaryDto = exports.DailyEventSummaryWithHistoryDto = exports.DailyEventSummaryHistoryDto = exports.GetMonthlySummariesRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class GetMonthlySummariesRequestDto {
+}
+exports.GetMonthlySummariesRequestDto = GetMonthlySummariesRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '연도',
+        example: '2024',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetMonthlySummariesRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '월',
+        example: '01',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetMonthlySummariesRequestDto.prototype, "month", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetMonthlySummariesRequestDto.prototype, "departmentId", void 0);
+class DailyEventSummaryHistoryDto {
+}
+exports.DailyEventSummaryHistoryDto = DailyEventSummaryHistoryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID' }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '일간 요약 ID' }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "dailyEventSummaryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '날짜' }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '변경 내역' }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "content", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '변경자' }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "changedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '변경 시간' }),
+    __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
+], DailyEventSummaryHistoryDto.prototype, "changedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '변경 사유', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "reason", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 ID', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "snapshotId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], DailyEventSummaryHistoryDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], DailyEventSummaryHistoryDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '삭제 일시', nullable: true }),
+    __metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], DailyEventSummaryHistoryDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성자 ID', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정자 ID', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryHistoryDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], DailyEventSummaryHistoryDto.prototype, "version", void 0);
+class DailyEventSummaryWithHistoryDto {
+}
+exports.DailyEventSummaryWithHistoryDto = DailyEventSummaryWithHistoryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID' }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '날짜' }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월간 요약 ID', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "monthlyEventSummaryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '공휴일 여부' }),
+    __metadata("design:type", Boolean)
+], DailyEventSummaryWithHistoryDto.prototype, "isHoliday", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '출근 시간', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "enter", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '퇴근 시간', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "leave", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '실제 출근 시간', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "realEnter", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '실제 퇴근 시간', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "realLeave", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '검토 완료 여부' }),
+    __metadata("design:type", Boolean)
+], DailyEventSummaryWithHistoryDto.prototype, "isChecked", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '지각 여부' }),
+    __metadata("design:type", Boolean)
+], DailyEventSummaryWithHistoryDto.prototype, "isLate", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '조퇴 여부' }),
+    __metadata("design:type", Boolean)
+], DailyEventSummaryWithHistoryDto.prototype, "isEarlyLeave", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '결근 여부' }),
+    __metadata("design:type", Boolean)
+], DailyEventSummaryWithHistoryDto.prototype, "isAbsent", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '근무 시간 (분)', nullable: true }),
+    __metadata("design:type", Number)
+], DailyEventSummaryWithHistoryDto.prototype, "workTime", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '비고', nullable: true }),
+    __metadata("design:type", String)
+], DailyEventSummaryWithHistoryDto.prototype, "note", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '사용된 근태 유형 정보', nullable: true, type: 'array' }),
+    __metadata("design:type", typeof (_e = typeof Array !== "undefined" && Array) === "function" ? _e : Object)
+], DailyEventSummaryWithHistoryDto.prototype, "usedAttendances", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정이력', type: [DailyEventSummaryHistoryDto], required: false }),
+    __metadata("design:type", Array)
+], DailyEventSummaryWithHistoryDto.prototype, "history", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '근태 이슈 목록', type: 'array', required: false }),
+    __metadata("design:type", typeof (_f = typeof Array !== "undefined" && Array) === "function" ? _f : Object)
+], DailyEventSummaryWithHistoryDto.prototype, "issues", void 0);
+class MonthlyEventSummaryDto {
+}
+exports.MonthlyEventSummaryDto = MonthlyEventSummaryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID' }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '사원 번호' }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "employeeNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID' }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '사원 이름', nullable: true }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "employeeName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연월 (YYYY-MM)' }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "yyyymm", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '비고', nullable: true }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "note", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월간 근태 요약 노트' }),
+    __metadata("design:type", String)
+], MonthlyEventSummaryDto.prototype, "additionalNote", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '근무 일수' }),
+    __metadata("design:type", Number)
+], MonthlyEventSummaryDto.prototype, "workDaysCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '총 업무 가능 시간 (분)', nullable: true }),
+    __metadata("design:type", Number)
+], MonthlyEventSummaryDto.prototype, "totalWorkableTime", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '총 근무 시간 (분)' }),
+    __metadata("design:type", Number)
+], MonthlyEventSummaryDto.prototype, "totalWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '평균 근무 시간 (분)' }),
+    __metadata("design:type", Number)
+], MonthlyEventSummaryDto.prototype, "avgWorkTimes", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '근태 유형별 횟수', type: 'object' }),
+    __metadata("design:type", typeof (_g = typeof Record !== "undefined" && Record) === "function" ? _g : Object)
+], MonthlyEventSummaryDto.prototype, "attendanceTypeCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '주별 근무시간 요약', nullable: true, type: 'array' }),
+    __metadata("design:type", Array)
+], MonthlyEventSummaryDto.prototype, "weeklyWorkTimeSummary", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '지각 상세정보', nullable: true, type: 'array' }),
+    __metadata("design:type", Array)
+], MonthlyEventSummaryDto.prototype, "lateDetails", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '결근 상세정보', nullable: true, type: 'array' }),
+    __metadata("design:type", Array)
+], MonthlyEventSummaryDto.prototype, "absenceDetails", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '조퇴 상세정보', nullable: true, type: 'array' }),
+    __metadata("design:type", Array)
+], MonthlyEventSummaryDto.prototype, "earlyLeaveDetails", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '일간 요약 목록 (수정이력 포함)', type: [DailyEventSummaryWithHistoryDto] }),
+    __metadata("design:type", Array)
+], MonthlyEventSummaryDto.prototype, "dailySummaries", void 0);
+class GetMonthlySummariesResponseDto {
+}
+exports.GetMonthlySummariesResponseDto = GetMonthlySummariesResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월간 요약 목록 (일간 요약 포함)', type: [MonthlyEventSummaryDto] }),
+    __metadata("design:type", Array)
+], GetMonthlySummariesResponseDto.prototype, "monthlySummaries", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/dto/get-snapshot-list.dto.ts":
+/*!******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/dto/get-snapshot-list.dto.ts ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d, _e, _f, _g;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetSnapshotListResponseDto = exports.SnapshotInfoResponseDto = exports.SnapshotChildResponseDto = exports.GetSnapshotListRequestDto = exports.SnapshotFiltersDto = exports.DateRangeFilterDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const class_transformer_1 = __webpack_require__(/*! class-transformer */ "class-transformer");
+class DateRangeFilterDto {
+}
+exports.DateRangeFilterDto = DateRangeFilterDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '시작 날짜', example: '2024-01-01' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], DateRangeFilterDto.prototype, "startDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '종료 날짜', example: '2024-12-31' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], DateRangeFilterDto.prototype, "endDate", void 0);
+class SnapshotFiltersDto {
+}
+exports.SnapshotFiltersDto = SnapshotFiltersDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '스냅샷 타입', example: 'MONTHLY' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], SnapshotFiltersDto.prototype, "snapshotType", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '날짜 범위', type: DateRangeFilterDto }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => DateRangeFilterDto),
+    __metadata("design:type", DateRangeFilterDto)
+], SnapshotFiltersDto.prototype, "dateRange", void 0);
+class GetSnapshotListRequestDto {
+}
+exports.GetSnapshotListRequestDto = GetSnapshotListRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '연도',
+        example: '2024',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetSnapshotListRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '월',
+        example: '01',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetSnapshotListRequestDto.prototype, "month", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetSnapshotListRequestDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '정렬 기준',
+        enum: ['latest', 'oldest', 'name', 'type'],
+        example: 'latest',
+        default: 'latest',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(['latest', 'oldest', 'name', 'type']),
+    __metadata("design:type", String)
+], GetSnapshotListRequestDto.prototype, "sortBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '필터 조건', type: SnapshotFiltersDto }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => SnapshotFiltersDto),
+    __metadata("design:type", SnapshotFiltersDto)
+], GetSnapshotListRequestDto.prototype, "filters", void 0);
+class SnapshotChildResponseDto {
+}
+exports.SnapshotChildResponseDto = SnapshotChildResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 자식 ID' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원명' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "employeeName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원번호' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "employeeNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연도' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "yyyy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "mm", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 데이터 (JSON)' }),
+    __metadata("design:type", Object)
+], SnapshotChildResponseDto.prototype, "snapshotData", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], SnapshotChildResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], SnapshotChildResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], SnapshotChildResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], SnapshotChildResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], SnapshotChildResponseDto.prototype, "version", void 0);
+class SnapshotInfoResponseDto {
+}
+exports.SnapshotInfoResponseDto = SnapshotInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 ID' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷명' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "snapshotName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '설명' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 타입' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "snapshotType", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연도' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "yyyy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "mm", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_e = typeof Date !== "undefined" && Date) === "function" ? _e : Object)
+], SnapshotInfoResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
+], SnapshotInfoResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+], SnapshotInfoResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], SnapshotInfoResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], SnapshotInfoResponseDto.prototype, "version", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '스냅샷 자식 데이터 목록',
+        type: [SnapshotChildResponseDto],
+    }),
+    __metadata("design:type", Array)
+], SnapshotInfoResponseDto.prototype, "children", void 0);
+class GetSnapshotListResponseDto {
+}
+exports.GetSnapshotListResponseDto = GetSnapshotListResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '가장 최신 스냅샷 (조건에 맞는 첫 번째)',
+        type: SnapshotInfoResponseDto,
+        nullable: true,
+    }),
+    __metadata("design:type", SnapshotInfoResponseDto)
+], GetSnapshotListResponseDto.prototype, "latestSnapshot", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '전체 스냅샷 목록 (조건에 맞는 모든 스냅샷)',
+        type: [SnapshotInfoResponseDto],
+    }),
+    __metadata("design:type", Array)
+], GetSnapshotListResponseDto.prototype, "snapshots", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 스냅샷 수' }),
+    __metadata("design:type", Number)
+], GetSnapshotListResponseDto.prototype, "totalCount", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/dto/restore-from-snapshot.dto.ts":
+/*!**********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/dto/restore-from-snapshot.dto.ts ***!
+  \**********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromSnapshotResponseDto = exports.RestoreFromSnapshotRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class RestoreFromSnapshotRequestDto {
+}
+exports.RestoreFromSnapshotRequestDto = RestoreFromSnapshotRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '스냅샷 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+    }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RestoreFromSnapshotRequestDto.prototype, "snapshotId", void 0);
+class RestoreFromSnapshotResponseDto {
+}
+exports.RestoreFromSnapshotResponseDto = RestoreFromSnapshotResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 ID' }),
+    __metadata("design:type", String)
+], RestoreFromSnapshotResponseDto.prototype, "snapshotId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연도' }),
+    __metadata("design:type", String)
+], RestoreFromSnapshotResponseDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월' }),
+    __metadata("design:type", String)
+], RestoreFromSnapshotResponseDto.prototype, "month", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '복원된 데이터 수' }),
+    __metadata("design:type", Object)
+], RestoreFromSnapshotResponseDto.prototype, "restoredCount", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/dto/save-attendance-snapshot.dto.ts":
+/*!*************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/dto/save-attendance-snapshot.dto.ts ***!
+  \*************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SaveAttendanceSnapshotResponseDto = exports.SaveAttendanceSnapshotRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const data_snapshot_info_types_1 = __webpack_require__(/*! ../../../domain/data-snapshot-info/data-snapshot-info.types */ "./apps/lams/src/refactoring/domain/data-snapshot-info/data-snapshot-info.types.ts");
+class SaveAttendanceSnapshotRequestDto {
+}
+exports.SaveAttendanceSnapshotRequestDto = SaveAttendanceSnapshotRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연도', example: '2024' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], SaveAttendanceSnapshotRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월', example: '01' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], SaveAttendanceSnapshotRequestDto.prototype, "month", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], SaveAttendanceSnapshotRequestDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '스냅샷 이름', example: '2024년 1월 근태 스냅샷' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], SaveAttendanceSnapshotRequestDto.prototype, "snapshotName", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '스냅샷 설명', example: '월간 요약 데이터 백업' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], SaveAttendanceSnapshotRequestDto.prototype, "description", void 0);
+class SaveAttendanceSnapshotResponseDto {
+}
+exports.SaveAttendanceSnapshotResponseDto = SaveAttendanceSnapshotResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '스냅샷 정보' }),
+    __metadata("design:type", typeof (_a = typeof data_snapshot_info_types_1.DataSnapshotInfoDTO !== "undefined" && data_snapshot_info_types_1.DataSnapshotInfoDTO) === "function" ? _a : Object)
+], SaveAttendanceSnapshotResponseDto.prototype, "snapshot", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-data/dto/update-daily-summary.dto.ts":
+/*!*********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-data/dto/update-daily-summary.dto.ts ***!
+  \*********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateDailySummaryResponseDto = exports.UpdateDailySummaryRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class UpdateDailySummaryRequestDto {
+}
+exports.UpdateDailySummaryRequestDto = UpdateDailySummaryRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '출근 시간 (출퇴근 시간 수정 시 선택, enter 또는 leave 중 하나 이상 필수, 근태유형 수정 시 불필요)',
+        example: '09:00:00',
+        required: false,
+    }),
+    (0, class_validator_1.ValidateIf)((o) => !o.attendanceTypeIds || o.attendanceTypeIds.length === 0),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateDailySummaryRequestDto.prototype, "enter", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '퇴근 시간 (출퇴근 시간 수정 시 선택, enter 또는 leave 중 하나 이상 필수, 근태유형 수정 시 불필요)',
+        example: '18:00:00',
+        required: false,
+    }),
+    (0, class_validator_1.ValidateIf)((o) => !o.attendanceTypeIds || o.attendanceTypeIds.length === 0),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateDailySummaryRequestDto.prototype, "leave", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: `근태 유형 ID 배열 (근태유형 수정 시 필수, 최대 2개까지, 출퇴근 시간 수정 시 불필요)
+        
+근태 유형 ID 목록:
+- 7d45683d-7476-4e86-859f-961637e48526: 연차
+- 1d6c5ba5-aeca-470b-9277-259d673b5e0d: 오전반차
+- 71f93733-6cab-4cab-bbaa-95a95814dc0c: 오후반차
+- a9c8ff8a-c352-4049-be2b-3a0d27f3d380: 공가
+- 9aaf5f97-ecdf-47b0-89c5-a7bd92da8655: 오전공가
+- 75160594-81c4-48b3-bb80-6c1ab9082536: 오후공가
+- b3b3be88-100c-436d-a772-3b0daeecf352: 출장
+- f4482432-fab2-4b2d-8efc-fe3a216d3015: 오전출장
+- 1d35f520-7f61-47f1-ab7d-0d7ad8e70725: 오후출장
+- 55181add-95a5-4908-95de-0a4b77ac5e07: 교육
+- 33e5d2ad-7481-4f27-97f4-59b708a53f98: 오전교육
+- bb07d807-1a25-4164-a1ee-ffe64ab277ea: 오후교육
+- 287c156f-70d4-4eca-b482-d17b0be6d620: 경조휴가
+- 6f97ad90-1b39-4450-9d92-7517bdaed833: 보건휴가(오전 반차)
+- 7e098c10-880b-463f-85b2-88d11f541249: 병가
+- 3eb5efba-a7d4-4828-9118-0d360f55a7d7: 생일오전반차
+- bc84e4a1-bb97-4a8f-b04b-88d0d65e4895: 생일오후반차
+- f99cbfc9-456e-43a0-bf60-717b9bf65dc5: 대체휴가
+- c5d8642a-6697-44b9-9eab-715ac3aa2198: 오전대체휴가
+- 140bcff6-c34f-419c-8ea6-826e4243d0c3: 오후대체휴가
+- fd7dee04-cfc1-4c8f-9aea-c8d8876aa6cb: 무급휴가
+- 3d2f3517-8aef-4277-b055-bb5d7a0b5e22: 보건휴가(오전반차)
+- ec38a9d6-0c28-4d4b-bd0d-6fb6e173f479: 국내출장
+- e5242c22-9be8-4fb3-b041-dfa01614539d: 국외출장
+- 012db601-840d-4777-b1ee-4eecdd7df041: 사외교육
+- fe305bb7-f228-4695-90af-9ad46fd57424: 사내교육`,
+        example: ['7d45683d-7476-4e86-859f-961637e48526'],
+        type: [String],
+        required: false,
+    }),
+    (0, class_validator_1.ValidateIf)((o) => !o.enter && !o.leave),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMinSize)(1, { message: '근태유형은 최소 1개 이상 필요합니다.' }),
+    (0, class_validator_1.ArrayMaxSize)(2, { message: '근태유형은 최대 2개까지 설정 가능합니다.' }),
+    (0, class_validator_1.IsUUID)(undefined, { each: true }),
+    __metadata("design:type", Array)
+], UpdateDailySummaryRequestDto.prototype, "attendanceTypeIds", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '변경 사유',
+        example: '출입기록 오류로 인한 수정',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateDailySummaryRequestDto.prototype, "reason", void 0);
+class UpdateDailySummaryResponseDto {
+}
+exports.UpdateDailySummaryResponseDto = UpdateDailySummaryResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정된 일간 요약 정보' }),
+    __metadata("design:type", Object)
+], UpdateDailySummaryResponseDto.prototype, "dailySummary", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue-interface.module.ts":
+/*!***************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue-interface.module.ts ***!
+  \***************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueInterfaceModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const attendance_issue_controller_1 = __webpack_require__(/*! ./attendance-issue.controller */ "./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue.controller.ts");
+const attendance_issue_business_module_1 = __webpack_require__(/*! ../../business/attendance-issue-business/attendance-issue-business.module */ "./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.module.ts");
+let AttendanceIssueInterfaceModule = class AttendanceIssueInterfaceModule {
+};
+exports.AttendanceIssueInterfaceModule = AttendanceIssueInterfaceModule;
+exports.AttendanceIssueInterfaceModule = AttendanceIssueInterfaceModule = __decorate([
+    (0, common_1.Module)({
+        imports: [attendance_issue_business_module_1.AttendanceIssueBusinessModule],
+        controllers: [attendance_issue_controller_1.AttendanceIssueController],
+        providers: [],
+        exports: [],
+    })
+], AttendanceIssueInterfaceModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue.controller.ts":
+/*!*********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue.controller.ts ***!
+  \*********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AttendanceIssueController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const user_decorator_1 = __webpack_require__(/*! ../../../common/decorators/user.decorator */ "./apps/lams/src/common/decorators/user.decorator.ts");
+const attendance_issue_business_service_1 = __webpack_require__(/*! ../../business/attendance-issue-business/attendance-issue-business.service */ "./apps/lams/src/refactoring/business/attendance-issue-business/attendance-issue-business.service.ts");
+const attendance_issue_dto_1 = __webpack_require__(/*! ./dto/attendance-issue.dto */ "./apps/lams/src/refactoring/interface/attendance-issue/dto/attendance-issue.dto.ts");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+let AttendanceIssueController = class AttendanceIssueController {
+    constructor(attendanceIssueBusinessService) {
+        this.attendanceIssueBusinessService = attendanceIssueBusinessService;
+    }
+    async getAttendanceIssues(query) {
+        const result = await this.attendanceIssueBusinessService.근태이슈목록을조회한다({
+            employeeId: query.employeeId,
+            startDate: query.startDate,
+            endDate: query.endDate,
+            status: query.status,
+        });
+        return result;
+    }
+    async getAttendanceIssue(id) {
+        const result = await this.attendanceIssueBusinessService.근태이슈를조회한다(id);
+        return result.issue;
+    }
+    async updateAttendanceIssueDescription(id, dto, userId) {
+        if (!userId) {
+            throw new common_1.BadRequestException('직원 정보를 찾을 수 없습니다.');
+        }
+        const result = await this.attendanceIssueBusinessService.근태이슈사유를수정한다(id, dto.description, userId);
+        return result.issue;
+    }
+    async updateAttendanceIssueCorrection(id, dto, userId) {
+        if (!userId) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        const result = await this.attendanceIssueBusinessService.근태이슈수정정보를설정한다(id, {
+            correctedEnterTime: dto.correctedEnterTime,
+            correctedLeaveTime: dto.correctedLeaveTime,
+            correctedAttendanceTypeIds: dto.correctedAttendanceTypeIds,
+        }, userId);
+        return result.issue;
+    }
+    async applyAttendanceIssue(id, dto, userId) {
+        if (!userId) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        const result = await this.attendanceIssueBusinessService.근태이슈를반영한다(id, dto.confirmedBy || '관리자', userId);
+        return result.issue;
+    }
+};
+exports.AttendanceIssueController = AttendanceIssueController;
+__decorate([
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 이슈 목록 조회',
+        description: '근태 이슈 목록을 조회합니다. 직원ID, 날짜 범위, 상태로 필터링할 수 있습니다.',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'employeeId', description: '직원 ID', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'startDate', description: '시작 날짜 (yyyy-MM-dd)', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'endDate', description: '종료 날짜 (yyyy-MM-dd)', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'status', description: '상태', enum: attendance_issue_types_1.AttendanceIssueStatus, required: false }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof attendance_issue_dto_1.GetAttendanceIssuesRequestDto !== "undefined" && attendance_issue_dto_1.GetAttendanceIssuesRequestDto) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], AttendanceIssueController.prototype, "getAttendanceIssues", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 이슈 상세 조회',
+        description: '근태 이슈 상세 정보를 조회합니다.',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], AttendanceIssueController.prototype, "getAttendanceIssue", null);
+__decorate([
+    (0, common_1.Patch)(':id/description'),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 이슈 사유 수정',
+        description: '근태 이슈의 사유를 작성합니다. 사유를 작성하면 상태가 미반영으로 변경됩니다.',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_e = typeof attendance_issue_dto_1.UpdateAttendanceIssueDescriptionRequestDto !== "undefined" && attendance_issue_dto_1.UpdateAttendanceIssueDescriptionRequestDto) === "function" ? _e : Object, String]),
+    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+], AttendanceIssueController.prototype, "updateAttendanceIssueDescription", null);
+__decorate([
+    (0, common_1.Patch)(':id/correction'),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 이슈 수정 정보 설정',
+        description: `근태 이슈의 수정 정보(출퇴근 시간 또는 근태유형)를 설정합니다. 
+수정 정보를 설정하면 상태가 미반영으로 변경됩니다.
+출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없으며, 둘 중 하나만 선택하여 설정할 수 있습니다.`,
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_g = typeof attendance_issue_dto_1.UpdateAttendanceIssueCorrectionRequestDto !== "undefined" && attendance_issue_dto_1.UpdateAttendanceIssueCorrectionRequestDto) === "function" ? _g : Object, String]),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], AttendanceIssueController.prototype, "updateAttendanceIssueCorrection", null);
+__decorate([
+    (0, common_1.Patch)(':id/apply'),
+    (0, swagger_1.ApiOperation)({
+        summary: '근태 이슈 반영',
+        description: `근태 이슈를 반영합니다. 
+수정 정보가 설정된 이슈만 반영할 수 있으며, 반영 시 일간 요약에 수정 정보가 반영됩니다.
+한번 반영된 이슈는 더 이상 수정할 수 없습니다.`,
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_j = typeof attendance_issue_dto_1.ApplyAttendanceIssueRequestDto !== "undefined" && attendance_issue_dto_1.ApplyAttendanceIssueRequestDto) === "function" ? _j : Object, String]),
+    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+], AttendanceIssueController.prototype, "applyAttendanceIssue", null);
+exports.AttendanceIssueController = AttendanceIssueController = __decorate([
+    (0, swagger_1.ApiTags)('근태 이슈'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.Controller)('attendance-issues'),
+    __metadata("design:paramtypes", [typeof (_a = typeof attendance_issue_business_service_1.AttendanceIssueBusinessService !== "undefined" && attendance_issue_business_service_1.AttendanceIssueBusinessService) === "function" ? _a : Object])
+], AttendanceIssueController);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/attendance-issue/dto/attendance-issue.dto.ts":
+/*!******************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/attendance-issue/dto/attendance-issue.dto.ts ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d, _e, _f;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetAttendanceIssuesResponseDto = exports.AttendanceIssueResponseDto = exports.RejectAttendanceIssueRequestDto = exports.ApplyAttendanceIssueRequestDto = exports.UpdateAttendanceIssueCorrectionRequestDto = exports.UpdateAttendanceIssueDescriptionRequestDto = exports.GetAttendanceIssuesRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const attendance_issue_types_1 = __webpack_require__(/*! ../../../domain/attendance-issue/attendance-issue.types */ "./apps/lams/src/refactoring/domain/attendance-issue/attendance-issue.types.ts");
+class GetAttendanceIssuesRequestDto {
+}
+exports.GetAttendanceIssuesRequestDto = GetAttendanceIssuesRequestDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '직원 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], GetAttendanceIssuesRequestDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '시작 날짜 (yyyy-MM-dd)', example: '2024-01-01' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], GetAttendanceIssuesRequestDto.prototype, "startDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '종료 날짜 (yyyy-MM-dd)', example: '2024-01-31' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], GetAttendanceIssuesRequestDto.prototype, "endDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '상태', enum: attendance_issue_types_1.AttendanceIssueStatus, example: attendance_issue_types_1.AttendanceIssueStatus.REQUEST }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(attendance_issue_types_1.AttendanceIssueStatus),
+    __metadata("design:type", typeof (_a = typeof attendance_issue_types_1.AttendanceIssueStatus !== "undefined" && attendance_issue_types_1.AttendanceIssueStatus) === "function" ? _a : Object)
+], GetAttendanceIssuesRequestDto.prototype, "status", void 0);
+class UpdateAttendanceIssueDescriptionRequestDto {
+}
+exports.UpdateAttendanceIssueDescriptionRequestDto = UpdateAttendanceIssueDescriptionRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '이슈 설명 (사유)', example: '출장으로 인한 지각입니다.' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateAttendanceIssueDescriptionRequestDto.prototype, "description", void 0);
+class UpdateAttendanceIssueCorrectionRequestDto {
+}
+exports.UpdateAttendanceIssueCorrectionRequestDto = UpdateAttendanceIssueCorrectionRequestDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경할 출근 시간 (HH:MM:SS)', example: '09:00:00' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateAttendanceIssueCorrectionRequestDto.prototype, "correctedEnterTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경할 퇴근 시간 (HH:MM:SS)', example: '18:00:00' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateAttendanceIssueCorrectionRequestDto.prototype, "correctedLeaveTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '변경할 근태 유형 ID 목록 (최대 2개)',
+        example: ['7d45683d-7476-4e86-859f-961637e48526'],
+        type: [String],
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMinSize)(1),
+    (0, class_validator_1.ArrayMaxSize)(2),
+    (0, class_validator_1.IsUUID)('4', { each: true }),
+    __metadata("design:type", Array)
+], UpdateAttendanceIssueCorrectionRequestDto.prototype, "correctedAttendanceTypeIds", void 0);
+class ApplyAttendanceIssueRequestDto {
+}
+exports.ApplyAttendanceIssueRequestDto = ApplyAttendanceIssueRequestDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '확인자 이름', example: '관리자' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ApplyAttendanceIssueRequestDto.prototype, "confirmedBy", void 0);
+class RejectAttendanceIssueRequestDto {
+}
+exports.RejectAttendanceIssueRequestDto = RejectAttendanceIssueRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '미반영 사유', example: '사유가 불충분합니다.' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RejectAttendanceIssueRequestDto.prototype, "rejectionReason", void 0);
+class AttendanceIssueResponseDto {
+}
+exports.AttendanceIssueResponseDto = AttendanceIssueResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '일간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "dailyEventSummaryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '날짜', example: '2024-01-15' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '문제가 된 출근 시간', example: '09:30:00' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "problematicEnterTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '문제가 된 퇴근 시간', example: '17:30:00' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "problematicLeaveTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경할 출근 시간', example: '09:00:00' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "correctedEnterTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경할 퇴근 시간', example: '18:00:00' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "correctedLeaveTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '문제가 된 근태 유형 ID 목록',
+        example: ['7d45683d-7476-4e86-859f-961637e48526'],
+        type: [String],
+    }),
+    __metadata("design:type", Array)
+], AttendanceIssueResponseDto.prototype, "problematicAttendanceTypeIds", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: '변경할 근태 유형 ID 목록',
+        example: ['7d45683d-7476-4e86-859f-961637e48526'],
+        type: [String],
+    }),
+    __metadata("design:type", Array)
+], AttendanceIssueResponseDto.prototype, "correctedAttendanceTypeIds", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '상태', enum: attendance_issue_types_1.AttendanceIssueStatus, example: attendance_issue_types_1.AttendanceIssueStatus.REQUEST }),
+    __metadata("design:type", typeof (_b = typeof attendance_issue_types_1.AttendanceIssueStatus !== "undefined" && attendance_issue_types_1.AttendanceIssueStatus) === "function" ? _b : Object)
+], AttendanceIssueResponseDto.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '이슈 설명', example: '출장으로 인한 지각입니다.' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '확인자', example: '관리자' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "confirmedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '확인 시간' }),
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], AttendanceIssueResponseDto.prototype, "confirmedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '해결 시간' }),
+    __metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], AttendanceIssueResponseDto.prototype, "resolvedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '거부 사유', example: '사유가 불충분합니다.' }),
+    __metadata("design:type", String)
+], AttendanceIssueResponseDto.prototype, "rejectionReason", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 시간' }),
+    __metadata("design:type", typeof (_e = typeof Date !== "undefined" && Date) === "function" ? _e : Object)
+], AttendanceIssueResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 시간' }),
+    __metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
+], AttendanceIssueResponseDto.prototype, "updatedAt", void 0);
+class GetAttendanceIssuesResponseDto {
+}
+exports.GetAttendanceIssuesResponseDto = GetAttendanceIssuesResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '근태 이슈 목록', type: [AttendanceIssueResponseDto] }),
+    __metadata("design:type", Array)
+], GetAttendanceIssuesResponseDto.prototype, "issues", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '총 개수', example: 10 }),
+    __metadata("design:type", Number)
+], GetAttendanceIssuesResponseDto.prototype, "total", void 0);
+
+
+/***/ }),
+
 /***/ "./apps/lams/src/refactoring/interface/auth/auth-interface.module.ts":
 /*!***************************************************************************!*\
   !*** ./apps/lams/src/refactoring/interface/auth/auth-interface.module.ts ***!
@@ -9923,20 +17114,19 @@ let AuthController = class AuthController {
     async generateToken(dto) {
         try {
             const payload = {
-                id: dto.employeeNumber,
-                employeeNumber: dto.employeeNumber,
-                name: dto.name || 'Test User',
-                email: dto.email || 'test@example.com',
-                ...dto.additionalData,
+                id: '839e6f06-8d44-43a1-948c-095253c4cf8c',
+                employeeNumber: '24016',
+                name: '김규현',
+                email: 'kim.kyuhyun@lumir.space',
             };
             const token = this.jwtService.sign(payload);
             return {
                 success: true,
                 token,
                 tokenInfo: {
-                    employeeNumber: dto.employeeNumber,
-                    name: dto.name,
-                    email: dto.email,
+                    employeeNumber: '24016',
+                    name: '김규현',
+                    email: 'kim.kyuhyun@lumir.space',
                     issuedAt: new Date(),
                     expiresAt: undefined,
                 },
@@ -10273,6 +17463,197 @@ __decorate([
 
 /***/ }),
 
+/***/ "./apps/lams/src/refactoring/interface/file-management/dto/get-file-list-with-history.dto.ts":
+/*!***************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/file-management/dto/get-file-list-with-history.dto.ts ***!
+  \***************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetFileListWithHistoryResponseDto = exports.FileWithHistoryResponseDto = exports.FileContentReflectionHistoryResponseDto = exports.GetFileListWithHistoryRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class GetFileListWithHistoryRequestDto {
+}
+exports.GetFileListWithHistoryRequestDto = GetFileListWithHistoryRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '연도',
+        example: '2024',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetFileListWithHistoryRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '월',
+        example: '01',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetFileListWithHistoryRequestDto.prototype, "month", void 0);
+class FileContentReflectionHistoryResponseDto {
+}
+exports.FileContentReflectionHistoryResponseDto = FileContentReflectionHistoryResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID' }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '파일 ID' }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "fileId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '상태' }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '타입' }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '데이터', nullable: true }),
+    __metadata("design:type", typeof (_a = typeof Record !== "undefined" && Record) === "function" ? _a : Object)
+], FileContentReflectionHistoryResponseDto.prototype, "data", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], FileContentReflectionHistoryResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '반영 일시', nullable: true }),
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], FileContentReflectionHistoryResponseDto.prototype, "reflectedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], FileContentReflectionHistoryResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '삭제 일시', nullable: true }),
+    __metadata("design:type", typeof (_e = typeof Date !== "undefined" && Date) === "function" ? _e : Object)
+], FileContentReflectionHistoryResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성자 ID', nullable: true }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정자 ID', nullable: true }),
+    __metadata("design:type", String)
+], FileContentReflectionHistoryResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], FileContentReflectionHistoryResponseDto.prototype, "version", void 0);
+class FileWithHistoryResponseDto {
+}
+exports.FileWithHistoryResponseDto = FileWithHistoryResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID' }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '파일명' }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "fileName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '원본 파일명', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "fileOriginalName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '파일 경로' }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "filePath", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '연도', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "month", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '읽음 일시', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "readAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '상태' }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '에러 메시지', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "error", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '데이터', nullable: true }),
+    __metadata("design:type", typeof (_f = typeof Record !== "undefined" && Record) === "function" ? _f : Object)
+], FileWithHistoryResponseDto.prototype, "data", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '업로드한 사용자 ID' }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "uploadBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '업로드 일시' }),
+    __metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+], FileWithHistoryResponseDto.prototype, "uploadedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_h = typeof Date !== "undefined" && Date) === "function" ? _h : Object)
+], FileWithHistoryResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_j = typeof Date !== "undefined" && Date) === "function" ? _j : Object)
+], FileWithHistoryResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '삭제 일시', nullable: true }),
+    __metadata("design:type", typeof (_k = typeof Date !== "undefined" && Date) === "function" ? _k : Object)
+], FileWithHistoryResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성자 ID', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정자 ID', nullable: true }),
+    __metadata("design:type", String)
+], FileWithHistoryResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], FileWithHistoryResponseDto.prototype, "version", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '반영이력 목록',
+        type: [FileContentReflectionHistoryResponseDto],
+    }),
+    __metadata("design:type", Array)
+], FileWithHistoryResponseDto.prototype, "reflectionHistories", void 0);
+class GetFileListWithHistoryResponseDto {
+}
+exports.GetFileListWithHistoryResponseDto = GetFileListWithHistoryResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '파일 목록 (반영이력 포함)',
+        type: [FileWithHistoryResponseDto],
+    }),
+    __metadata("design:type", Array)
+], GetFileListWithHistoryResponseDto.prototype, "files", void 0);
+
+
+/***/ }),
+
 /***/ "./apps/lams/src/refactoring/interface/file-management/dto/reflect-file-content.dto.ts":
 /*!*********************************************************************************************!*\
   !*** ./apps/lams/src/refactoring/interface/file-management/dto/reflect-file-content.dto.ts ***!
@@ -10299,7 +17680,7 @@ exports.ReflectFileContentRequestDto = ReflectFileContentRequestDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: '파일 ID 목록 (순서대로 반영됨)',
-        example: ['86a1e801-d278-422e-90f8-bea04e40b87a', '510f7c1c-a227-4088-884d-9f0df7962a73'],
+        example: ['dd0cbfa8-94ef-4540-aa3c-c0d0178d5c19', 'f883ead4-bbed-4f86-97d9-55f949189ee5'],
         type: [String],
     }),
     (0, class_validator_1.IsArray)(),
@@ -10357,6 +17738,75 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], ReflectFileContentResponseDto.prototype, "reflections", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/file-management/dto/restore-from-history.dto.ts":
+/*!*********************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/file-management/dto/restore-from-history.dto.ts ***!
+  \*********************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RestoreFromHistoryResponseDto = exports.RestoreFromHistoryRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class RestoreFromHistoryRequestDto {
+}
+exports.RestoreFromHistoryRequestDto = RestoreFromHistoryRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '반영 이력 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+    }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RestoreFromHistoryRequestDto.prototype, "reflectionHistoryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '연도',
+        example: '2024',
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RestoreFromHistoryRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '월',
+        example: '01',
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RestoreFromHistoryRequestDto.prototype, "month", void 0);
+class RestoreFromHistoryResponseDto {
+}
+exports.RestoreFromHistoryResponseDto = RestoreFromHistoryResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '원본 반영 이력 ID' }),
+    __metadata("design:type", String)
+], RestoreFromHistoryResponseDto.prototype, "reflectionHistoryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '일일 요약 생성 결과' }),
+    __metadata("design:type", Object)
+], RestoreFromHistoryResponseDto.prototype, "dailySummaryResult", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '월간 요약 생성 결과' }),
+    __metadata("design:type", Object)
+], RestoreFromHistoryResponseDto.prototype, "monthlySummaryResult", void 0);
 
 
 /***/ }),
@@ -10483,7 +17933,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileManagementController = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
@@ -10493,6 +17943,8 @@ const user_decorator_1 = __webpack_require__(/*! ../../../common/decorators/user
 const file_management_business_service_1 = __webpack_require__(/*! ../../business/file-management-business/file-management-business.service */ "./apps/lams/src/refactoring/business/file-management-business/file-management-business.service.ts");
 const upload_file_dto_1 = __webpack_require__(/*! ./dto/upload-file.dto */ "./apps/lams/src/refactoring/interface/file-management/dto/upload-file.dto.ts");
 const reflect_file_content_dto_1 = __webpack_require__(/*! ./dto/reflect-file-content.dto */ "./apps/lams/src/refactoring/interface/file-management/dto/reflect-file-content.dto.ts");
+const restore_from_history_dto_1 = __webpack_require__(/*! ./dto/restore-from-history.dto */ "./apps/lams/src/refactoring/interface/file-management/dto/restore-from-history.dto.ts");
+const get_file_list_with_history_dto_1 = __webpack_require__(/*! ./dto/get-file-list-with-history.dto */ "./apps/lams/src/refactoring/interface/file-management/dto/get-file-list-with-history.dto.ts");
 let FileManagementController = class FileManagementController {
     constructor(fileManagementBusinessService) {
         this.fileManagementBusinessService = fileManagementBusinessService;
@@ -10521,6 +17973,30 @@ let FileManagementController = class FileManagementController {
         return {
             reflections: result.reflections,
         };
+    }
+    async restoreFromHistory(dto, performedBy) {
+        if (!performedBy) {
+            throw new common_1.BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+        if (!dto.reflectionHistoryId) {
+            throw new common_1.BadRequestException('반영 이력 ID는 필수입니다.');
+        }
+        const result = await this.fileManagementBusinessService.이력으로되돌리기(dto.reflectionHistoryId, dto.year, dto.month, performedBy);
+        return {
+            reflectionHistoryId: result.reflectionHistoryId,
+            dailySummaryResult: result.dailySummaryResult,
+            monthlySummaryResult: result.monthlySummaryResult,
+        };
+    }
+    async getFileListWithHistory(dto) {
+        if (!dto.year || !dto.month) {
+            throw new common_1.BadRequestException('연도와 월은 필수입니다.');
+        }
+        const result = await this.fileManagementBusinessService.파일목록과반영이력을조회한다({
+            year: dto.year,
+            month: dto.month,
+        });
+        return result;
     }
 };
 exports.FileManagementController = FileManagementController;
@@ -10581,6 +18057,36 @@ __decorate([
     __metadata("design:paramtypes", [typeof (_f = typeof reflect_file_content_dto_1.ReflectFileContentRequestDto !== "undefined" && reflect_file_content_dto_1.ReflectFileContentRequestDto) === "function" ? _f : Object, String]),
     __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
 ], FileManagementController.prototype, "reflectFileContent", null);
+__decorate([
+    (0, common_1.Post)('restore-from-history'),
+    (0, swagger_1.ApiOperation)({
+        summary: '이력으로 되돌리기',
+        description: '파일 내용 반영 이력을 선택하여 해당 이력의 데이터로 되돌립니다. 이력에 저장된 데이터를 그대로 사용하여 해당 연월의 데이터를 복원합니다.',
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_h = typeof restore_from_history_dto_1.RestoreFromHistoryRequestDto !== "undefined" && restore_from_history_dto_1.RestoreFromHistoryRequestDto) === "function" ? _h : Object, String]),
+    __metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
+], FileManagementController.prototype, "restoreFromHistory", null);
+__decorate([
+    (0, common_1.Get)('files'),
+    (0, swagger_1.ApiOperation)({
+        summary: '파일 목록과 반영이력 조회',
+        description: '파일 목록을 조회하고 각 파일의 반영이력을 함께 조회합니다. 연도와 월을 필수로 제공해야 합니다.',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'year', description: '연도', example: '2024', required: true }),
+    (0, swagger_1.ApiQuery)({ name: 'month', description: '월', example: '01', required: true }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '파일 목록과 반영이력 조회 성공',
+        type: get_file_list_with_history_dto_1.GetFileListWithHistoryResponseDto,
+    }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_k = typeof get_file_list_with_history_dto_1.GetFileListWithHistoryRequestDto !== "undefined" && get_file_list_with_history_dto_1.GetFileListWithHistoryRequestDto) === "function" ? _k : Object]),
+    __metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+], FileManagementController.prototype, "getFileListWithHistory", null);
 exports.FileManagementController = FileManagementController = __decorate([
     (0, swagger_1.ApiTags)('파일 관리'),
     (0, swagger_1.ApiBearerAuth)(),
@@ -10609,17 +18115,1098 @@ exports.InterfaceModule = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const file_management_interface_module_1 = __webpack_require__(/*! ./file-management/file-management-interface.module */ "./apps/lams/src/refactoring/interface/file-management/file-management-interface.module.ts");
 const auth_interface_module_1 = __webpack_require__(/*! ./auth/auth-interface.module */ "./apps/lams/src/refactoring/interface/auth/auth-interface.module.ts");
+const attendance_data_interface_module_1 = __webpack_require__(/*! ./attendance-data/attendance-data-interface.module */ "./apps/lams/src/refactoring/interface/attendance-data/attendance-data-interface.module.ts");
+const attendance_issue_interface_module_1 = __webpack_require__(/*! ./attendance-issue/attendance-issue-interface.module */ "./apps/lams/src/refactoring/interface/attendance-issue/attendance-issue-interface.module.ts");
+const organization_management_interface_module_1 = __webpack_require__(/*! ./organization-management/organization-management-interface.module */ "./apps/lams/src/refactoring/interface/organization-management/organization-management-interface.module.ts");
+const settings_interface_module_1 = __webpack_require__(/*! ./settings/settings-interface.module */ "./apps/lams/src/refactoring/interface/settings/settings-interface.module.ts");
 let InterfaceModule = class InterfaceModule {
 };
 exports.InterfaceModule = InterfaceModule;
 exports.InterfaceModule = InterfaceModule = __decorate([
     (0, common_1.Module)({
-        imports: [file_management_interface_module_1.FileManagementInterfaceModule, auth_interface_module_1.AuthInterfaceModule],
+        imports: [
+            file_management_interface_module_1.FileManagementInterfaceModule,
+            auth_interface_module_1.AuthInterfaceModule,
+            attendance_data_interface_module_1.AttendanceDataInterfaceModule,
+            attendance_issue_interface_module_1.AttendanceIssueInterfaceModule,
+            organization_management_interface_module_1.OrganizationManagementInterfaceModule,
+            settings_interface_module_1.SettingsInterfaceModule,
+        ],
         controllers: [],
         providers: [],
         exports: [],
     })
 ], InterfaceModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/organization-management/dto/get-department-list.dto.ts":
+/*!****************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/organization-management/dto/get-department-list.dto.ts ***!
+  \****************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetDepartmentListResponseDto = exports.DepartmentInfoResponseDto = exports.DepartmentNodeResponseDto = exports.GetDepartmentListRequestDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class GetDepartmentListRequestDto {
+}
+exports.GetDepartmentListRequestDto = GetDepartmentListRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '연도',
+        example: '2024',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetDepartmentListRequestDto.prototype, "year", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '월',
+        example: '01',
+        required: true,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], GetDepartmentListRequestDto.prototype, "month", void 0);
+class DepartmentNodeResponseDto {
+}
+exports.DepartmentNodeResponseDto = DepartmentNodeResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID' }),
+    __metadata("design:type", String)
+], DepartmentNodeResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 코드' }),
+    __metadata("design:type", String)
+], DepartmentNodeResponseDto.prototype, "departmentCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 이름' }),
+    __metadata("design:type", String)
+], DepartmentNodeResponseDto.prototype, "departmentName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '상위 부서 ID', nullable: true }),
+    __metadata("design:type", String)
+], DepartmentNodeResponseDto.prototype, "parentDepartmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 유형' }),
+    __metadata("design:type", String)
+], DepartmentNodeResponseDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '정렬 순서' }),
+    __metadata("design:type", Number)
+], DepartmentNodeResponseDto.prototype, "order", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 수' }),
+    __metadata("design:type", Number)
+], DepartmentNodeResponseDto.prototype, "employeeCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '하위 부서 목록',
+        type: [DepartmentNodeResponseDto],
+    }),
+    __metadata("design:type", Array)
+], DepartmentNodeResponseDto.prototype, "children", void 0);
+class DepartmentInfoResponseDto {
+}
+exports.DepartmentInfoResponseDto = DepartmentInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID' }),
+    __metadata("design:type", String)
+], DepartmentInfoResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 코드' }),
+    __metadata("design:type", String)
+], DepartmentInfoResponseDto.prototype, "departmentCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 이름' }),
+    __metadata("design:type", String)
+], DepartmentInfoResponseDto.prototype, "departmentName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '상위 부서 ID', nullable: true }),
+    __metadata("design:type", String)
+], DepartmentInfoResponseDto.prototype, "parentDepartmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 유형' }),
+    __metadata("design:type", String)
+], DepartmentInfoResponseDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '정렬 순서' }),
+    __metadata("design:type", Number)
+], DepartmentInfoResponseDto.prototype, "order", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 수' }),
+    __metadata("design:type", Number)
+], DepartmentInfoResponseDto.prototype, "employeeCount", void 0);
+class GetDepartmentListResponseDto {
+}
+exports.GetDepartmentListResponseDto = GetDepartmentListResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '부서 계층구조',
+        type: [DepartmentNodeResponseDto],
+    }),
+    __metadata("design:type", Array)
+], GetDepartmentListResponseDto.prototype, "hierarchy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '부서 1차원 배열',
+        type: [DepartmentInfoResponseDto],
+    }),
+    __metadata("design:type", Array)
+], GetDepartmentListResponseDto.prototype, "flatList", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 부서 수' }),
+    __metadata("design:type", Number)
+], GetDepartmentListResponseDto.prototype, "totalDepartments", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 직원 수' }),
+    __metadata("design:type", Number)
+], GetDepartmentListResponseDto.prototype, "totalEmployees", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/organization-management/organization-management-interface.module.ts":
+/*!*****************************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/organization-management/organization-management-interface.module.ts ***!
+  \*****************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementInterfaceModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const organization_management_controller_1 = __webpack_require__(/*! ./organization-management.controller */ "./apps/lams/src/refactoring/interface/organization-management/organization-management.controller.ts");
+const organization_management_business_module_1 = __webpack_require__(/*! ../../business/organization-management-business/organization-management-business.module */ "./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.module.ts");
+let OrganizationManagementInterfaceModule = class OrganizationManagementInterfaceModule {
+};
+exports.OrganizationManagementInterfaceModule = OrganizationManagementInterfaceModule;
+exports.OrganizationManagementInterfaceModule = OrganizationManagementInterfaceModule = __decorate([
+    (0, common_1.Module)({
+        imports: [organization_management_business_module_1.OrganizationManagementBusinessModule],
+        controllers: [organization_management_controller_1.OrganizationManagementController],
+    })
+], OrganizationManagementInterfaceModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/organization-management/organization-management.controller.ts":
+/*!***********************************************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/organization-management/organization-management.controller.ts ***!
+  \***********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrganizationManagementController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const organization_management_business_service_1 = __webpack_require__(/*! ../../business/organization-management-business/organization-management-business.service */ "./apps/lams/src/refactoring/business/organization-management-business/organization-management-business.service.ts");
+const get_department_list_dto_1 = __webpack_require__(/*! ./dto/get-department-list.dto */ "./apps/lams/src/refactoring/interface/organization-management/dto/get-department-list.dto.ts");
+let OrganizationManagementController = class OrganizationManagementController {
+    constructor(organizationManagementBusinessService) {
+        this.organizationManagementBusinessService = organizationManagementBusinessService;
+    }
+    async getDepartmentList(dto) {
+        if (!dto.year || !dto.month) {
+            throw new common_1.BadRequestException('연도와 월은 필수입니다.');
+        }
+        const result = await this.organizationManagementBusinessService.부서목록을조회한다({
+            year: dto.year,
+            month: dto.month,
+        });
+        return result;
+    }
+};
+exports.OrganizationManagementController = OrganizationManagementController;
+__decorate([
+    (0, common_1.Get)('departments'),
+    (0, swagger_1.ApiOperation)({
+        summary: '부서 목록 조회',
+        description: '요청받은 연월을 기준으로 해당 월에 유효했던 조직도 상태를 반환합니다. 계층구조와 1차원 배열 두 가지 형태로 제공합니다.',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'year', description: '연도', example: '2024', required: true }),
+    (0, swagger_1.ApiQuery)({ name: 'month', description: '월', example: '01', required: true }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '부서 목록 조회 성공',
+        type: get_department_list_dto_1.GetDepartmentListResponseDto,
+    }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof get_department_list_dto_1.GetDepartmentListRequestDto !== "undefined" && get_department_list_dto_1.GetDepartmentListRequestDto) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], OrganizationManagementController.prototype, "getDepartmentList", null);
+exports.OrganizationManagementController = OrganizationManagementController = __decorate([
+    (0, swagger_1.ApiTags)('조직 관리'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.Controller)('organization-management'),
+    __metadata("design:paramtypes", [typeof (_a = typeof organization_management_business_service_1.OrganizationManagementBusinessService !== "undefined" && organization_management_business_service_1.OrganizationManagementBusinessService) === "function" ? _a : Object])
+], OrganizationManagementController);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/settings/dto/settings.dto.ts":
+/*!**************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/settings/dto/settings.dto.ts ***!
+  \**************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GetWorkTimeOverrideListResponseDto = exports.GetHolidayListResponseDto = exports.DeleteWorkTimeOverrideResponseDto = exports.DeleteWorkTimeOverrideRequestDto = exports.UpdateWorkTimeOverrideResponseDto = exports.UpdateWorkTimeOverrideRequestDto = exports.CreateWorkTimeOverrideResponseDto = exports.WorkTimeOverrideResponseDto = exports.CreateWorkTimeOverrideRequestDto = exports.DeleteHolidayInfoResponseDto = exports.DeleteHolidayInfoRequestDto = exports.UpdateHolidayInfoResponseDto = exports.UpdateHolidayInfoRequestDto = exports.CreateHolidayInfoResponseDto = exports.HolidayInfoResponseDto = exports.CreateHolidayInfoRequestDto = exports.UpdateEmployeeExtraInfoResponseDto = exports.EmployeeExtraInfoResponseDto = exports.UpdateEmployeeExtraInfoRequestDto = exports.UpdateEmployeeDepartmentPermissionResponseDto = exports.EmployeeDepartmentPermissionResponseDto = exports.UpdateEmployeeDepartmentPermissionRequestDto = exports.GetDepartmentListForPermissionResponseDto = exports.DepartmentInfoForPermissionResponseDto = exports.GetManagerEmployeeListResponseDto = exports.EmployeeInfoResponseDto = void 0;
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+class EmployeeInfoResponseDto {
+}
+exports.EmployeeInfoResponseDto = EmployeeInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID' }),
+    __metadata("design:type", String)
+], EmployeeInfoResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원번호' }),
+    __metadata("design:type", String)
+], EmployeeInfoResponseDto.prototype, "employeeNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원명' }),
+    __metadata("design:type", String)
+], EmployeeInfoResponseDto.prototype, "employeeName", void 0);
+class GetManagerEmployeeListResponseDto {
+}
+exports.GetManagerEmployeeListResponseDto = GetManagerEmployeeListResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 목록', type: [EmployeeInfoResponseDto] }),
+    __metadata("design:type", Array)
+], GetManagerEmployeeListResponseDto.prototype, "employees", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 직원 수' }),
+    __metadata("design:type", Number)
+], GetManagerEmployeeListResponseDto.prototype, "totalCount", void 0);
+class DepartmentInfoForPermissionResponseDto {
+}
+exports.DepartmentInfoForPermissionResponseDto = DepartmentInfoForPermissionResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID' }),
+    __metadata("design:type", String)
+], DepartmentInfoForPermissionResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 코드' }),
+    __metadata("design:type", String)
+], DepartmentInfoForPermissionResponseDto.prototype, "departmentCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서명' }),
+    __metadata("design:type", String)
+], DepartmentInfoForPermissionResponseDto.prototype, "departmentName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 타입' }),
+    __metadata("design:type", String)
+], DepartmentInfoForPermissionResponseDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '정렬 순서' }),
+    __metadata("design:type", Number)
+], DepartmentInfoForPermissionResponseDto.prototype, "order", void 0);
+class GetDepartmentListForPermissionResponseDto {
+}
+exports.GetDepartmentListForPermissionResponseDto = GetDepartmentListForPermissionResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 목록', type: [DepartmentInfoForPermissionResponseDto] }),
+    __metadata("design:type", Array)
+], GetDepartmentListForPermissionResponseDto.prototype, "departments", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 부서 수' }),
+    __metadata("design:type", Number)
+], GetDepartmentListForPermissionResponseDto.prototype, "totalCount", void 0);
+class UpdateEmployeeDepartmentPermissionRequestDto {
+}
+exports.UpdateEmployeeDepartmentPermissionRequestDto = UpdateEmployeeDepartmentPermissionRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateEmployeeDepartmentPermissionRequestDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID', example: '123e4567-e89b-12d3-a456-426614174001' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateEmployeeDepartmentPermissionRequestDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '접근 권한', example: true }),
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Boolean)
+], UpdateEmployeeDepartmentPermissionRequestDto.prototype, "hasAccessPermission", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '검토 권한', example: false }),
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Boolean)
+], UpdateEmployeeDepartmentPermissionRequestDto.prototype, "hasReviewPermission", void 0);
+class EmployeeDepartmentPermissionResponseDto {
+}
+exports.EmployeeDepartmentPermissionResponseDto = EmployeeDepartmentPermissionResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '권한 ID' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermissionResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermissionResponseDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '부서 ID' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermissionResponseDto.prototype, "departmentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '접근 권한' }),
+    __metadata("design:type", Boolean)
+], EmployeeDepartmentPermissionResponseDto.prototype, "hasAccessPermission", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '검토 권한' }),
+    __metadata("design:type", Boolean)
+], EmployeeDepartmentPermissionResponseDto.prototype, "hasReviewPermission", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
+], EmployeeDepartmentPermissionResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], EmployeeDepartmentPermissionResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], EmployeeDepartmentPermissionResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermissionResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], EmployeeDepartmentPermissionResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], EmployeeDepartmentPermissionResponseDto.prototype, "version", void 0);
+class UpdateEmployeeDepartmentPermissionResponseDto {
+}
+exports.UpdateEmployeeDepartmentPermissionResponseDto = UpdateEmployeeDepartmentPermissionResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '권한 정보', type: EmployeeDepartmentPermissionResponseDto }),
+    __metadata("design:type", EmployeeDepartmentPermissionResponseDto)
+], UpdateEmployeeDepartmentPermissionResponseDto.prototype, "permission", void 0);
+class UpdateEmployeeExtraInfoRequestDto {
+}
+exports.UpdateEmployeeExtraInfoRequestDto = UpdateEmployeeExtraInfoRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateEmployeeExtraInfoRequestDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '대시보드 요약에서 제외 여부', example: false }),
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Boolean)
+], UpdateEmployeeExtraInfoRequestDto.prototype, "isExcludedFromSummary", void 0);
+class EmployeeExtraInfoResponseDto {
+}
+exports.EmployeeExtraInfoResponseDto = EmployeeExtraInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '추가 정보 ID' }),
+    __metadata("design:type", String)
+], EmployeeExtraInfoResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '직원 ID' }),
+    __metadata("design:type", String)
+], EmployeeExtraInfoResponseDto.prototype, "employeeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '대시보드 요약에서 제외 여부' }),
+    __metadata("design:type", Boolean)
+], EmployeeExtraInfoResponseDto.prototype, "isExcludedFromSummary", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], EmployeeExtraInfoResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_e = typeof Date !== "undefined" && Date) === "function" ? _e : Object)
+], EmployeeExtraInfoResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
+], EmployeeExtraInfoResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], EmployeeExtraInfoResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], EmployeeExtraInfoResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], EmployeeExtraInfoResponseDto.prototype, "version", void 0);
+class UpdateEmployeeExtraInfoResponseDto {
+}
+exports.UpdateEmployeeExtraInfoResponseDto = UpdateEmployeeExtraInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '추가 정보', type: EmployeeExtraInfoResponseDto }),
+    __metadata("design:type", EmployeeExtraInfoResponseDto)
+], UpdateEmployeeExtraInfoResponseDto.prototype, "extraInfo", void 0);
+class CreateHolidayInfoRequestDto {
+}
+exports.CreateHolidayInfoRequestDto = CreateHolidayInfoRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일명', example: '신정' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateHolidayInfoRequestDto.prototype, "holidayName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 날짜', example: '2024-01-01' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateHolidayInfoRequestDto.prototype, "holidayDate", void 0);
+class HolidayInfoResponseDto {
+}
+exports.HolidayInfoResponseDto = HolidayInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 ID' }),
+    __metadata("design:type", String)
+], HolidayInfoResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일명' }),
+    __metadata("design:type", String)
+], HolidayInfoResponseDto.prototype, "holidayName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 날짜' }),
+    __metadata("design:type", String)
+], HolidayInfoResponseDto.prototype, "holidayDate", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+], HolidayInfoResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_h = typeof Date !== "undefined" && Date) === "function" ? _h : Object)
+], HolidayInfoResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_j = typeof Date !== "undefined" && Date) === "function" ? _j : Object)
+], HolidayInfoResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], HolidayInfoResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], HolidayInfoResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], HolidayInfoResponseDto.prototype, "version", void 0);
+class CreateHolidayInfoResponseDto {
+}
+exports.CreateHolidayInfoResponseDto = CreateHolidayInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 정보', type: HolidayInfoResponseDto }),
+    __metadata("design:type", HolidayInfoResponseDto)
+], CreateHolidayInfoResponseDto.prototype, "holidayInfo", void 0);
+class UpdateHolidayInfoRequestDto {
+}
+exports.UpdateHolidayInfoRequestDto = UpdateHolidayInfoRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateHolidayInfoRequestDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '휴일명', example: '신정' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateHolidayInfoRequestDto.prototype, "holidayName", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '휴일 날짜', example: '2024-01-01' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateHolidayInfoRequestDto.prototype, "holidayDate", void 0);
+class UpdateHolidayInfoResponseDto {
+}
+exports.UpdateHolidayInfoResponseDto = UpdateHolidayInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 정보', type: HolidayInfoResponseDto }),
+    __metadata("design:type", HolidayInfoResponseDto)
+], UpdateHolidayInfoResponseDto.prototype, "holidayInfo", void 0);
+class DeleteHolidayInfoRequestDto {
+}
+exports.DeleteHolidayInfoRequestDto = DeleteHolidayInfoRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], DeleteHolidayInfoRequestDto.prototype, "id", void 0);
+class DeleteHolidayInfoResponseDto {
+}
+exports.DeleteHolidayInfoResponseDto = DeleteHolidayInfoResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '삭제 성공 여부' }),
+    __metadata("design:type", Boolean)
+], DeleteHolidayInfoResponseDto.prototype, "success", void 0);
+class CreateWorkTimeOverrideRequestDto {
+}
+exports.CreateWorkTimeOverrideRequestDto = CreateWorkTimeOverrideRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '적용 날짜', example: '2024-01-01' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateWorkTimeOverrideRequestDto.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '시작 시간', example: '09:00:00' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateWorkTimeOverrideRequestDto.prototype, "startWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '종료 시간', example: '18:00:00' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateWorkTimeOverrideRequestDto.prototype, "endWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경 사유', example: '눈으로 인한 출근시간 조정' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateWorkTimeOverrideRequestDto.prototype, "reason", void 0);
+class WorkTimeOverrideResponseDto {
+}
+exports.WorkTimeOverrideResponseDto = WorkTimeOverrideResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 ID' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '적용 날짜' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '시작 시간' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "startWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '종료 시간' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "endWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경 사유' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "reason", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '생성 일시' }),
+    __metadata("design:type", typeof (_k = typeof Date !== "undefined" && Date) === "function" ? _k : Object)
+], WorkTimeOverrideResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '수정 일시' }),
+    __metadata("design:type", typeof (_l = typeof Date !== "undefined" && Date) === "function" ? _l : Object)
+], WorkTimeOverrideResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '삭제 일시' }),
+    __metadata("design:type", typeof (_m = typeof Date !== "undefined" && Date) === "function" ? _m : Object)
+], WorkTimeOverrideResponseDto.prototype, "deletedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '생성자 ID' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "createdBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '수정자 ID' }),
+    __metadata("design:type", String)
+], WorkTimeOverrideResponseDto.prototype, "updatedBy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '버전' }),
+    __metadata("design:type", Number)
+], WorkTimeOverrideResponseDto.prototype, "version", void 0);
+class CreateWorkTimeOverrideResponseDto {
+}
+exports.CreateWorkTimeOverrideResponseDto = CreateWorkTimeOverrideResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 정보', type: WorkTimeOverrideResponseDto }),
+    __metadata("design:type", WorkTimeOverrideResponseDto)
+], CreateWorkTimeOverrideResponseDto.prototype, "workTimeOverride", void 0);
+class UpdateWorkTimeOverrideRequestDto {
+}
+exports.UpdateWorkTimeOverrideRequestDto = UpdateWorkTimeOverrideRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateWorkTimeOverrideRequestDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '시작 시간', example: '09:00:00' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateWorkTimeOverrideRequestDto.prototype, "startWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '종료 시간', example: '18:00:00' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateWorkTimeOverrideRequestDto.prototype, "endWorkTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: '변경 사유', example: '눈으로 인한 출근시간 조정' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateWorkTimeOverrideRequestDto.prototype, "reason", void 0);
+class UpdateWorkTimeOverrideResponseDto {
+}
+exports.UpdateWorkTimeOverrideResponseDto = UpdateWorkTimeOverrideResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 정보', type: WorkTimeOverrideResponseDto }),
+    __metadata("design:type", WorkTimeOverrideResponseDto)
+], UpdateWorkTimeOverrideResponseDto.prototype, "workTimeOverride", void 0);
+class DeleteWorkTimeOverrideRequestDto {
+}
+exports.DeleteWorkTimeOverrideRequestDto = DeleteWorkTimeOverrideRequestDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 ID', example: '123e4567-e89b-12d3-a456-426614174000' }),
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], DeleteWorkTimeOverrideRequestDto.prototype, "id", void 0);
+class DeleteWorkTimeOverrideResponseDto {
+}
+exports.DeleteWorkTimeOverrideResponseDto = DeleteWorkTimeOverrideResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '삭제 성공 여부' }),
+    __metadata("design:type", Boolean)
+], DeleteWorkTimeOverrideResponseDto.prototype, "success", void 0);
+class GetHolidayListResponseDto {
+}
+exports.GetHolidayListResponseDto = GetHolidayListResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '휴일 목록', type: [HolidayInfoResponseDto] }),
+    __metadata("design:type", Array)
+], GetHolidayListResponseDto.prototype, "holidays", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 휴일 수' }),
+    __metadata("design:type", Number)
+], GetHolidayListResponseDto.prototype, "totalCount", void 0);
+class GetWorkTimeOverrideListResponseDto {
+}
+exports.GetWorkTimeOverrideListResponseDto = GetWorkTimeOverrideListResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '특별근태시간 목록', type: [WorkTimeOverrideResponseDto] }),
+    __metadata("design:type", Array)
+], GetWorkTimeOverrideListResponseDto.prototype, "workTimeOverrides", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: '전체 특별근태시간 수' }),
+    __metadata("design:type", Number)
+], GetWorkTimeOverrideListResponseDto.prototype, "totalCount", void 0);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/settings/settings-interface.module.ts":
+/*!***********************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/settings/settings-interface.module.ts ***!
+  \***********************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsInterfaceModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const settings_controller_1 = __webpack_require__(/*! ./settings.controller */ "./apps/lams/src/refactoring/interface/settings/settings.controller.ts");
+const settings_business_module_1 = __webpack_require__(/*! ../../business/settings-business/settings-business.module */ "./apps/lams/src/refactoring/business/settings-business/settings-business.module.ts");
+let SettingsInterfaceModule = class SettingsInterfaceModule {
+};
+exports.SettingsInterfaceModule = SettingsInterfaceModule;
+exports.SettingsInterfaceModule = SettingsInterfaceModule = __decorate([
+    (0, common_1.Module)({
+        imports: [settings_business_module_1.SettingsBusinessModule],
+        controllers: [settings_controller_1.SettingsController],
+    })
+], SettingsInterfaceModule);
+
+
+/***/ }),
+
+/***/ "./apps/lams/src/refactoring/interface/settings/settings.controller.ts":
+/*!*****************************************************************************!*\
+  !*** ./apps/lams/src/refactoring/interface/settings/settings.controller.ts ***!
+  \*****************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SettingsController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const settings_business_service_1 = __webpack_require__(/*! ../../business/settings-business/settings-business.service */ "./apps/lams/src/refactoring/business/settings-business/settings-business.service.ts");
+const settings_dto_1 = __webpack_require__(/*! ./dto/settings.dto */ "./apps/lams/src/refactoring/interface/settings/dto/settings.dto.ts");
+const user_decorator_1 = __webpack_require__(/*! ../../../common/decorators/user.decorator */ "./apps/lams/src/common/decorators/user.decorator.ts");
+let SettingsController = class SettingsController {
+    constructor(settingsBusinessService) {
+        this.settingsBusinessService = settingsBusinessService;
+    }
+    async getManagerEmployeeList() {
+        return await this.settingsBusinessService.관리자직원목록을조회한다({});
+    }
+    async getDepartmentListForPermission() {
+        return await this.settingsBusinessService.권한관리용부서목록을조회한다({});
+    }
+    async updateEmployeeDepartmentPermission(dto, userId) {
+        return await this.settingsBusinessService.직원부서권한을변경한다({
+            employeeId: dto.employeeId,
+            departmentId: dto.departmentId,
+            hasAccessPermission: dto.hasAccessPermission,
+            hasReviewPermission: dto.hasReviewPermission,
+            performedBy: userId,
+        });
+    }
+    async updateEmployeeExtraInfo(dto, userId) {
+        return await this.settingsBusinessService.직원추가정보를변경한다({
+            employeeId: dto.employeeId,
+            isExcludedFromSummary: dto.isExcludedFromSummary,
+            performedBy: userId,
+        });
+    }
+    async getHolidayList() {
+        return await this.settingsBusinessService.휴일목록을조회한다({});
+    }
+    async createHolidayInfo(dto, userId) {
+        return await this.settingsBusinessService.휴일정보를생성한다({
+            holidayName: dto.holidayName,
+            holidayDate: dto.holidayDate,
+            performedBy: userId,
+        });
+    }
+    async updateHolidayInfo(dto, userId) {
+        return await this.settingsBusinessService.휴일정보를수정한다({
+            id: dto.id,
+            holidayName: dto.holidayName,
+            holidayDate: dto.holidayDate,
+            performedBy: userId,
+        });
+    }
+    async deleteHolidayInfo(dto, userId) {
+        return await this.settingsBusinessService.휴일정보를삭제한다({
+            id: dto.id,
+            performedBy: userId,
+        });
+    }
+    async getWorkTimeOverrideList() {
+        return await this.settingsBusinessService.특별근태시간목록을조회한다({});
+    }
+    async createWorkTimeOverride(dto, userId) {
+        return await this.settingsBusinessService.특별근태시간을생성한다({
+            date: dto.date,
+            startWorkTime: dto.startWorkTime,
+            endWorkTime: dto.endWorkTime,
+            reason: dto.reason,
+            performedBy: userId,
+        });
+    }
+    async updateWorkTimeOverride(dto, userId) {
+        return await this.settingsBusinessService.특별근태시간을수정한다({
+            id: dto.id,
+            startWorkTime: dto.startWorkTime,
+            endWorkTime: dto.endWorkTime,
+            reason: dto.reason,
+            performedBy: userId,
+        });
+    }
+    async deleteWorkTimeOverride(dto, userId) {
+        return await this.settingsBusinessService.특별근태시간을삭제한다({
+            id: dto.id,
+            performedBy: userId,
+        });
+    }
+};
+exports.SettingsController = SettingsController;
+__decorate([
+    (0, common_1.Get)('employees/managers'),
+    (0, swagger_1.ApiOperation)({
+        summary: '관리자 직원 목록 조회',
+        description: '배치이력에서 관리자였던 적이 있는 직원들만 조회합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '관리자 직원 목록 조회 성공',
+        type: settings_dto_1.GetManagerEmployeeListResponseDto,
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+], SettingsController.prototype, "getManagerEmployeeList", null);
+__decorate([
+    (0, common_1.Get)('departments'),
+    (0, swagger_1.ApiOperation)({
+        summary: '권한 관리용 부서 목록 조회',
+        description: '퇴사자 부서를 제외한 전체 부서 목록을 조회합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '부서 목록 조회 성공',
+        type: settings_dto_1.GetDepartmentListForPermissionResponseDto,
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], SettingsController.prototype, "getDepartmentListForPermission", null);
+__decorate([
+    (0, common_1.Patch)('permissions'),
+    (0, swagger_1.ApiOperation)({
+        summary: '직원-부서 권한 변경',
+        description: '직원의 부서에 대한 접근권한과 검토권한을 변경합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '권한 변경 성공',
+        type: settings_dto_1.UpdateEmployeeDepartmentPermissionResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_d = typeof settings_dto_1.UpdateEmployeeDepartmentPermissionRequestDto !== "undefined" && settings_dto_1.UpdateEmployeeDepartmentPermissionRequestDto) === "function" ? _d : Object, String]),
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], SettingsController.prototype, "updateEmployeeDepartmentPermission", null);
+__decorate([
+    (0, common_1.Patch)('employee-extra-info'),
+    (0, swagger_1.ApiOperation)({
+        summary: '직원 추가 정보 변경',
+        description: '직원의 대시보드 요약 표시 여부를 변경합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '직원 추가 정보 변경 성공',
+        type: settings_dto_1.UpdateEmployeeExtraInfoResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_f = typeof settings_dto_1.UpdateEmployeeExtraInfoRequestDto !== "undefined" && settings_dto_1.UpdateEmployeeExtraInfoRequestDto) === "function" ? _f : Object, String]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+], SettingsController.prototype, "updateEmployeeExtraInfo", null);
+__decorate([
+    (0, common_1.Get)('holidays'),
+    (0, swagger_1.ApiOperation)({
+        summary: '휴일 목록 조회',
+        description: '전체 공휴일 목록을 조회합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '휴일 목록 조회 성공',
+        type: settings_dto_1.GetHolidayListResponseDto,
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], SettingsController.prototype, "getHolidayList", null);
+__decorate([
+    (0, common_1.Post)('holidays'),
+    (0, swagger_1.ApiOperation)({
+        summary: '휴일 정보 생성',
+        description: '새로운 공휴일을 추가합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: '휴일 정보 생성 성공',
+        type: settings_dto_1.CreateHolidayInfoResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_j = typeof settings_dto_1.CreateHolidayInfoRequestDto !== "undefined" && settings_dto_1.CreateHolidayInfoRequestDto) === "function" ? _j : Object, String]),
+    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+], SettingsController.prototype, "createHolidayInfo", null);
+__decorate([
+    (0, common_1.Patch)('holidays'),
+    (0, swagger_1.ApiOperation)({
+        summary: '휴일 정보 수정',
+        description: '기존 공휴일 정보를 수정합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '휴일 정보 수정 성공',
+        type: settings_dto_1.UpdateHolidayInfoResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_l = typeof settings_dto_1.UpdateHolidayInfoRequestDto !== "undefined" && settings_dto_1.UpdateHolidayInfoRequestDto) === "function" ? _l : Object, String]),
+    __metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+], SettingsController.prototype, "updateHolidayInfo", null);
+__decorate([
+    (0, common_1.Delete)('holidays'),
+    (0, swagger_1.ApiOperation)({
+        summary: '휴일 정보 삭제',
+        description: '공휴일을 삭제합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '휴일 정보 삭제 성공',
+        type: settings_dto_1.DeleteHolidayInfoResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_o = typeof settings_dto_1.DeleteHolidayInfoRequestDto !== "undefined" && settings_dto_1.DeleteHolidayInfoRequestDto) === "function" ? _o : Object, String]),
+    __metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
+], SettingsController.prototype, "deleteHolidayInfo", null);
+__decorate([
+    (0, common_1.Get)('work-time-overrides'),
+    (0, swagger_1.ApiOperation)({
+        summary: '특별근태시간 목록 조회',
+        description: '전체 특별근태시간 목록을 조회합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '특별근태시간 목록 조회 성공',
+        type: settings_dto_1.GetWorkTimeOverrideListResponseDto,
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
+], SettingsController.prototype, "getWorkTimeOverrideList", null);
+__decorate([
+    (0, common_1.Post)('work-time-overrides'),
+    (0, swagger_1.ApiOperation)({
+        summary: '특별근태시간 생성',
+        description: '특정 날짜의 근무시간을 커스터마이징합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: '특별근태시간 생성 성공',
+        type: settings_dto_1.CreateWorkTimeOverrideResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_r = typeof settings_dto_1.CreateWorkTimeOverrideRequestDto !== "undefined" && settings_dto_1.CreateWorkTimeOverrideRequestDto) === "function" ? _r : Object, String]),
+    __metadata("design:returntype", typeof (_s = typeof Promise !== "undefined" && Promise) === "function" ? _s : Object)
+], SettingsController.prototype, "createWorkTimeOverride", null);
+__decorate([
+    (0, common_1.Patch)('work-time-overrides'),
+    (0, swagger_1.ApiOperation)({
+        summary: '특별근태시간 수정',
+        description: '기존 특별근태시간 정보를 수정합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '특별근태시간 수정 성공',
+        type: settings_dto_1.UpdateWorkTimeOverrideResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_t = typeof settings_dto_1.UpdateWorkTimeOverrideRequestDto !== "undefined" && settings_dto_1.UpdateWorkTimeOverrideRequestDto) === "function" ? _t : Object, String]),
+    __metadata("design:returntype", typeof (_u = typeof Promise !== "undefined" && Promise) === "function" ? _u : Object)
+], SettingsController.prototype, "updateWorkTimeOverride", null);
+__decorate([
+    (0, common_1.Delete)('work-time-overrides'),
+    (0, swagger_1.ApiOperation)({
+        summary: '특별근태시간 삭제',
+        description: '특별근태시간을 삭제합니다.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '특별근태시간 삭제 성공',
+        type: settings_dto_1.DeleteWorkTimeOverrideResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_v = typeof settings_dto_1.DeleteWorkTimeOverrideRequestDto !== "undefined" && settings_dto_1.DeleteWorkTimeOverrideRequestDto) === "function" ? _v : Object, String]),
+    __metadata("design:returntype", typeof (_w = typeof Promise !== "undefined" && Promise) === "function" ? _w : Object)
+], SettingsController.prototype, "deleteWorkTimeOverride", null);
+exports.SettingsController = SettingsController = __decorate([
+    (0, swagger_1.ApiTags)('설정 관리'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.Controller)('settings'),
+    __metadata("design:paramtypes", [typeof (_a = typeof settings_business_service_1.SettingsBusinessService !== "undefined" && settings_business_service_1.SettingsBusinessService) === "function" ? _a : Object])
+], SettingsController);
 
 
 /***/ }),
@@ -12139,6 +20726,7 @@ const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const typeorm_1 = __webpack_require__(/*! @nestjs/typeorm */ "@nestjs/typeorm");
 const typeorm_2 = __webpack_require__(/*! typeorm */ "typeorm");
 const employee_department_position_history_entity_1 = __webpack_require__(/*! ./employee-department-position-history.entity */ "./libs/modules/employee-department-position-history/employee-department-position-history.entity.ts");
+const date_fns_1 = __webpack_require__(/*! date-fns */ "date-fns");
 let DomainEmployeeDepartmentPositionHistoryService = class DomainEmployeeDepartmentPositionHistoryService {
     constructor(repository, dataSource) {
         this.repository = repository;
@@ -12185,7 +20773,7 @@ let DomainEmployeeDepartmentPositionHistoryService = class DomainEmployeeDepartm
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.employeeId = :employeeId', { employeeId })
             .andWhere('eh.effectiveStartDate <= :targetDate', { targetDate })
-            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate > :targetDate)', { targetDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :targetDate)', { targetDate })
             .getOne();
     }
     async findCurrentByEmployeeId(employeeId) {
@@ -12216,7 +20804,7 @@ let DomainEmployeeDepartmentPositionHistoryService = class DomainEmployeeDepartm
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.departmentId = :departmentId', { departmentId })
             .andWhere('eh.effectiveStartDate <= :targetDate', { targetDate })
-            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate > :targetDate)', { targetDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :targetDate)', { targetDate })
             .getMany();
     }
     async findAllCurrent() {
@@ -12228,6 +20816,63 @@ let DomainEmployeeDepartmentPositionHistoryService = class DomainEmployeeDepartm
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.isCurrent = :isCurrent', { isCurrent: true })
             .getMany();
+    }
+    async 특정연월의부서정보목록을조회한다(year, month) {
+        const repository = this.repository;
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = (0, date_fns_1.startOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = (0, date_fns_1.endOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const startDate = (0, date_fns_1.format)(monthStart, 'yyyy-MM-dd');
+        const endDate = (0, date_fns_1.format)(monthEnd, 'yyyy-MM-dd');
+        const results = await repository
+            .createQueryBuilder('eh')
+            .leftJoin('eh.department', 'dept')
+            .select('eh.departmentId', 'id')
+            .addSelect('dept.departmentName', 'departmentName')
+            .distinct(true)
+            .where('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getRawMany();
+        return results
+            .map((r) => ({
+            id: r.id,
+            departmentName: r.departmentName || '',
+        }))
+            .filter((dept) => dept.id !== null && dept.id !== undefined);
+    }
+    async 특정연월의배치이력목록을조회한다(year, month) {
+        const repository = this.repository;
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = (0, date_fns_1.startOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = (0, date_fns_1.endOfMonth)(new Date(yearNum, monthNum - 1, 1));
+        const startDate = (0, date_fns_1.format)(monthStart, 'yyyy-MM-dd');
+        const endDate = (0, date_fns_1.format)(monthEnd, 'yyyy-MM-dd');
+        return await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .where('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getMany();
+    }
+    async 부서정보를조회한다(departmentId) {
+        const repository = this.repository;
+        const result = await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .select('eh.departmentId', 'id')
+            .addSelect('dept.departmentName', 'departmentName')
+            .where('eh.departmentId = :departmentId', { departmentId })
+            .limit(1)
+            .getRawOne();
+        if (!result || !result.id) {
+            return null;
+        }
+        return {
+            id: result.id,
+            departmentName: result.departmentName || '',
+        };
     }
 };
 exports.DomainEmployeeDepartmentPositionHistoryService = DomainEmployeeDepartmentPositionHistoryService;
@@ -13054,6 +21699,16 @@ module.exports = require("@nestjs/swagger");
 /***/ ((module) => {
 
 module.exports = require("@nestjs/typeorm");
+
+/***/ }),
+
+/***/ "class-transformer":
+/*!************************************!*\
+  !*** external "class-transformer" ***!
+  \************************************/
+/***/ ((module) => {
+
+module.exports = require("class-transformer");
 
 /***/ }),
 

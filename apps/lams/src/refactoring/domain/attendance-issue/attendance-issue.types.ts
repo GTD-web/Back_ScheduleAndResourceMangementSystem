@@ -6,10 +6,9 @@
  * 근태 이슈 상태
  */
 export enum AttendanceIssueStatus {
-    PENDING = 'pending', // 대기 (발행됨)
-    CONFIRMED = 'confirmed', // 확인됨
-    RESOLVED = 'resolved', // 해결됨 (수정 완료)
-    REJECTED = 'rejected', // 거부됨
+    REQUEST = 'request', // 요청 (생성 시 기본 상태)
+    APPLIED = 'applied', // 반영
+    NOT_APPLIED = 'not_applied', // 미반영
 }
 
 /**
@@ -23,8 +22,8 @@ export interface CreateAttendanceIssueData {
     problematicLeaveTime?: string;
     correctedEnterTime?: string;
     correctedLeaveTime?: string;
-    problematicAttendanceTypeId?: string;
-    correctedAttendanceTypeId?: string;
+    problematicAttendanceTypeIds?: string[]; // 최대 2개
+    correctedAttendanceTypeIds?: string[]; // 최대 2개
     description?: string;
 }
 
@@ -36,8 +35,8 @@ export interface UpdateAttendanceIssueData {
     problematicLeaveTime?: string;
     correctedEnterTime?: string;
     correctedLeaveTime?: string;
-    problematicAttendanceTypeId?: string;
-    correctedAttendanceTypeId?: string;
+    problematicAttendanceTypeIds?: string[]; // 최대 2개
+    correctedAttendanceTypeIds?: string[]; // 최대 2개
     description?: string;
     status?: AttendanceIssueStatus;
     rejectionReason?: string;
@@ -55,8 +54,8 @@ export interface AttendanceIssueDTO {
     problematicLeaveTime: string | null;
     correctedEnterTime: string | null;
     correctedLeaveTime: string | null;
-    problematicAttendanceTypeId: string | null;
-    correctedAttendanceTypeId: string | null;
+    problematicAttendanceTypeIds: string[] | null; // 최대 2개
+    correctedAttendanceTypeIds: string[] | null; // 최대 2개
     status: AttendanceIssueStatus;
     description: string | null;
     confirmedBy: string | null;

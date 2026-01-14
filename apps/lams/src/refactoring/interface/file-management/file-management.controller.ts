@@ -1,18 +1,26 @@
 import {
     Controller,
     Post,
+    Get,
     Body,
+    Query,
     UploadedFile,
     UseInterceptors,
     ParseUUIDPipe,
     BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { User } from '../../../common/decorators/user.decorator';
 import { FileManagementBusinessService } from '../../business/file-management-business/file-management-business.service';
 import { UploadFileRequestDto, UploadFileResponseDto } from './dto/upload-file.dto';
 import { ReflectFileContentRequestDto, ReflectFileContentResponseDto } from './dto/reflect-file-content.dto';
+import { RestoreFromHistoryRequestDto, RestoreFromHistoryResponseDto } from './dto/restore-from-history.dto';
+import {
+    GetFileListWithHistoryRequestDto,
+    GetFileListWithHistoryResponseDto,
+} from './dto/get-file-list-with-history.dto';
+import { IGetFileListWithHistoryResponse } from '../../context/file-management-context/interfaces/response/get-file-list-with-history-response.interface';
 
 /**
  * 파일 관리 컨트롤러
@@ -125,5 +133,75 @@ export class FileManagementController {
         return {
             reflections: result.reflections,
         };
+    }
+
+    /**
+     * 이력으로 되돌리기
+     *
+     * 파일 내용 반영 이력을 선택하여 해당 이력의 데이터로 되돌립니다.
+     */
+    @Post('restore-from-history')
+    @ApiOperation({
+        summary: '이력으로 되돌리기',
+        description:
+            '파일 내용 반영 이력을 선택하여 해당 이력의 데이터로 되돌립니다. 이력에 저장된 데이터를 그대로 사용하여 해당 연월의 데이터를 복원합니다.',
+    })
+    async restoreFromHistory(
+        @Body() dto: RestoreFromHistoryRequestDto,
+        @User('id') performedBy: string,
+    ): Promise<RestoreFromHistoryResponseDto> {
+        if (!performedBy) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        if (!dto.reflectionHistoryId) {
+            throw new BadRequestException('반영 이력 ID는 필수입니다.');
+        }
+
+        const result = await this.fileManagementBusinessService.이력으로되돌리기(
+            dto.reflectionHistoryId,
+            dto.year,
+            dto.month,
+            performedBy,
+        );
+
+        return {
+            reflectionHistoryId: result.reflectionHistoryId,
+            dailySummaryResult: result.dailySummaryResult,
+            monthlySummaryResult: result.monthlySummaryResult,
+        };
+    }
+
+    /**
+     * 파일 목록과 반영이력 조회
+     *
+     * 파일 목록을 조회하고 각 파일의 반영이력을 함께 조회합니다.
+     * 연도와 월을 선택적으로 필터링할 수 있습니다.
+     */
+    @Get('files')
+    @ApiOperation({
+        summary: '파일 목록과 반영이력 조회',
+        description: '파일 목록을 조회하고 각 파일의 반영이력을 함께 조회합니다. 연도와 월을 필수로 제공해야 합니다.',
+    })
+    @ApiQuery({ name: 'year', description: '연도', example: '2024', required: true })
+    @ApiQuery({ name: 'month', description: '월', example: '01', required: true })
+    @ApiResponse({
+        status: 200,
+        description: '파일 목록과 반영이력 조회 성공',
+        type: GetFileListWithHistoryResponseDto,
+    })
+    async getFileListWithHistory(
+        @Query() dto: GetFileListWithHistoryRequestDto,
+    ): Promise<IGetFileListWithHistoryResponse> {
+        if (!dto.year || !dto.month) {
+            throw new BadRequestException('연도와 월은 필수입니다.');
+        }
+
+        const result = await this.fileManagementBusinessService.파일목록과반영이력을조회한다({
+            year: dto.year,
+            month: dto.month,
+        });
+
+        return result;
     }
 }

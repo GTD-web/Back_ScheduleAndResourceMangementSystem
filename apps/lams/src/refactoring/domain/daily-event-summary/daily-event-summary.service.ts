@@ -48,8 +48,11 @@ export class DomainDailyEventSummaryService {
             data.isLate !== undefined ? data.isLate : false,
             data.isEarlyLeave !== undefined ? data.isEarlyLeave : false,
             data.isAbsent !== undefined ? data.isAbsent : false,
+            data.hasAttendanceConflict !== undefined ? data.hasAttendanceConflict : false,
+            data.hasAttendanceOverlap !== undefined ? data.hasAttendanceOverlap : false,
             data.workTime,
             data.note,
+            data.usedAttendances,
         );
 
         const saved = await repository.save(summary);
@@ -130,8 +133,11 @@ export class DomainDailyEventSummaryService {
             data.isLate,
             data.isEarlyLeave,
             data.isAbsent,
+            data.hasAttendanceConflict,
+            data.hasAttendanceOverlap,
             data.workTime,
             data.note,
+            data.usedAttendances,
         );
 
         // 수정자 정보 설정

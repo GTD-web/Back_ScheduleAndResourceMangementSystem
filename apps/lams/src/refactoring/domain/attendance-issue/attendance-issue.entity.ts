@@ -113,28 +113,28 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
     corrected_leave_time: string | null;
 
     /**
-     * 문제가 된 근태 유형 ID
-     * 원본 근태 유형
+     * 문제가 된 근태 유형 ID 목록 (최대 2개)
+     * 원본 근태 유형들
      */
     @Column({
-        name: 'problematic_attendance_type_id',
-        type: 'uuid',
+        name: 'problematic_attendance_type_ids',
+        type: 'json',
         nullable: true,
-        comment: '문제가 된 근태 유형 ID',
+        comment: '문제가 된 근태 유형 ID 목록 (최대 2개)',
     })
-    problematic_attendance_type_id: string | null;
+    problematic_attendance_type_ids: string[] | null;
 
     /**
-     * 변경할 근태 유형 ID
-     * 수정이 필요한 근태 유형
+     * 변경할 근태 유형 ID 목록 (최대 2개)
+     * 수정이 필요한 근태 유형들
      */
     @Column({
-        name: 'corrected_attendance_type_id',
-        type: 'uuid',
+        name: 'corrected_attendance_type_ids',
+        type: 'json',
         nullable: true,
-        comment: '변경할 근태 유형 ID',
+        comment: '변경할 근태 유형 ID 목록 (최대 2개)',
     })
-    corrected_attendance_type_id: string | null;
+    corrected_attendance_type_ids: string[] | null;
 
     /**
      * 상태
@@ -144,7 +144,7 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         name: 'status',
         type: 'enum',
         enum: AttendanceIssueStatus,
-        default: AttendanceIssueStatus.PENDING,
+        default: AttendanceIssueStatus.REQUEST,
         comment: '상태',
     })
     status: AttendanceIssueStatus;
@@ -250,11 +250,28 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         if (this.daily_event_summary_id) {
             this.validateUuidFormat(this.daily_event_summary_id, 'daily_event_summary_id');
         }
-        if (this.problematic_attendance_type_id) {
-            this.validateUuidFormat(this.problematic_attendance_type_id, 'problematic_attendance_type_id');
+        // 근태 유형 ID 배열 검증 (최대 2개)
+        if (this.problematic_attendance_type_ids) {
+            if (!Array.isArray(this.problematic_attendance_type_ids)) {
+                throw new Error('문제가 된 근태 유형 ID는 배열이어야 합니다.');
+            }
+            if (this.problematic_attendance_type_ids.length > 2) {
+                throw new Error('문제가 된 근태 유형 ID는 최대 2개까지 가능합니다.');
+            }
+            this.problematic_attendance_type_ids.forEach((id, index) => {
+                this.validateUuidFormat(id, `problematic_attendance_type_ids[${index}]`);
+            });
         }
-        if (this.corrected_attendance_type_id) {
-            this.validateUuidFormat(this.corrected_attendance_type_id, 'corrected_attendance_type_id');
+        if (this.corrected_attendance_type_ids) {
+            if (!Array.isArray(this.corrected_attendance_type_ids)) {
+                throw new Error('변경할 근태 유형 ID는 배열이어야 합니다.');
+            }
+            if (this.corrected_attendance_type_ids.length > 2) {
+                throw new Error('변경할 근태 유형 ID는 최대 2개까지 가능합니다.');
+            }
+            this.corrected_attendance_type_ids.forEach((id, index) => {
+                this.validateUuidFormat(id, `corrected_attendance_type_ids[${index}]`);
+            });
         }
     }
 
@@ -276,8 +293,8 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         problematic_leave_time?: string,
         corrected_enter_time?: string,
         corrected_leave_time?: string,
-        problematic_attendance_type_id?: string,
-        corrected_attendance_type_id?: string,
+        problematic_attendance_type_ids?: string[],
+        corrected_attendance_type_ids?: string[],
         description?: string,
     ) {
         super();
@@ -288,10 +305,10 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         this.problematic_leave_time = problematic_leave_time || null;
         this.corrected_enter_time = corrected_enter_time || null;
         this.corrected_leave_time = corrected_leave_time || null;
-        this.problematic_attendance_type_id = problematic_attendance_type_id || null;
-        this.corrected_attendance_type_id = corrected_attendance_type_id || null;
+        this.problematic_attendance_type_ids = problematic_attendance_type_ids || null;
+        this.corrected_attendance_type_ids = corrected_attendance_type_ids || null;
         this.description = description || null;
-        this.status = AttendanceIssueStatus.PENDING;
+        this.status = AttendanceIssueStatus.REQUEST;
         this.confirmed_by = null;
         this.confirmed_at = null;
         this.resolved_at = null;
@@ -307,8 +324,8 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         problematic_leave_time?: string,
         corrected_enter_time?: string,
         corrected_leave_time?: string,
-        problematic_attendance_type_id?: string,
-        corrected_attendance_type_id?: string,
+        problematic_attendance_type_ids?: string[],
+        corrected_attendance_type_ids?: string[],
         description?: string,
         status?: AttendanceIssueStatus,
         rejection_reason?: string,
@@ -325,11 +342,11 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         if (corrected_leave_time !== undefined) {
             this.corrected_leave_time = corrected_leave_time;
         }
-        if (problematic_attendance_type_id !== undefined) {
-            this.problematic_attendance_type_id = problematic_attendance_type_id;
+        if (problematic_attendance_type_ids !== undefined) {
+            this.problematic_attendance_type_ids = problematic_attendance_type_ids;
         }
-        if (corrected_attendance_type_id !== undefined) {
-            this.corrected_attendance_type_id = corrected_attendance_type_id;
+        if (corrected_attendance_type_ids !== undefined) {
+            this.corrected_attendance_type_ids = corrected_attendance_type_ids;
         }
         if (description !== undefined) {
             this.description = description;
@@ -344,27 +361,20 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
     }
 
     /**
-     * 확인 처리
+     * 반영 처리
      */
-    확인처리한다(confirmed_by: string): void {
-        this.status = AttendanceIssueStatus.CONFIRMED;
+    반영처리한다(confirmed_by: string): void {
+        this.status = AttendanceIssueStatus.APPLIED;
         this.confirmed_by = confirmed_by;
         this.confirmed_at = new Date();
-    }
-
-    /**
-     * 해결 처리
-     */
-    해결처리한다(): void {
-        this.status = AttendanceIssueStatus.RESOLVED;
         this.resolved_at = new Date();
     }
 
     /**
-     * 거부 처리
+     * 미반영 처리
      */
-    거부처리한다(rejection_reason: string): void {
-        this.status = AttendanceIssueStatus.REJECTED;
+    미반영처리한다(rejection_reason: string): void {
+        this.status = AttendanceIssueStatus.NOT_APPLIED;
         this.rejection_reason = rejection_reason;
     }
 
@@ -381,8 +391,8 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
             problematicLeaveTime: this.problematic_leave_time,
             correctedEnterTime: this.corrected_enter_time,
             correctedLeaveTime: this.corrected_leave_time,
-            problematicAttendanceTypeId: this.problematic_attendance_type_id,
-            correctedAttendanceTypeId: this.corrected_attendance_type_id,
+            problematicAttendanceTypeIds: this.problematic_attendance_type_ids,
+            correctedAttendanceTypeIds: this.corrected_attendance_type_ids,
             status: this.status,
             description: this.description,
             confirmedBy: this.confirmed_by,

@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UploadFileCommand } from './handlers/file-upload/commands';
-import { ReflectFileContentCommand } from './handlers/file-content-reflection/commands';
-import { IUploadFileResponse, IReflectFileContentResponse } from './interfaces';
+import { ReflectFileContentCommand, RestoreFromHistoryCommand } from './handlers/file-content-reflection/commands';
+import { GetFileListWithHistoryQuery } from './handlers/file-list/queries';
+import {
+    IUploadFileResponse,
+    IReflectFileContentResponse,
+    IRestoreFromHistoryCommand,
+    IRestoreFromHistoryResponse,
+    IGetFileListWithHistoryQuery,
+    IGetFileListWithHistoryResponse,
+} from './interfaces';
+import { DomainFileContentReflectionHistoryService } from '../../domain/file-content-reflection-history/file-content-reflection-history.service';
 
 /**
  * 파일관리 컨텍스트 서비스
@@ -14,6 +23,7 @@ export class FileManagementContextService {
     constructor(
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus,
+        private readonly fileContentReflectionHistoryService: DomainFileContentReflectionHistoryService,
     ) {}
 
     /**
@@ -66,5 +76,39 @@ export class FileManagementContextService {
             performedBy,
         });
         return await this.commandBus.execute(command);
+    }
+
+    /**
+     * 이력을 조회한다
+     *
+     * @param reflectionHistoryId 반영 이력 ID
+     * @returns 이력 정보
+     */
+    async 이력을조회한다(reflectionHistoryId: string) {
+        return await this.fileContentReflectionHistoryService.ID로조회한다(reflectionHistoryId);
+    }
+
+    /**
+     * 이력으로 되돌리기
+     *
+     * @param command 이력으로 되돌리기 명령
+     * @returns 이력으로 되돌리기 결과
+     */
+    async 이력으로되돌리기(command: IRestoreFromHistoryCommand): Promise<IRestoreFromHistoryResponse> {
+        const commandInstance = new RestoreFromHistoryCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+
+    /**
+     * 파일 목록과 반영이력을 조회한다
+     *
+     * @param query 파일 목록과 반영이력 조회 쿼리
+     * @returns 파일 목록과 반영이력 조회 결과
+     */
+    async 파일목록과반영이력을조회한다(
+        query: IGetFileListWithHistoryQuery,
+    ): Promise<IGetFileListWithHistoryResponse> {
+        const queryInstance = new GetFileListWithHistoryQuery(query);
+        return await this.queryBus.execute(queryInstance);
     }
 }

@@ -8,11 +8,15 @@ import { DomainAttendanceIssueService } from '../../../../../domain/attendance-i
 import { DomainEventInfoService } from '../../../../../domain/event-info/event-info.service';
 import { DomainUsedAttendanceService } from '../../../../../domain/used-attendance/used-attendance.service';
 import { DomainHolidayInfoService } from '../../../../../domain/holiday-info/holiday-info.service';
+import { DomainWorkTimeOverrideService } from '../../../../../domain/work-time-override/work-time-override.service';
 import { DomainEmployeeService } from '@libs/modules/employee/employee.service';
 import { WorkTimePolicyService } from '../../../services/work-time-policy.service';
+import { DailySummaryJudgmentService } from '../../../services/daily-summary-judgment.service';
 import { EventInfo } from '../../../../../domain/event-info/event-info.entity';
 import { UsedAttendance } from '../../../../../domain/used-attendance/used-attendance.entity';
 import { DailyEventSummary } from '../../../../../domain/daily-event-summary/daily-event-summary.entity';
+import { AttendanceIssue } from '../../../../../domain/attendance-issue/attendance-issue.entity';
+import { DailySummaryChangeHistory } from '../../../../../domain/daily-summary-change-history/daily-summary-change-history.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 
@@ -46,8 +50,10 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         private readonly eventInfoService: DomainEventInfoService,
         private readonly usedAttendanceService: DomainUsedAttendanceService,
         private readonly holidayInfoService: DomainHolidayInfoService,
+        private readonly workTimeOverrideService: DomainWorkTimeOverrideService,
         private readonly employeeService: DomainEmployeeService,
         private readonly workTimePolicyService: WorkTimePolicyService,
+        private readonly dailySummaryJudgmentService: DailySummaryJudgmentService,
         private readonly dataSource: DataSource,
     ) {}
 
@@ -241,6 +247,10 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         const endDate = new Date(yearNum, monthNum, 0);
         const allDates = this.날짜범위생성(startDate, endDate);
 
+        // 날짜 범위의 모든 커스텀 시간을 일괄 조회 (N+1 방지)
+        const dateStrings = allDates.map((date) => format(date, 'yyyy-MM-dd'));
+        const workTimeOverrides = await this.workTimeOverrideService.날짜목록으로조회한다(dateStrings, manager);
+
         // 직원별, 날짜별로 이벤트 그룹화
         const eventsByEmployeeAndDate = new Map<string, Map<string, EventInfo[]>>();
         events.forEach((event) => {
@@ -296,14 +306,14 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                     holidaySet.has(dateStr) || this.주말여부확인(dateStr),
                 );
 
-                // 입사일 및 퇴사일 확인
-                const hireDate = employee.hireDate ? format(new Date(employee.hireDate), 'yyyy-MM-dd') : null;
-                const terminationDate =
-                    employee.status === '퇴사' && employee.terminationDate
-                        ? format(new Date(employee.terminationDate), 'yyyy-MM-dd')
-                        : null;
-                const isBeforeHireDate = hireDate && dateStr < hireDate;
-                const isAfterTerminationDate = terminationDate && dateStr > terminationDate;
+                // // 입사일 및 퇴사일 확인
+                // const hireDate = employee.hireDate ? format(new Date(employee.hireDate), 'yyyy-MM-dd') : null;
+                // const terminationDate =
+                //     employee.status === '퇴사' && employee.terminationDate
+                //         ? format(new Date(employee.terminationDate), 'yyyy-MM-dd')
+                //         : null;
+                // const isBeforeHireDate = hireDate && dateStr < hireDate;
+                // const isAfterTerminationDate = terminationDate && dateStr > terminationDate;
 
                 // 1단계: 출입 기록 정보 반영
                 let realEnterTime: string | null = null;
@@ -333,44 +343,34 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 summary.enter = workTime.enter;
                 summary.leave = workTime.leave;
 
-                // 3단계: 결근 판정
-                if (isBeforeHireDate || isAfterTerminationDate) {
-                    summary.is_absent = false;
-                } else if (summary.is_holiday) {
-                    summary.is_absent = false;
-                } else if (recognizedAttendances.length > 0 || (dayEvents && dayEvents.length > 0)) {
-                    // 인정되는 근태가 있거나 출입 기록이 있으면 결근 아님
-                    summary.is_absent = false;
-                } else {
-                    summary.is_absent = true;
-                }
+                // 3-4단계: 결근, 지각, 조퇴 판정 (공통 서비스 사용)
+                // used_attendances를 공통 서비스에서 사용하는 형태로 변환
+                const usedAttendancesForJudgment = dayAttendances.map((ua) => ({
+                    attendanceTypeId: ua.attendance_type_id,
+                    title: ua.attendanceType?.title || '',
+                    workTime: ua.attendanceType?.work_time,
+                    isRecognizedWorkTime: ua.attendanceType?.is_recognized_work_time,
+                    startWorkTime: ua.attendanceType?.start_work_time || null,
+                    endWorkTime: ua.attendanceType?.end_work_time || null,
+                    deductedAnnualLeave: ua.attendanceType?.deducted_annual_leave,
+                }));
 
-                // 4단계: 지각/조퇴 판정 (출입 기록이 있는 경우에만)
-                if (dayEvents && dayEvents.length > 0) {
-                    const hasMorningRecognized = this.workTimePolicyService.hasMorningRecognized(recognizedAttendances);
-                    const hasAfternoonRecognized =
-                        this.workTimePolicyService.hasAfternoonRecognized(recognizedAttendances);
+                const 판정결과 = await this.dailySummaryJudgmentService.결근지각조퇴판정한다(
+                    summary,
+                    realEnterTime,
+                    realLeaveTime,
+                    usedAttendancesForJudgment.length > 0 ? usedAttendancesForJudgment : null,
+                    manager,
+                );
 
-                    const earliestHHMMSS = dayEvents[0].hhmmss;
-                    const latestHHMMSS = dayEvents[dayEvents.length - 1].hhmmss;
+                summary.is_absent = 판정결과.isAbsent;
+                summary.is_late = 판정결과.isLate;
+                summary.is_early_leave = 판정결과.isEarlyLeave;
+                summary.has_attendance_conflict = 판정결과.hasAttendanceConflict;
+                summary.has_attendance_overlap = 판정결과.hasAttendanceOverlap;
 
-                    summary.is_late = this.workTimePolicyService.isLate(
-                        earliestHHMMSS,
-                        hasMorningRecognized,
-                        summary.is_holiday,
-                        isBeforeHireDate,
-                        isAfterTerminationDate,
-                    );
-
-                    summary.is_early_leave = this.workTimePolicyService.isEarlyLeave(
-                        latestHHMMSS,
-                        hasAfternoonRecognized,
-                        summary.is_holiday,
-                        isBeforeHireDate,
-                        isAfterTerminationDate,
-                    );
-                }
-
+                // 5단계: 근무 시간 계산
+                summary.work_time = this.근무시간을계산한다(summary.enter, summary.leave, recognizedAttendances);
                 summary.is_checked = true;
                 summary.note = '';
 
@@ -430,12 +430,14 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 existing.note = summary.note;
                 existing.work_time = summary.work_time;
                 existing.used_attendances = summary.used_attendances;
+
                 toSave.push(existing);
             } else {
                 // 새 데이터 생성
                 toSave.push(summary);
             }
         });
+        // console.log(toSave);
 
         // 배치 저장
         const SUMMARY_BATCH_SIZE = 1000;
@@ -449,6 +451,8 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
 
     /**
      * 근태 이슈를 생성한다 (정상근무 범위를 벗어난 경우)
+     *
+     * 최초로 일간요약과 생성이 되었으면 그 다음부터는 생성되거나 업데이트되지 않게 함
      */
     private async 근태이슈를생성한다(
         summaries: DailyEventSummary[],
@@ -457,9 +461,94 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
     ): Promise<any[]> {
         const issues: any[] = [];
 
+        // 일괄 조회를 위해 모든 일간요약 ID 수집 (모든 summary 확인 필요)
+        const summaryIds = summaries.map((s) => s.id);
+
+        if (summaryIds.length === 0) {
+            return issues;
+        }
+
+        // 이미 존재하는 이슈 조회 (일간요약 ID 기준)
+        const existingIssues = await manager
+            .createQueryBuilder('AttendanceIssue', 'ai')
+            .where('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .andWhere('ai.deleted_at IS NULL')
+            .getMany();
+
+        const existingIssueMap = new Map<string, boolean>();
+        existingIssues.forEach((issue) => {
+            if (issue.daily_event_summary_id) {
+                existingIssueMap.set(issue.daily_event_summary_id, true);
+            }
+        });
+
+        // used_attendances 정보를 일괄 조회 (날짜 범위 기준)
+        const dateSet = new Set(summaries.map((s) => s.date));
+        const dateArray = Array.from(dateSet);
+        const usedAttendancesMap = new Map<string, UsedAttendance[]>();
+
+        if (dateArray.length > 0) {
+            const minDate = dateArray.sort()[0];
+            const maxDate = dateArray.sort().reverse()[0];
+            const allUsedAttendances = await manager
+                .createQueryBuilder('UsedAttendance', 'ua')
+                .leftJoinAndSelect('ua.attendanceType', 'at')
+                .where('ua.deleted_at IS NULL')
+                .andWhere('ua.used_at >= :minDate', { minDate })
+                .andWhere('ua.used_at <= :maxDate', { maxDate })
+                .getMany();
+
+            allUsedAttendances.forEach((ua) => {
+                const key = `${ua.employee_id}_${ua.used_at}`;
+                if (!usedAttendancesMap.has(key)) {
+                    usedAttendancesMap.set(key, []);
+                }
+                usedAttendancesMap.get(key)!.push(ua);
+            });
+        }
+
         for (const summary of summaries) {
-            // 지각, 조퇴, 결근인 경우 이슈 생성
-            if (summary.is_late || summary.is_early_leave || summary.is_absent) {
+            // used_attendances에서 근태 유형 ID 추출 (최대 2개)
+            const key = `${summary.employee_id}_${summary.date}`;
+            const dayAttendances = usedAttendancesMap.get(key) || [];
+            const problematicAttendanceTypeIds = dayAttendances
+                .map((ua) => ua.attendance_type_id)
+                .filter((id): id is string => !!id)
+                .slice(0, 2); // 최대 2개
+
+            // 이슈 생성 조건 확인
+            // 1. 지각, 조퇴, 결근인 경우
+            const isAttendanceIssue = summary.is_late || summary.is_early_leave || summary.is_absent;
+
+            // 2. 근태사용내역에서 두 개의 근태가 있고, 시작시간과 종료시간이 동일한 경우
+            let isDuplicateTimeIssue = false;
+            if (dayAttendances.length === 2) {
+                const [attendance1, attendance2] = dayAttendances;
+                const startTime1 = attendance1.attendanceType?.start_work_time;
+                const endTime1 = attendance1.attendanceType?.end_work_time;
+                const startTime2 = attendance2.attendanceType?.start_work_time;
+                const endTime2 = attendance2.attendanceType?.end_work_time;
+
+                // 두 근태의 시작시간과 종료시간이 모두 동일한지 확인
+                if (
+                    startTime1 &&
+                    endTime1 &&
+                    startTime2 &&
+                    endTime2 &&
+                    startTime1 === startTime2 &&
+                    endTime1 === endTime2
+                ) {
+                    isDuplicateTimeIssue = true;
+                }
+            }
+
+            // 이슈 생성 조건에 해당하는 경우
+            if (isAttendanceIssue || isDuplicateTimeIssue) {
+                // 이미 해당 일간요약에 대한 이슈가 있으면 생성하지 않음
+                if (existingIssueMap.has(summary.id)) {
+                    continue;
+                }
+
                 try {
                     const issue = await this.attendanceIssueService.생성한다(
                         {
@@ -470,9 +559,10 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                             problematicLeaveTime: summary.real_leave || summary.leave,
                             correctedEnterTime: null,
                             correctedLeaveTime: null,
-                            problematicAttendanceTypeId: null,
-                            correctedAttendanceTypeId: null,
-                            description: this.이슈설명생성(summary),
+                            problematicAttendanceTypeIds:
+                                problematicAttendanceTypeIds.length > 0 ? problematicAttendanceTypeIds : null,
+                            correctedAttendanceTypeIds: null,
+                            description: null, // 요청받은 직원이 직접 입력하는 부분
                         },
                         manager,
                     );
@@ -484,17 +574,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         }
 
         return issues;
-    }
-
-    /**
-     * 이슈 설명을 생성한다
-     */
-    private 이슈설명생성(summary: DailyEventSummary): string {
-        const descriptions: string[] = [];
-        if (summary.is_late) descriptions.push('지각');
-        if (summary.is_early_leave) descriptions.push('조퇴');
-        if (summary.is_absent) descriptions.push('결근');
-        return descriptions.join(', ');
     }
 
     /**
@@ -601,6 +680,93 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
     }
 
     /**
+     * 근무 시간을 계산한다
+     *
+     * 정책: 법정 휴식시간 보장
+     * - 4시간 미만: 의무 없음 (휴식시간 제외 안 함)
+     * - 4시간 이상 ~ 8시간 미만: 30분 이상 제외
+     * - 8시간 이상: 1시간 이상 제외
+     *
+     * 1. 출입 기록이 있는 경우: enter와 leave 시간 차이에서 법정 휴식시간 제외
+     * 2. 근태 유형만 있는 경우: 근태 유형의 work_time 합계 사용
+     * 3. 둘 다 있는 경우: 출입 기록 기반 계산 (법정 휴식시간 제외)
+     *
+     * @param enter 출근 시간 (HH:MM:SS 형식 또는 null)
+     * @param leave 퇴근 시간 (HH:MM:SS 형식 또는 null)
+     * @param recognizedAttendances 인정되는 근태 사용 내역 목록
+     * @returns 근무 시간 (분 단위)
+     */
+    private 근무시간을계산한다(
+        enter: string | null,
+        leave: string | null,
+        recognizedAttendances: UsedAttendance[],
+    ): number | null {
+        // 출입 기록이 있는 경우: 시간 차이에서 법정 휴식시간 제외
+        if (enter && leave) {
+            const enterTime = this.시간문자열을분으로변환(enter);
+            const leaveTime = this.시간문자열을분으로변환(leave);
+            const totalWorkMinutes = leaveTime - enterTime;
+
+            // 법정 휴식시간 계산
+            const requiredRestMinutes = this.법정휴식시간을계산한다(totalWorkMinutes);
+
+            // 총 근로시간에서 법정 휴식시간 제외
+            const workTime = totalWorkMinutes - requiredRestMinutes;
+            return workTime > 0 ? workTime : 0;
+        }
+
+        // 출입 기록이 없고 근태 유형만 있는 경우: 근태 유형의 work_time 합계
+        if (recognizedAttendances.length > 0) {
+            const totalWorkTime = recognizedAttendances.reduce((sum, ua) => {
+                return sum + (ua.attendanceType?.work_time || 0);
+            }, 0);
+            return totalWorkTime > 0 ? totalWorkTime : null;
+        }
+
+        return null;
+    }
+
+    /**
+     * 법정 휴식시간을 계산한다
+     *
+     * 근로시간별 휴식시간 계산표:
+     * - 4시간 미만: 의무 없음 (0분)
+     * - 4시간 이상 ~ 8시간 미만: 30분 이상
+     * - 8시간 이상: 1시간 이상
+     *
+     * @param totalWorkMinutes 총 근로 시간 (분 단위)
+     * @returns 법정 휴식시간 (분 단위)
+     */
+    private 법정휴식시간을계산한다(totalWorkMinutes: number): number {
+        const FOUR_HOURS = 4 * 60; // 240분
+        const EIGHT_HOURS = 8 * 60; // 480분
+
+        if (totalWorkMinutes < FOUR_HOURS) {
+            // 4시간 미만: 의무 없음
+            return 0;
+        } else if (totalWorkMinutes < EIGHT_HOURS) {
+            // 4시간 이상 ~ 8시간 미만: 30분 이상
+            return 30;
+        } else {
+            // 8시간 이상: 1시간 이상
+            return 60;
+        }
+    }
+
+    /**
+     * 시간 문자열을 분 단위로 변환한다
+     *
+     * @param timeStr 시간 문자열 (HH:MM:SS 또는 HH:MM 형식)
+     * @returns 분 단위 시간
+     */
+    private 시간문자열을분으로변환(timeStr: string): number {
+        const parts = timeStr.split(':');
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        return hours * 60 + minutes;
+    }
+
+    /**
      * 인정되는 근태를 기반으로 출입 시간을 계산한다
      *
      * 정책에 따라 다음 우선순위로 출입 시간을 결정합니다:
@@ -694,15 +860,52 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
             return;
         }
 
+        const summaryIds = existingSummaries.map((s) => s.id);
         const now = new Date();
+
+        // 1. 일간 요약 소프트 삭제
         for (const summary of existingSummaries) {
             summary.deleted_at = now;
             summary.수정자설정한다(performedBy);
             summary.메타데이터업데이트한다(performedBy);
         }
-
         await manager.save(DailyEventSummary, existingSummaries);
-        this.logger.log(`해당 연월 일간요약 소프트 삭제 완료: ${existingSummaries.length}건`);
+
+        // 2. 해당 일간 요약과 연결된 근태 이슈 소프트 삭제
+        const existingIssues = await manager
+            .createQueryBuilder(AttendanceIssue, 'ai')
+            .where('ai.deleted_at IS NULL')
+            .andWhere('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .getMany();
+
+        if (existingIssues.length > 0) {
+            for (const issue of existingIssues) {
+                issue.deleted_at = now;
+                issue.수정자설정한다(performedBy);
+                issue.메타데이터업데이트한다(performedBy);
+            }
+            await manager.save(AttendanceIssue, existingIssues);
+        }
+
+        // 3. 해당 일간 요약과 연결된 변경 이력 소프트 삭제
+        const existingHistories = await manager
+            .createQueryBuilder(DailySummaryChangeHistory, 'dsh')
+            .where('dsh.deleted_at IS NULL')
+            .andWhere('dsh.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
+            .getMany();
+
+        if (existingHistories.length > 0) {
+            for (const history of existingHistories) {
+                history.deleted_at = now;
+                history.수정자설정한다(performedBy);
+                history.메타데이터업데이트한다(performedBy);
+            }
+            await manager.save(DailySummaryChangeHistory, existingHistories);
+        }
+
+        this.logger.log(
+            `해당 연월 일간요약 소프트 삭제 완료: 일간요약=${existingSummaries.length}건, 이슈=${existingIssues.length}건, 변경이력=${existingHistories.length}건`,
+        );
     }
 
     /**
@@ -726,6 +929,8 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 is_late: boolean;
                 is_early_leave: boolean;
                 is_absent: boolean;
+                has_attendance_conflict?: boolean;
+                has_attendance_overlap?: boolean;
                 work_time: number | null;
                 note: string | null;
                 used_attendances?: Array<{
@@ -767,6 +972,8 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 snapshot.is_late,
                 snapshot.is_early_leave,
                 snapshot.is_absent,
+                snapshot.has_attendance_conflict ?? false,
+                snapshot.has_attendance_overlap ?? false,
                 snapshot.work_time,
                 snapshot.note,
                 snapshot.used_attendances,

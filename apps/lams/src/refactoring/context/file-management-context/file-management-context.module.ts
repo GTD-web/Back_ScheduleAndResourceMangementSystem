@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileManagementContextService } from './file-management-context.service';
-import { FILE_UPLOAD_HANDLERS, FILE_CONTENT_REFLECTION_HANDLERS } from './handlers';
+import { FILE_UPLOAD_HANDLERS, FILE_CONTENT_REFLECTION_HANDLERS, FILE_LIST_QUERY_HANDLERS } from './handlers';
 import { S3StorageModule } from '../../integrations/s3-storage/s3-storage.module';
 import { LocalStorageModule } from '../../integrations/local-storage/local-storage.module';
 import { ExcelReaderModule } from '../../integrations/excel-reader/excel-reader.module';
@@ -13,6 +13,7 @@ import { DomainEventInfoModule } from '../../domain/event-info/event-info.module
 import { DomainUsedAttendanceModule } from '../../domain/used-attendance/used-attendance.module';
 import { DomainAttendanceTypeModule } from '../../domain/attendance-type/attendance-type.module';
 import { DomainEmployeeModule } from '@libs/modules/employee/employee.module';
+import { DataSnapshotContextModule } from '../data-snapshot-context/data-snapshot-context.module';
 import { StorageServiceProvider } from '../../integrations/storage';
 
 /**
@@ -37,6 +38,7 @@ export class FileManagementContextModule {
                 DomainUsedAttendanceModule,
                 DomainAttendanceTypeModule,
                 DomainEmployeeModule,
+                DataSnapshotContextModule, // 스냅샷 저장을 위해 필요
                 // 두 스토리지 모듈을 모두 임포트 (StorageServiceProvider에서 환경 변수에 따라 선택)
                 S3StorageModule,
                 LocalStorageModule,
@@ -46,6 +48,7 @@ export class FileManagementContextModule {
                 StorageServiceProvider, // 동적 스토리지 서비스 프로바이더
                 ...FILE_UPLOAD_HANDLERS,
                 ...FILE_CONTENT_REFLECTION_HANDLERS,
+                ...FILE_LIST_QUERY_HANDLERS,
             ],
             exports: [FileManagementContextService],
         };

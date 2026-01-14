@@ -149,7 +149,7 @@ export class DomainMonthlyEventSummaryService {
         dailySummaries: DailyEventSummary[],
         usedAttendances: any[],
         allAttendanceTypes: any[],
-        queryRunner: any,
+        queryRunnerOrManager: any,
     ): Promise<MonthlyEventSummaryDTO> {
         try {
             const [year, month] = yyyymm.split('-');
@@ -157,6 +157,9 @@ export class DomainMonthlyEventSummaryService {
             if (dailySummaries.length === 0) {
                 throw new Error(`${yyyymm}의 일일 요약 데이터가 없습니다.`);
             }
+
+            // queryRunner 또는 { manager } 형태 모두 지원
+            const manager = queryRunnerOrManager?.manager || queryRunnerOrManager;
 
             // 통계 계산 (뷰 로직과 동기화)
             const workDays = dailySummaries.filter((d) => {
@@ -180,7 +183,7 @@ export class DomainMonthlyEventSummaryService {
                 const dow = day.getDay();
                 return dow !== 0 && dow !== 6;
             }).length;
-            const totalWorkableTime = weekdayCount * 624;
+            const totalWorkableTime = weekdayCount * 624; // 624는 주당최대 근무 시간52시간을 하루치의 분 단위로 변환한 값(52시간 / 5일 * 60분 = 624분)
 
             const avgWorkTimes = workDays.length > 0 ? totalWorkTime / workDays.length : 0;
 
@@ -209,28 +212,29 @@ export class DomainMonthlyEventSummaryService {
             });
 
             // 상세 정보
-            const dailyEventSummary = dailySummaries.map((d) => ({
-                dailyEventSummaryId: d.id,
-                date: d.date,
-                isHoliday: d.is_holiday,
-                enter: d.enter,
-                leave: d.leave,
-                realEnter: d.real_enter,
-                realLeave: d.real_leave,
-                isChecked: d.is_checked,
-                isLate: d.is_late,
-                isEarlyLeave: d.is_early_leave,
-                isAbsent: d.is_absent,
-                workTime: d.work_time,
-                note: d.note || '',
-                usedAttendances: usedAttendances
-                    .filter((ua) => ua.used_at === d.date)
-                    .map((ua) => ({
-                        usedAttendanceId: ua.id,
-                        attendanceTypeId: ua.attendanceType?.id,
-                        title: ua.attendanceType?.title,
-                    })),
-            }));
+            const dailyEventSummary = null;
+            // const dailyEventSummary = dailySummaries.map((d) => ({
+            //     dailyEventSummaryId: d.id,
+            //     date: d.date,
+            //     isHoliday: d.is_holiday,
+            //     enter: d.enter,
+            //     leave: d.leave,
+            //     realEnter: d.real_enter,
+            //     realLeave: d.real_leave,
+            //     isChecked: d.is_checked,
+            //     isLate: d.is_late,
+            //     isEarlyLeave: d.is_early_leave,
+            //     isAbsent: d.is_absent,
+            //     workTime: d.work_time,
+            //     note: d.note || '',
+            //     usedAttendances: usedAttendances
+            //         .filter((ua) => ua.used_at === d.date)
+            //         .map((ua) => ({
+            //             usedAttendanceId: ua.id,
+            //             attendanceTypeId: ua.attendanceType?.id,
+            //             title: ua.attendanceType?.title,
+            //         })),
+            // }));
 
             const lateDetails = dailySummaries
                 .filter((d) => d.is_late)
@@ -307,12 +311,14 @@ export class DomainMonthlyEventSummaryService {
                         })),
                 }));
 
-            // 기존 요약 찾기
-            let summary = await queryRunner.manager.findOne(MonthlyEventSummary, {
+            // 기존 요약 찾기 (삭제된 레코드도 포함하여 조회)
+            let summary = await manager.findOne(MonthlyEventSummary, {
                 where: { employee_id: employeeId, yyyymm },
+                withDeleted: true,
             });
 
             if (!summary) {
+                // 새로 생성
                 summary = new MonthlyEventSummary(
                     dailySummaries[0].employee?.employeeNumber || '',
                     employeeId,
@@ -330,6 +336,9 @@ export class DomainMonthlyEventSummaryService {
                     earlyLeaveDetails,
                 );
             } else {
+                summary.deleted_at = null;
+
+                // 기존 요약 업데이트
                 summary.요약업데이트한다({
                     employeeInfo: {
                         employeeNumber: dailySummaries[0].employee?.employeeNumber || '',
@@ -350,8 +359,7 @@ export class DomainMonthlyEventSummaryService {
                     note: summary.note || '',
                 });
             }
-
-            const saved = await queryRunner.manager.save(MonthlyEventSummary, summary);
+            const saved = await manager.save(MonthlyEventSummary, summary);
             return saved.DTO변환한다();
         } catch (error) {
             this.logger.error(`월간 요약 생성 실패 (배치): ${error.message}`, error.stack);

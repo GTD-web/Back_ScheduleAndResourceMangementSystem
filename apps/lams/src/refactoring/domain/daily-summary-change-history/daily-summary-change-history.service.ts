@@ -76,6 +76,42 @@ export class DomainDailySummaryChangeHistoryService {
     }
 
     /**
+     * 일간 요약 ID 목록으로 변경 이력 목록을 일괄 조회한다
+     *
+     * 여러 일간 요약의 변경 이력을 한 번의 쿼리로 조회합니다.
+     * 결과는 일간 요약 ID별로 그룹화되어 반환됩니다.
+     */
+    async 일간요약ID목록으로목록조회한다(
+        dailyEventSummaryIds: string[],
+        manager?: EntityManager,
+    ): Promise<Map<string, DailySummaryChangeHistoryDTO[]>> {
+        if (dailyEventSummaryIds.length === 0) {
+            return new Map();
+        }
+
+        const repository = this.getRepository(manager);
+        const histories = await repository
+            .createQueryBuilder('history')
+            .where('history.daily_event_summary_id IN (:...ids)', { ids: dailyEventSummaryIds })
+            .andWhere('history.deleted_at IS NULL')
+            .orderBy('history.daily_event_summary_id', 'ASC')
+            .addOrderBy('history.changed_at', 'DESC')
+            .getMany();
+
+        // 일간 요약 ID별로 그룹화
+        const historyMap = new Map<string, DailySummaryChangeHistoryDTO[]>();
+        histories.forEach((history) => {
+            const id = history.daily_event_summary_id;
+            if (!historyMap.has(id)) {
+                historyMap.set(id, []);
+            }
+            historyMap.get(id)!.push(history.DTO변환한다());
+        });
+
+        return historyMap;
+    }
+
+    /**
      * 날짜 범위로 변경 이력 목록을 조회한다
      */
     async 날짜범위로목록조회한다(startDate: string, endDate: string): Promise<DailySummaryChangeHistoryDTO[]> {

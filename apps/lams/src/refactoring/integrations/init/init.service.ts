@@ -409,7 +409,10 @@ export class InitService implements OnApplicationBootstrap {
 
         try {
             this.logger.log('조직 데이터가 없습니다. SSO에서 데이터를 가져와서 마이그레이션을 시작합니다.');
-            const result = await this.organizationMigrationService.마이그레이션한다();
+            const result = await this.organizationMigrationService.마이그레이션한다({
+                includeTerminated: true,
+                includeInactiveDepartments: true,
+            });
             this.logger.log(
                 `✅ 조직 데이터 마이그레이션 완료: 직급 ${result.statistics.ranks}개, 직책 ${result.statistics.positions}개, 부서 ${result.statistics.departments}개, 직원 ${result.statistics.employees}명`,
             );

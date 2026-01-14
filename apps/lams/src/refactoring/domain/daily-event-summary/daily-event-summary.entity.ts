@@ -78,6 +78,14 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
     @Column({ name: 'is_absent', default: false })
     is_absent: boolean;
 
+    // 근태 충돌 여부 (시간 범위가 완전히 일치하는 경우)
+    @Column({ name: 'has_attendance_conflict', default: false })
+    has_attendance_conflict: boolean;
+
+    // 근태 겹침 여부 (시간 범위가 일부만 겹치는 경우)
+    @Column({ name: 'has_attendance_overlap', default: false })
+    has_attendance_overlap: boolean;
+
     // 근무 시간
     @Column({ name: 'work_time', type: 'int', nullable: true })
     work_time: number | null;
@@ -155,6 +163,8 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
         is_late: boolean = false,
         is_early_leave: boolean = false,
         is_absent: boolean = false,
+        has_attendance_conflict: boolean = false,
+        has_attendance_overlap: boolean = false,
         work_time?: number,
         note?: string,
         used_attendances?: Array<{
@@ -180,6 +190,8 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
         this.is_late = is_late;
         this.is_early_leave = is_early_leave;
         this.is_absent = is_absent;
+        this.has_attendance_conflict = has_attendance_conflict;
+        this.has_attendance_overlap = has_attendance_overlap;
         this.work_time = work_time || null;
         this.note = note || null;
         this.used_attendances = used_attendances || null;
@@ -200,6 +212,8 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
         is_late?: boolean,
         is_early_leave?: boolean,
         is_absent?: boolean,
+        has_attendance_conflict?: boolean,
+        has_attendance_overlap?: boolean,
         work_time?: number,
         note?: string,
         used_attendances?: Array<{
@@ -242,6 +256,12 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
         if (is_absent !== undefined) {
             this.is_absent = is_absent;
         }
+        if (has_attendance_conflict !== undefined) {
+            this.has_attendance_conflict = has_attendance_conflict;
+        }
+        if (has_attendance_overlap !== undefined) {
+            this.has_attendance_overlap = has_attendance_overlap;
+        }
         if (work_time !== undefined) {
             this.work_time = work_time;
         }
@@ -252,23 +272,6 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
             this.used_attendances = used_attendances;
         }
         this.validateInvariants();
-    }
-
-    /**
-     * 근무 시간 계산 (BeforeInsert, BeforeUpdate)
-     */
-    @BeforeInsert()
-    @BeforeUpdate()
-    근무시간계산한다(): void {
-        if (this.enter && this.leave && this.date) {
-            const enterDate = new Date(`${this.date}T${this.enter}`);
-            const leaveDate = new Date(`${this.date}T${this.leave}`);
-            const diff = leaveDate.getTime() - enterDate.getTime();
-            // Convert milliseconds to minutes
-            this.work_time = Math.floor(diff / (1000 * 60));
-        } else {
-            this.work_time = null;
-        }
     }
 
     /**
@@ -326,6 +329,8 @@ export class DailyEventSummary extends BaseEntity<DailyEventSummaryDTO> {
             isLate: this.is_late,
             isEarlyLeave: this.is_early_leave,
             isAbsent: this.is_absent,
+            hasAttendanceConflict: this.has_attendance_conflict,
+            hasAttendanceOverlap: this.has_attendance_overlap,
             workTime: this.work_time,
             note: this.note,
             usedAttendances: this.used_attendances,

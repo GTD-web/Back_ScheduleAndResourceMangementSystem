@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToMany, AfterLoad } from 'typ
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { DataSnapshotChild } from '../data-snapshot-child/data-snapshot-child.entity';
 import { Department } from '@libs/modules/department/department.entity';
-import { DataSnapshotInfoDTO, SnapshotType } from './data-snapshot-info.types';
+import { DataSnapshotInfoDTO, SnapshotType, ApprovalStatus } from './data-snapshot-info.types';
 
 /**
  * 데이터 스냅샷 정보 엔티티
@@ -45,6 +45,49 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
 
     @Column({ name: 'department_id', type: 'uuid' })
     department_id: string;
+
+    @Column({
+        name: 'snapshot_version',
+        type: 'varchar',
+        length: 1,
+        nullable: true,
+        comment: '스냅샷 버전 (A-Z)',
+    })
+    snapshot_version: string | null;
+
+    @Column({
+        name: 'approval_document_id',
+        type: 'uuid',
+        nullable: true,
+        comment: '결재 문서 ID',
+    })
+    approval_document_id: string | null;
+
+    @Column({
+        name: 'submitted_at',
+        type: 'timestamp',
+        nullable: true,
+        comment: '제출 시간',
+    })
+    submitted_at: Date | null;
+
+    @Column({
+        name: 'approver_name',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+        comment: '결재자 이름',
+    })
+    approver_name: string | null;
+
+    @Column({
+        name: 'approval_status',
+        type: 'varchar',
+        length: 10,
+        nullable: true,
+        comment: '결재 상태 (미제출, 제출됨)',
+    })
+    approval_status: ApprovalStatus | null;
 
     @OneToMany(() => DataSnapshotChild, (child) => child.parentSnapshot, {
         cascade: ['insert', 'update', 'remove'],
@@ -92,7 +135,24 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
      * 데이터 형식 검증
      */
     private validateDataFormat(): void {
-        // 추가적인 형식 검증이 필요한 경우 여기에 구현
+        // 스냅샷 버전 검증 (A-Z만 허용)
+        if (this.snapshot_version !== null && this.snapshot_version !== undefined) {
+            if (!/^[A-Z]$/.test(this.snapshot_version)) {
+                throw new Error('스냅샷 버전은 A-Z 사이의 단일 문자만 허용됩니다.');
+            }
+        }
+
+        // 결재 문서 ID UUID 형식 검증
+        if (this.approval_document_id !== null && this.approval_document_id !== undefined) {
+            this.validateUuidFormat(this.approval_document_id, 'approval_document_id');
+        }
+
+        // 결재자 이름 검증
+        if (this.approver_name !== null && this.approver_name !== undefined) {
+            if (this.approver_name.trim().length === 0) {
+                throw new Error('결재자 이름은 빈 문자열일 수 없습니다.');
+            }
+        }
     }
 
     /**
@@ -112,6 +172,11 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         mm: string,
         department_id: string,
         description: string = '',
+        snapshot_version: string | null = null,
+        approval_document_id: string | null = null,
+        submitted_at: Date | null = null,
+        approver_name: string | null = null,
+        approval_status: ApprovalStatus | null = null,
     ) {
         super();
         this.snapshot_name = snapshot_name;
@@ -120,18 +185,46 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         this.mm = mm;
         this.department_id = department_id;
         this.description = description;
+        this.snapshot_version = snapshot_version;
+        this.approval_document_id = approval_document_id;
+        this.submitted_at = submitted_at;
+        this.approver_name = approver_name;
+        this.approval_status = approval_status;
         this.validateInvariants();
     }
 
     /**
      * 데이터 스냅샷 정보를 업데이트한다
      */
-    업데이트한다(snapshot_name?: string, description?: string): void {
+    업데이트한다(
+        snapshot_name?: string,
+        description?: string,
+        snapshot_version?: string | null,
+        approval_document_id?: string | null,
+        submitted_at?: Date | null,
+        approver_name?: string | null,
+        approval_status?: ApprovalStatus | null,
+    ): void {
         if (snapshot_name !== undefined) {
             this.snapshot_name = snapshot_name;
         }
         if (description !== undefined) {
             this.description = description;
+        }
+        if (snapshot_version !== undefined) {
+            this.snapshot_version = snapshot_version;
+        }
+        if (approval_document_id !== undefined) {
+            this.approval_document_id = approval_document_id;
+        }
+        if (submitted_at !== undefined) {
+            this.submitted_at = submitted_at;
+        }
+        if (approver_name !== undefined) {
+            this.approver_name = approver_name;
+        }
+        if (approval_status !== undefined) {
+            this.approval_status = approval_status;
         }
         this.validateInvariants();
     }
@@ -148,12 +241,20 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
             yyyy: this.yyyy,
             mm: this.mm,
             departmentId: this.department_id,
+            snapshotVersion: this.snapshot_version || undefined,
+            approvalDocumentId: this.approval_document_id || undefined,
+            submittedAt: this.submitted_at || undefined,
+            approverName: this.approver_name || undefined,
+            approvalStatus: this.approval_status || undefined,
             createdAt: this.created_at,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,
             createdBy: this.created_by,
             updatedBy: this.updated_by,
             version: this.version,
+            children: this.dataSnapshotChildInfoList
+                ? this.dataSnapshotChildInfoList.map((child) => child.DTO변환한다())
+                : undefined,
         };
     }
 

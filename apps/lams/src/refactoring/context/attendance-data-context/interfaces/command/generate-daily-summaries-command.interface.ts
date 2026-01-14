@@ -6,7 +6,7 @@
  * 2. 스냅샷 적용 흐름: 스냅샷 데이터를 기반으로 생성 (snapshotData 제공)
  */
 export interface IGenerateDailySummariesCommand {
-    employeeIds: string[];
+    // employeeIds: string[];
     year: string;
     month: string;
     performedBy: string;

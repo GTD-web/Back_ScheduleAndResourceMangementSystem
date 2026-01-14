@@ -31,6 +31,8 @@ export interface CreateDailyEventSummaryData {
     isLate?: boolean;
     isEarlyLeave?: boolean;
     isAbsent?: boolean;
+    hasAttendanceConflict?: boolean;
+    hasAttendanceOverlap?: boolean;
     workTime?: number;
     note?: string;
     usedAttendances?: UsedAttendanceInfo[];
@@ -50,6 +52,8 @@ export interface UpdateDailyEventSummaryData {
     isLate?: boolean;
     isEarlyLeave?: boolean;
     isAbsent?: boolean;
+    hasAttendanceConflict?: boolean;
+    hasAttendanceOverlap?: boolean;
     workTime?: number;
     note?: string;
     usedAttendances?: UsedAttendanceInfo[];
@@ -72,6 +76,8 @@ export interface DailyEventSummaryDTO {
     isLate: boolean;
     isEarlyLeave: boolean;
     isAbsent: boolean;
+    hasAttendanceConflict: boolean;
+    hasAttendanceOverlap: boolean;
     workTime: number | null;
     note: string | null;
     usedAttendances: UsedAttendanceInfo[] | null;
@@ -82,4 +88,3 @@ export interface DailyEventSummaryDTO {
     updatedBy?: string;
     version: number;
 }
-

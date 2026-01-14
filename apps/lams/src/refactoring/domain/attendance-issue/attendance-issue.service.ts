@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, IsNull, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Repository } from 'typeorm';
 import { AttendanceIssue } from './attendance-issue.entity';
 import {
     CreateAttendanceIssueData,
@@ -43,8 +43,8 @@ export class DomainAttendanceIssueService {
             data.problematicLeaveTime,
             data.correctedEnterTime,
             data.correctedLeaveTime,
-            data.problematicAttendanceTypeId,
-            data.correctedAttendanceTypeId,
+            data.problematicAttendanceTypeIds,
+            data.correctedAttendanceTypeIds,
             data.description,
         );
 
@@ -115,31 +115,62 @@ export class DomainAttendanceIssueService {
     }
 
     /**
-     * 대기 중인 근태 이슈 목록을 조회한다
+     * 일간 요약 ID 목록으로 근태 이슈 목록을 일괄 조회한다
+     *
+     * 여러 일간 요약의 근태 이슈를 한 번의 쿼리로 조회합니다.
+     * 결과는 일간 요약 ID별로 그룹화되어 반환됩니다.
      */
-    async 대기중목록조회한다(): Promise<AttendanceIssueDTO[]> {
-        return this.상태별목록조회한다(AttendanceIssueStatus.PENDING);
+    async 일간요약ID목록으로목록조회한다(
+        dailyEventSummaryIds: string[],
+        manager?: EntityManager,
+    ): Promise<Map<string, AttendanceIssueDTO[]>> {
+        if (dailyEventSummaryIds.length === 0) {
+            return new Map();
+        }
+
+        const repository = this.getRepository(manager);
+        const issues = await repository
+            .createQueryBuilder('issue')
+            .where('issue.daily_event_summary_id IN (:...ids)', { ids: dailyEventSummaryIds })
+            .andWhere('issue.deleted_at IS NULL')
+            .orderBy('issue.daily_event_summary_id', 'ASC')
+            .addOrderBy('issue.created_at', 'DESC')
+            .getMany();
+
+        // 일간 요약 ID별로 그룹화
+        const issueMap = new Map<string, AttendanceIssueDTO[]>();
+        issues.forEach((issue) => {
+            const id = issue.daily_event_summary_id;
+            if (!id) return; // daily_event_summary_id가 null인 경우 스킵
+
+            if (!issueMap.has(id)) {
+                issueMap.set(id, []);
+            }
+            issueMap.get(id)!.push(issue.DTO변환한다());
+        });
+
+        return issueMap;
     }
 
     /**
-     * 확인된 근태 이슈 목록을 조회한다
+     * 요청 상태인 근태 이슈 목록을 조회한다
      */
-    async 확인된목록조회한다(): Promise<AttendanceIssueDTO[]> {
-        return this.상태별목록조회한다(AttendanceIssueStatus.CONFIRMED);
+    async 요청중목록조회한다(): Promise<AttendanceIssueDTO[]> {
+        return this.상태별목록조회한다(AttendanceIssueStatus.REQUEST);
     }
 
     /**
-     * 해결된 근태 이슈 목록을 조회한다
+     * 반영된 근태 이슈 목록을 조회한다
      */
-    async 해결된목록조회한다(): Promise<AttendanceIssueDTO[]> {
-        return this.상태별목록조회한다(AttendanceIssueStatus.RESOLVED);
+    async 반영된목록조회한다(): Promise<AttendanceIssueDTO[]> {
+        return this.상태별목록조회한다(AttendanceIssueStatus.APPLIED);
     }
 
     /**
-     * 거부된 근태 이슈 목록을 조회한다
+     * 미반영된 근태 이슈 목록을 조회한다
      */
-    async 거부된목록조회한다(): Promise<AttendanceIssueDTO[]> {
-        return this.상태별목록조회한다(AttendanceIssueStatus.REJECTED);
+    async 미반영된목록조회한다(): Promise<AttendanceIssueDTO[]> {
+        return this.상태별목록조회한다(AttendanceIssueStatus.NOT_APPLIED);
     }
 
     /**
@@ -173,8 +204,8 @@ export class DomainAttendanceIssueService {
             data.problematicLeaveTime,
             data.correctedEnterTime,
             data.correctedLeaveTime,
-            data.problematicAttendanceTypeId,
-            data.correctedAttendanceTypeId,
+            data.problematicAttendanceTypeIds,
+            data.correctedAttendanceTypeIds,
             data.description,
             data.status,
             data.rejectionReason,
@@ -189,9 +220,9 @@ export class DomainAttendanceIssueService {
     }
 
     /**
-     * 근태 이슈 확인 처리
+     * 근태 이슈 반영 처리
      */
-    async 확인처리한다(
+    async 반영처리한다(
         id: string,
         confirmedBy: string,
         userId: string,
@@ -203,7 +234,7 @@ export class DomainAttendanceIssueService {
             throw new NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
         }
 
-        issue.확인처리한다(confirmedBy);
+        issue.반영처리한다(confirmedBy);
         issue.수정자설정한다(userId);
         issue.메타데이터업데이트한다(userId);
 
@@ -212,27 +243,9 @@ export class DomainAttendanceIssueService {
     }
 
     /**
-     * 근태 이슈 해결 처리
+     * 근태 이슈 미반영 처리
      */
-    async 해결처리한다(id: string, userId: string, manager?: EntityManager): Promise<AttendanceIssueDTO> {
-        const repository = this.getRepository(manager);
-        const issue = await repository.findOne({ where: { id } });
-        if (!issue) {
-            throw new NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
-        }
-
-        issue.해결처리한다();
-        issue.수정자설정한다(userId);
-        issue.메타데이터업데이트한다(userId);
-
-        const saved = await repository.save(issue);
-        return saved.DTO변환한다();
-    }
-
-    /**
-     * 근태 이슈 거부 처리
-     */
-    async 거부처리한다(
+    async 미반영처리한다(
         id: string,
         rejectionReason: string,
         userId: string,
@@ -244,7 +257,7 @@ export class DomainAttendanceIssueService {
             throw new NotFoundException(`근태 이슈를 찾을 수 없습니다. (id: ${id})`);
         }
 
-        issue.거부처리한다(rejectionReason);
+        issue.미반영처리한다(rejectionReason);
         issue.수정자설정한다(userId);
         issue.메타데이터업데이트한다(userId);
 

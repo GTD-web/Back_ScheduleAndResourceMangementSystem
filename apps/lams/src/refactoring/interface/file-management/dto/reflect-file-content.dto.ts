@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ReflectFileContentRequestDto {
     @ApiProperty({
         description: '파일 ID 목록 (순서대로 반영됨)',
-        example: ['86a1e801-d278-422e-90f8-bea04e40b87a', '510f7c1c-a227-4088-884d-9f0df7962a73'],
+        example: ['dd0cbfa8-94ef-4540-aa3c-c0d0178d5c19', 'f883ead4-bbed-4f86-97d9-55f949189ee5'],
         type: [String],
     })
     @IsArray()

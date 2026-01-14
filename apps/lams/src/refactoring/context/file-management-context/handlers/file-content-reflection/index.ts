@@ -1,4 +1,4 @@
-import { ReflectFileContentHandler } from './commands';
+import { ReflectFileContentHandler, RestoreFromHistoryHandler } from './commands';
 
-export const FILE_CONTENT_REFLECTION_HANDLERS = [ReflectFileContentHandler];
+export const FILE_CONTENT_REFLECTION_HANDLERS = [ReflectFileContentHandler, RestoreFromHistoryHandler];
 

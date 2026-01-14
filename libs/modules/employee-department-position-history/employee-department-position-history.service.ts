@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, QueryRunner, Repository, DataSource } from 'typeorm';
 import { EmployeeDepartmentPositionHistory } from './employee-department-position-history.entity';
+import { format, startOfMonth, endOfMonth } from 'date-fns';
 
 /**
  * 직원-부서-직책 이력 서비스
@@ -113,7 +114,7 @@ export class DomainEmployeeDepartmentPositionHistoryService {
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.employeeId = :employeeId', { employeeId })
             .andWhere('eh.effectiveStartDate <= :targetDate', { targetDate })
-            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate > :targetDate)', { targetDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :targetDate)', { targetDate })
             .getOne();
     }
 
@@ -159,7 +160,7 @@ export class DomainEmployeeDepartmentPositionHistoryService {
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.departmentId = :departmentId', { departmentId })
             .andWhere('eh.effectiveStartDate <= :targetDate', { targetDate })
-            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate > :targetDate)', { targetDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :targetDate)', { targetDate })
             .getMany();
     }
 
@@ -175,5 +176,106 @@ export class DomainEmployeeDepartmentPositionHistoryService {
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.isCurrent = :isCurrent', { isCurrent: true })
             .getMany();
+    }
+
+    /**
+     * 특정 연월에 유효한 부서 정보 목록을 조회한다
+     *
+     * 해당 월의 범위(첫 날짜 ~ 마지막 날짜) 내에 유효한 배치 정보를 조회하여 부서 정보를 반환합니다.
+     *
+     * @param year 연도
+     * @param month 월
+
+     * @returns 부서 정보 목록 (id, departmentName 포함)
+     */
+    async 특정연월의부서정보목록을조회한다(
+        year: string,
+        month: string,
+    ): Promise<Array<{ id: string; departmentName: string }>> {
+        const repository = this.repository;
+
+        // 해당 월의 시작일과 종료일 계산
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const startDate = format(monthStart, 'yyyy-MM-dd');
+        const endDate = format(monthEnd, 'yyyy-MM-dd');
+
+        const results = await repository
+            .createQueryBuilder('eh')
+            .leftJoin('eh.department', 'dept')
+            .select('eh.departmentId', 'id')
+            .addSelect('dept.departmentName', 'departmentName')
+            .distinct(true)
+            .where('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getRawMany();
+
+        return results
+            .map((r) => ({
+                id: r.id,
+                departmentName: r.departmentName || '',
+            }))
+            .filter((dept) => dept.id !== null && dept.id !== undefined);
+    }
+
+    /**
+     * 특정 연월에 유효한 배치이력 목록을 조회한다
+     *
+     * 해당 월의 범위(첫 날짜 ~ 마지막 날짜) 내에 유효한 배치 정보를 조회하여 배치이력 엔티티를 반환합니다.
+     * 퇴사한 직원의 배치이력은 제외합니다.
+     *
+     * @param year 연도
+     * @param month 월
+     *
+     * @returns 배치이력 엔티티 목록 (department 관계 포함)
+     */
+    async 특정연월의배치이력목록을조회한다(year: string, month: string): Promise<EmployeeDepartmentPositionHistory[]> {
+        const repository = this.repository;
+
+        // 해당 월의 시작일과 종료일 계산
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const startDate = format(monthStart, 'yyyy-MM-dd');
+        const endDate = format(monthEnd, 'yyyy-MM-dd');
+
+        return await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .where('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getMany();
+    }
+
+    /**
+     * 특정 부서 ID의 부서 정보를 조회한다
+     *
+     * @param departmentId 부서 ID
+     * @param manager 트랜잭션 EntityManager (선택)
+     * @returns 부서 정보 (id, departmentName 포함)
+     */
+    async 부서정보를조회한다(departmentId: string): Promise<{ id: string; departmentName: string } | null> {
+        const repository = this.repository;
+
+        const result = await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .select('eh.departmentId', 'id')
+            .addSelect('dept.departmentName', 'departmentName')
+            .where('eh.departmentId = :departmentId', { departmentId })
+            .limit(1)
+            .getRawOne();
+
+        if (!result || !result.id) {
+            return null;
+        }
+
+        return {
+            id: result.id,
+            departmentName: result.departmentName || '',
+        };
     }
 }

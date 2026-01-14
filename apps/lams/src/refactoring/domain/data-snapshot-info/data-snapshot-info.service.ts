@@ -42,6 +42,11 @@ export class DomainDataSnapshotInfoService {
             data.mm,
             data.departmentId,
             data.description || '',
+            data.snapshotVersion || null,
+            data.approvalDocumentId || null,
+            data.submittedAt || null,
+            data.approverName || null,
+            data.approvalStatus || null,
         );
 
         const saved = await repository.save(snapshot);
@@ -134,6 +139,26 @@ export class DomainDataSnapshotInfoService {
     }
 
     /**
+     * 연도, 월, 부서별 스냅샷 목록을 조회한다 (버전 관리용)
+     */
+    async 연월부서별목록조회한다(
+        yyyy: string,
+        mm: string,
+        departmentId: string,
+        snapshotType: SnapshotType,
+        manager?: EntityManager,
+    ): Promise<DataSnapshotInfoDTO[]> {
+        const repository = this.getRepository(manager);
+        const snapshots = await repository.find({
+            where: { yyyy, mm, department_id: departmentId, snapshot_type: snapshotType, deleted_at: IsNull() },
+            order: {
+                snapshot_version: 'ASC',
+            },
+        });
+        return snapshots.map((snapshot) => snapshot.DTO변환한다());
+    }
+
+    /**
      * 데이터 스냅샷 정보를 수정한다
      */
     async 수정한다(
@@ -148,7 +173,15 @@ export class DomainDataSnapshotInfoService {
             throw new NotFoundException(`데이터 스냅샷 정보를 찾을 수 없습니다. (id: ${id})`);
         }
 
-        snapshot.업데이트한다(data.snapshotName, data.description);
+        snapshot.업데이트한다(
+            data.snapshotName,
+            data.description,
+            data.snapshotVersion !== undefined ? data.snapshotVersion : undefined,
+            data.approvalDocumentId !== undefined ? data.approvalDocumentId : undefined,
+            data.submittedAt !== undefined ? data.submittedAt : undefined,
+            data.approverName !== undefined ? data.approverName : undefined,
+            data.approvalStatus !== undefined ? data.approvalStatus : undefined,
+        );
 
         // 수정자 정보 설정
         snapshot.수정자설정한다(userId);

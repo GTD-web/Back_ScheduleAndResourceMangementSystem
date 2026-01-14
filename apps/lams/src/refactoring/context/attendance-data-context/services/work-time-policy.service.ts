@@ -130,21 +130,57 @@ export class WorkTimePolicyService {
     }
 
     /**
+     * 특정 날짜의 정상근무 시작 시간을 반환한다
+     *
+     * 커스텀 시간이 있으면 우선 사용, 없으면 기본값 사용
+     *
+     * @param date 날짜 (yyyy-MM-dd)
+     * @param workTimeOverride 해당 날짜의 커스텀 시간 (선택)
+     * @returns 정상근무 시작 시간 (HH:MM:SS)
+     */
+    getWorkStartTime(date: string, workTimeOverride?: { startWorkTime: string | null } | null): string {
+        if (workTimeOverride?.startWorkTime) {
+            return workTimeOverride.startWorkTime;
+        }
+        return this.NORMAL_WORK_START_TIME;
+    }
+
+    /**
+     * 특정 날짜의 정상근무 종료 시간을 반환한다
+     *
+     * 커스텀 시간이 있으면 우선 사용, 없으면 기본값 사용
+     *
+     * @param date 날짜 (yyyy-MM-dd)
+     * @param workTimeOverride 해당 날짜의 커스텀 시간 (선택)
+     * @returns 정상근무 종료 시간 (HH:MM:SS)
+     */
+    getWorkEndTime(date: string, workTimeOverride?: { endWorkTime: string | null } | null): string {
+        if (workTimeOverride?.endWorkTime) {
+            return workTimeOverride.endWorkTime;
+        }
+        return this.NORMAL_WORK_END_TIME;
+    }
+
+    /**
      * 지각 여부를 판정한다
      *
      * @param enterTime 출근 시간 (HHMMSS 형식)
+     * @param date 날짜 (yyyy-MM-dd)
      * @param hasMorningRecognized 오전 근무 인정 여부
      * @param isHoliday 공휴일 여부
      * @param isBeforeHireDate 입사일 이전 여부
      * @param isAfterTerminationDate 퇴사일 이후 여부
+     * @param workTimeOverride 해당 날짜의 커스텀 시간 (선택)
      * @returns 지각 여부
      */
     isLate(
         enterTime: string,
+        date: string,
         hasMorningRecognized: boolean,
         isHoliday: boolean,
         isBeforeHireDate: boolean,
         isAfterTerminationDate: boolean,
+        workTimeOverride?: { startWorkTime: string | null } | null,
     ): boolean {
         // 입사일 이전, 퇴사일 이후, 공휴일은 지각 아님
         if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
@@ -158,25 +194,30 @@ export class WorkTimePolicyService {
 
         // HHMMSS 형식을 HH:MM:SS 형식으로 변환하여 비교
         const enterTimeFormatted = this.HHMMSS를HHMMSS로변환(enterTime);
-        return enterTimeFormatted > this.NORMAL_WORK_START_TIME;
+        const workStartTime = this.getWorkStartTime(date, workTimeOverride);
+        return enterTimeFormatted > workStartTime;
     }
 
     /**
      * 조퇴 여부를 판정한다
      *
      * @param leaveTime 퇴근 시간 (HHMMSS 형식)
+     * @param date 날짜 (yyyy-MM-dd)
      * @param hasAfternoonRecognized 오후 근무 인정 여부
      * @param isHoliday 공휴일 여부
      * @param isBeforeHireDate 입사일 이전 여부
      * @param isAfterTerminationDate 퇴사일 이후 여부
+     * @param workTimeOverride 해당 날짜의 커스텀 시간 (선택)
      * @returns 조퇴 여부
      */
     isEarlyLeave(
         leaveTime: string,
+        date: string,
         hasAfternoonRecognized: boolean,
         isHoliday: boolean,
         isBeforeHireDate: boolean,
         isAfterTerminationDate: boolean,
+        workTimeOverride?: { endWorkTime: string | null } | null,
     ): boolean {
         // 입사일 이전, 퇴사일 이후, 공휴일은 조퇴 아님
         if (isBeforeHireDate || isAfterTerminationDate || isHoliday) {
@@ -190,7 +231,8 @@ export class WorkTimePolicyService {
 
         // HHMMSS 형식을 HH:MM:SS 형식으로 변환하여 비교
         const leaveTimeFormatted = this.HHMMSS를HHMMSS로변환(leaveTime);
-        return leaveTimeFormatted < this.NORMAL_WORK_END_TIME;
+        const workEndTime = this.getWorkEndTime(date, workTimeOverride);
+        return leaveTimeFormatted < workEndTime;
     }
 
     /**

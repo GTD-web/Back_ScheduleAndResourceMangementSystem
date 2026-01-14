@@ -36,11 +36,10 @@ export class AuthController {
     async generateToken(@Body() dto: GenerateTokenRequestDto): Promise<GenerateTokenResponseDto> {
         try {
             const payload: any = {
-                id: dto.employeeNumber,
-                employeeNumber: dto.employeeNumber,
-                name: dto.name || 'Test User',
-                email: dto.email || 'test@example.com',
-                ...dto.additionalData,
+                id: '839e6f06-8d44-43a1-948c-095253c4cf8c',
+                employeeNumber: '24016',
+                name: '김규현',
+                email: 'kim.kyuhyun@lumir.space',
             };
 
             // 만료시간 없이 토큰 생성
@@ -52,9 +51,9 @@ export class AuthController {
                 success: true,
                 token,
                 tokenInfo: {
-                    employeeNumber: dto.employeeNumber,
-                    name: dto.name,
-                    email: dto.email,
+                    employeeNumber: '24016',
+                    name: '김규현',
+                    email: 'kim.kyuhyun@lumir.space',
                     issuedAt: new Date(),
                     expiresAt: undefined, // 만료시간 없음
                 },
