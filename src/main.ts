@@ -14,6 +14,7 @@ import * as fs from 'fs';
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     const isProduction = process.env.NODE_ENV === 'production';
+    console.log(isProduction, process.env.NODE_ENV);
     app.enableCors({
         origin: isProduction
             ? function (origin, callback) {
@@ -31,7 +32,7 @@ async function bootstrap() {
                       'http://localhost:3002',
                   ];
                   console.log(origin);
-                  console.log(isProduction, process.env.NODE_ENV);
+
                   if (!isProduction || !origin || whitelist.includes(origin)) {
                       callback(null, true);
                   } else {
