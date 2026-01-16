@@ -20,6 +20,8 @@ async function bootstrap() {
                   const whitelist = [
                       'https://portal.lumir.space',
                       'https://lsms.lumir.space',
+                      'https://portal-dev.lumir.space',
+                      'https://lsms-dev.lumir.space',
                       'https://lrms.lumir.space',
                       'https://rms-backend-iota.vercel.app',
                       'https://rms-backend-lumir-web-dev.vercel.app',
