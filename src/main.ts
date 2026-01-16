@@ -30,6 +30,8 @@ async function bootstrap() {
                       'https://lrim.lumir.space',
                       'http://localhost:3002',
                   ];
+                  console.log(origin);
+                  console.log(isProduction, process.env.NODE_ENV);
                   if (!isProduction || !origin || whitelist.includes(origin)) {
                       callback(null, true);
                   } else {
