@@ -51,6 +51,14 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
     @Column({ name: 'snapshot_data', type: 'json' })
     snapshot_data: string;
 
+    @Column({
+        name: 'raw_data',
+        type: 'jsonb',
+        nullable: true,
+        comment: '스냅샷 원본 데이터 (해당 직원의 eventInfo, usedAttendance)',
+    })
+    raw_data: Record<string, any> | null;
+
     @ManyToOne(() => DataSnapshotInfo, (snapshot) => snapshot.dataSnapshotChildInfoList, { onDelete: 'CASCADE' })
     parentSnapshot: DataSnapshotInfo;
 
@@ -115,6 +123,7 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
         yyyy: string,
         mm: string,
         snapshot_data: string,
+        raw_data: Record<string, any> | null = null,
     ) {
         super();
         this.employee_id = employee_id;
@@ -123,13 +132,19 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
         this.yyyy = yyyy;
         this.mm = mm;
         this.snapshot_data = snapshot_data;
+        this.raw_data = raw_data;
         this.validateInvariants();
     }
 
     /**
      * 데이터 스냅샷 자식 정보를 업데이트한다
      */
-    업데이트한다(employee_name?: string, employee_number?: string, snapshot_data?: string): void {
+    업데이트한다(
+        employee_name?: string,
+        employee_number?: string,
+        snapshot_data?: string,
+        raw_data?: Record<string, any> | null,
+    ): void {
         if (employee_name !== undefined) {
             this.employee_name = employee_name;
         }
@@ -138,6 +153,9 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
         }
         if (snapshot_data !== undefined) {
             this.snapshot_data = snapshot_data;
+        }
+        if (raw_data !== undefined) {
+            this.raw_data = raw_data;
         }
         this.validateInvariants();
     }
@@ -154,6 +172,7 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
             yyyy: this.yyyy,
             mm: this.mm,
             snapshotData: this.snapshot_data,
+            rawData: this.raw_data,
             createdAt: this.created_at,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,
@@ -176,6 +195,7 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
                 // JSON 파싱 실패 시 원본 유지
             }
         }
+        // raw_data는 JSONB 타입이므로 자동으로 파싱됨 (추가 처리 불필요)
     }
 
     /**

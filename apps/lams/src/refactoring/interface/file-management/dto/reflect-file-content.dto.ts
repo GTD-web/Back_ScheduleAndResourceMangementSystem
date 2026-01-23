@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, IsUUID, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
@@ -6,24 +6,23 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 export class ReflectFileContentRequestDto {
     @ApiProperty({
-        description: '파일 ID 목록 (순서대로 반영됨)',
-        example: ['dd0cbfa8-94ef-4540-aa3c-c0d0178d5c19', 'f883ead4-bbed-4f86-97d9-55f949189ee5'],
-        type: [String],
+        description: '파일 ID',
+        example: 'dd0cbfa8-94ef-4540-aa3c-c0d0178d5c19',
     })
-    @IsArray()
+    @IsString()
     @IsNotEmpty()
-    @IsUUID('4', { each: true })
-    fileIds: string[];
+    @IsUUID('4')
+    fileId: string;
 
     @ApiProperty({
-        description: '적용할 직원 ID 목록',
-        example: ['839e6f06-8d44-43a1-948c-095253c4cf8c'],
+        description: '적용할 직원 번호 목록',
+        example: ['10001', '10002'],
         type: [String],
     })
     @IsArray()
     @IsNotEmpty()
-    @IsUUID('4', { each: true })
-    employeeIds: string[];
+    @IsString({ each: true })
+    employeeNumbers: string[];
 
     @ApiProperty({
         description: '연도',
@@ -40,26 +39,23 @@ export class ReflectFileContentRequestDto {
     @IsString()
     @IsNotEmpty()
     month: string;
-}
 
-/**
- * 파일 반영 결과
- */
-export class FileReflectionResult {
-    @ApiProperty({ description: '파일 ID' })
-    fileId: string;
-
-    @ApiProperty({ description: '반영 이력 ID' })
-    reflectionHistoryId: string;
+    @ApiProperty({
+        description: '추가 정보 (선택사항)',
+        example: '파일 반영에 대한 추가 메모',
+        required: false,
+    })
+    @IsString()
+    info?: string;
 }
 
 /**
  * 파일 내용 반영 응답 DTO
  */
 export class ReflectFileContentResponseDto {
-    @ApiProperty({
-        description: '반영된 파일 목록',
-        type: [FileReflectionResult],
-    })
-    reflections: FileReflectionResult[];
+    @ApiProperty({ description: '파일 ID' })
+    fileId: string;
+
+    @ApiProperty({ description: '반영 이력 ID' })
+    reflectionHistoryId: string;
 }

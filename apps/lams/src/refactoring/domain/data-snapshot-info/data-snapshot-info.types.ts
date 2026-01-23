@@ -35,6 +35,7 @@ export interface CreateDataSnapshotInfoData {
     submittedAt?: Date;
     approverName?: string;
     approvalStatus?: ApprovalStatus;
+    isCurrent?: boolean;
 }
 
 /**
@@ -48,6 +49,7 @@ export interface UpdateDataSnapshotInfoData {
     submittedAt?: Date;
     approverName?: string;
     approvalStatus?: ApprovalStatus;
+    isCurrent?: boolean;
 }
 
 import { DataSnapshotChildDTO } from '../data-snapshot-child/data-snapshot-child.types';
@@ -68,6 +70,7 @@ export interface DataSnapshotInfoDTO {
     submittedAt?: Date;
     approverName?: string;
     approvalStatus?: ApprovalStatus;
+    isCurrent: boolean;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;

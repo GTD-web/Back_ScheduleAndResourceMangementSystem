@@ -5,7 +5,6 @@ import { COMMAND_HANDLERS, QUERY_HANDLERS } from './handlers';
 import { DomainDataSnapshotInfoModule } from '../../domain/data-snapshot-info/data-snapshot-info.module';
 import { DomainAttendanceIssueModule } from '../../domain/attendance-issue/attendance-issue.module';
 import { DomainDailySummaryChangeHistoryModule } from '../../domain/daily-summary-change-history/daily-summary-change-history.module';
-import { AttendanceDataContextModule } from '../attendance-data-context/attendance-data-context.module';
 import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/employee-department-position-history/employee-department-position-history.module';
 
 /**
@@ -19,7 +18,6 @@ import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/emp
         DomainDataSnapshotInfoModule,
         DomainAttendanceIssueModule, // 이슈 복원을 위해 필요
         DomainDailySummaryChangeHistoryModule, // 변경이력 복원을 위해 필요
-        AttendanceDataContextModule, // 월간 요약 조회를 위해 필요
         DomainEmployeeDepartmentPositionHistoryModule, // 직원 부서 정보 조회를 위해 필요
     ],
     providers: [

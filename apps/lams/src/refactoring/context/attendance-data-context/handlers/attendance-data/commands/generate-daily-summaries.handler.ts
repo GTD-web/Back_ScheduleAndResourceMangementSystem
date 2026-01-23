@@ -15,8 +15,6 @@ import { DailySummaryJudgmentService } from '../../../services/daily-summary-jud
 import { EventInfo } from '../../../../../domain/event-info/event-info.entity';
 import { UsedAttendance } from '../../../../../domain/used-attendance/used-attendance.entity';
 import { DailyEventSummary } from '../../../../../domain/daily-event-summary/daily-event-summary.entity';
-import { AttendanceIssue } from '../../../../../domain/attendance-issue/attendance-issue.entity';
-import { DailySummaryChangeHistory } from '../../../../../domain/daily-summary-change-history/daily-summary-change-history.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 
@@ -58,16 +56,13 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
     ) {}
 
     async execute(command: GenerateDailySummariesCommand): Promise<IGenerateDailySummariesResponse> {
-        const { year, month, performedBy, snapshotData } = command.data;
+        const { year, month, performedBy } = command.data;
 
         return await this.dataSource.transaction(async (manager) => {
             try {
-                const isSnapshotMode = !!snapshotData;
-                this.logger.log(
-                    `일일 요약 생성 시작: year=${year}, month=${month}, 모드=${isSnapshotMode ? '스냅샷' : '일반'}`,
-                );
+                this.logger.log(`일일 요약 생성 시작: year=${year}, month=${month}`);
 
-                // 날짜 범위 계산 (소프트 삭제용)
+                // 날짜 범위 계산
                 const yearNum = parseInt(year);
                 const monthNum = parseInt(month);
                 const startDate = startOfMonth(new Date(yearNum, monthNum - 1, 1));
@@ -75,66 +70,57 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 const startDateStr = format(startDate, 'yyyy-MM-dd');
                 const endDateStr = format(endDate, 'yyyy-MM-dd');
 
-                // 해당 연월의 모든 일간요약 소프트 삭제 (재반영 시 이전 데이터 제거)
-                await this.해당연월일간요약소프트삭제(startDateStr, endDateStr, performedBy, manager);
+                // 1. event-info와 used-attendance 가져오기 (도메인 서비스 사용)
+                const events = await this.eventInfoService.날짜범위로조회한다(startDateStr, endDateStr, manager);
+                const usedAttendances = await this.usedAttendanceService.날짜범위로조회한다(
+                    startDateStr,
+                    endDateStr,
+                    manager,
+                );
 
-                let summaries: DailyEventSummary[];
+                // 2. 조회된 데이터에서 직원 정보 추출 및 조회
+                const { employees, employeeNumberMap } = await this.직원정보를추출한다(
+                    events,
+                    usedAttendances,
+                    manager,
+                );
 
-                if (isSnapshotMode) {
-                    // 스냅샷 적용 흐름: 스냅샷 데이터를 기반으로 생성 (모든 데이터 사용)
-                    summaries = await this.스냅샷기반일일요약생성(snapshotData!, year, month, manager);
-                } else {
-                    // 파일내용반영 흐름: event-info와 used-attendance를 기반으로 생성
-                    // 1. event-info와 used-attendance 가져오기 (날짜 범위만으로 조회)
-                    const events = await this.이벤트정보를조회한다(startDateStr, endDateStr, manager);
-                    const usedAttendances = await this.근태사용내역을조회한다(startDateStr, endDateStr, manager);
-
-                    // 2. 조회된 데이터에서 직원 정보 추출 및 조회
-                    const { employees, employeeNumberMap } = await this.직원정보를추출한다(
-                        events,
-                        usedAttendances,
-                        manager,
-                    );
-
-                    if (employees.length === 0) {
-                        this.logger.warn('조회된 직원이 없습니다.');
-                        return {
-                            success: true,
-                            statistics: {
-                                dailyEventSummaryCount: 0,
-                                attendanceIssueCount: 0,
-                            },
-                        };
-                    }
-
-                    // 3. holiday 정보 가져오기
-                    const holidays = await this.holidayInfoService.목록조회한다();
-                    const holidaySet = new Set(holidays.map((h) => h.holidayDate));
-
-                    // 4. daily-event-summary 생성
-                    summaries = await this.일일요약을생성한다(
-                        events,
-                        usedAttendances,
-                        employees,
-                        employeeNumberMap,
-                        holidaySet,
-                        year,
-                        month,
-                        manager,
-                    );
+                if (employees.length === 0) {
+                    this.logger.warn('조회된 직원이 없습니다.');
+                    return {
+                        success: true,
+                        statistics: {
+                            dailyEventSummaryCount: 0,
+                            attendanceIssueCount: 0,
+                        },
+                    };
                 }
 
-                // 7. attendance-issue 생성 (정상근무 범위를 벗어난 경우)
-                const issues = await this.근태이슈를생성한다(summaries, performedBy, manager);
+                // 3. holiday 정보 가져오기
+                const holidays = await this.holidayInfoService.목록조회한다();
+                const holidaySet = new Set(holidays.map((h) => h.holidayDate));
 
-                this.logger.log(`✅ 일일 요약 생성 완료: 요약 ${summaries.length}건, 이슈 ${issues.length}건`);
+                // 4. daily-event-summary 생성
+                const summaries = await this.일일요약을생성한다(
+                    events,
+                    usedAttendances,
+                    employees,
+                    employeeNumberMap,
+                    holidaySet,
+                    year,
+                    month,
+                    manager,
+                );
+
+                this.logger.log(`✅ 일일 요약 생성 완료: 요약 ${summaries.length}건`);
 
                 return {
                     success: true,
                     statistics: {
                         dailyEventSummaryCount: summaries.length,
-                        attendanceIssueCount: issues.length,
+                        attendanceIssueCount: 0, // 근태 이슈는 별도 핸들러에서 생성
                     },
+                    summaries, // 오케스트레이션에서 사용
                 };
             } catch (error) {
                 this.logger.error(`일일 요약 생성 실패: ${error.message}`, error.stack);
@@ -143,35 +129,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         });
     }
 
-    /**
-     * 이벤트 정보를 조회한다 (날짜 범위만으로 조회)
-     */
-    private async 이벤트정보를조회한다(startDate: string, endDate: string, manager: any): Promise<EventInfo[]> {
-        // 날짜를 YYYYMMDD 형식으로 변환
-        const startDateNum = parseInt(startDate.replace(/-/g, ''));
-        const endDateNum = parseInt(endDate.replace(/-/g, ''));
-
-        return await manager
-            .createQueryBuilder(EventInfo, 'ei')
-            .where('ei.yyyymmdd >= :startDateNum', { startDateNum })
-            .andWhere('ei.yyyymmdd <= :endDateNum', { endDateNum })
-            .andWhere('ei.deleted_at IS NULL')
-            .getMany();
-    }
-
-    /**
-     * 근태 사용 내역을 조회한다 (날짜 범위만으로 조회)
-     */
-    private async 근태사용내역을조회한다(startDate: string, endDate: string, manager: any): Promise<UsedAttendance[]> {
-        const usedAttendances = await manager
-            .createQueryBuilder(UsedAttendance, 'ua')
-            .leftJoinAndSelect('ua.attendanceType', 'at')
-            .where('ua.deleted_at IS NULL')
-            .andWhere('ua.used_at >= :startDate', { startDate })
-            .andWhere('ua.used_at <= :endDate', { endDate })
-            .getMany();
-        return usedAttendances;
-    }
 
     /**
      * 조회된 데이터에서 직원 정보를 추출한다
@@ -449,132 +406,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         return toSave;
     }
 
-    /**
-     * 근태 이슈를 생성한다 (정상근무 범위를 벗어난 경우)
-     *
-     * 최초로 일간요약과 생성이 되었으면 그 다음부터는 생성되거나 업데이트되지 않게 함
-     */
-    private async 근태이슈를생성한다(
-        summaries: DailyEventSummary[],
-        performedBy: string,
-        manager: any,
-    ): Promise<any[]> {
-        const issues: any[] = [];
-
-        // 일괄 조회를 위해 모든 일간요약 ID 수집 (모든 summary 확인 필요)
-        const summaryIds = summaries.map((s) => s.id);
-
-        if (summaryIds.length === 0) {
-            return issues;
-        }
-
-        // 이미 존재하는 이슈 조회 (일간요약 ID 기준)
-        const existingIssues = await manager
-            .createQueryBuilder('AttendanceIssue', 'ai')
-            .where('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
-            .andWhere('ai.deleted_at IS NULL')
-            .getMany();
-
-        const existingIssueMap = new Map<string, boolean>();
-        existingIssues.forEach((issue) => {
-            if (issue.daily_event_summary_id) {
-                existingIssueMap.set(issue.daily_event_summary_id, true);
-            }
-        });
-
-        // used_attendances 정보를 일괄 조회 (날짜 범위 기준)
-        const dateSet = new Set(summaries.map((s) => s.date));
-        const dateArray = Array.from(dateSet);
-        const usedAttendancesMap = new Map<string, UsedAttendance[]>();
-
-        if (dateArray.length > 0) {
-            const minDate = dateArray.sort()[0];
-            const maxDate = dateArray.sort().reverse()[0];
-            const allUsedAttendances = await manager
-                .createQueryBuilder('UsedAttendance', 'ua')
-                .leftJoinAndSelect('ua.attendanceType', 'at')
-                .where('ua.deleted_at IS NULL')
-                .andWhere('ua.used_at >= :minDate', { minDate })
-                .andWhere('ua.used_at <= :maxDate', { maxDate })
-                .getMany();
-
-            allUsedAttendances.forEach((ua) => {
-                const key = `${ua.employee_id}_${ua.used_at}`;
-                if (!usedAttendancesMap.has(key)) {
-                    usedAttendancesMap.set(key, []);
-                }
-                usedAttendancesMap.get(key)!.push(ua);
-            });
-        }
-
-        for (const summary of summaries) {
-            // used_attendances에서 근태 유형 ID 추출 (최대 2개)
-            const key = `${summary.employee_id}_${summary.date}`;
-            const dayAttendances = usedAttendancesMap.get(key) || [];
-            const problematicAttendanceTypeIds = dayAttendances
-                .map((ua) => ua.attendance_type_id)
-                .filter((id): id is string => !!id)
-                .slice(0, 2); // 최대 2개
-
-            // 이슈 생성 조건 확인
-            // 1. 지각, 조퇴, 결근인 경우
-            const isAttendanceIssue = summary.is_late || summary.is_early_leave || summary.is_absent;
-
-            // 2. 근태사용내역에서 두 개의 근태가 있고, 시작시간과 종료시간이 동일한 경우
-            let isDuplicateTimeIssue = false;
-            if (dayAttendances.length === 2) {
-                const [attendance1, attendance2] = dayAttendances;
-                const startTime1 = attendance1.attendanceType?.start_work_time;
-                const endTime1 = attendance1.attendanceType?.end_work_time;
-                const startTime2 = attendance2.attendanceType?.start_work_time;
-                const endTime2 = attendance2.attendanceType?.end_work_time;
-
-                // 두 근태의 시작시간과 종료시간이 모두 동일한지 확인
-                if (
-                    startTime1 &&
-                    endTime1 &&
-                    startTime2 &&
-                    endTime2 &&
-                    startTime1 === startTime2 &&
-                    endTime1 === endTime2
-                ) {
-                    isDuplicateTimeIssue = true;
-                }
-            }
-
-            // 이슈 생성 조건에 해당하는 경우
-            if (isAttendanceIssue || isDuplicateTimeIssue) {
-                // 이미 해당 일간요약에 대한 이슈가 있으면 생성하지 않음
-                if (existingIssueMap.has(summary.id)) {
-                    continue;
-                }
-
-                try {
-                    const issue = await this.attendanceIssueService.생성한다(
-                        {
-                            employeeId: summary.employee_id!,
-                            date: summary.date,
-                            dailyEventSummaryId: summary.id,
-                            problematicEnterTime: summary.real_enter || summary.enter,
-                            problematicLeaveTime: summary.real_leave || summary.leave,
-                            correctedEnterTime: null,
-                            correctedLeaveTime: null,
-                            problematicAttendanceTypeIds:
-                                problematicAttendanceTypeIds.length > 0 ? problematicAttendanceTypeIds : null,
-                            correctedAttendanceTypeIds: null,
-                            description: null, // 요청받은 직원이 직접 입력하는 부분
-                        },
-                        manager,
-                    );
-                    issues.push(issue);
-                } catch (error: any) {
-                    this.logger.warn(`근태 이슈 생성 실패 (${summary.date}, ${summary.employee_id}): ${error.message}`);
-                }
-            }
-        }
-
-        return issues;
-    }
 
     /**
      * 날짜 범위 생성
@@ -831,213 +662,4 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         return `${hhmmss.substring(0, 2)}:${hhmmss.substring(2, 4)}:${hhmmss.substring(4, 6)}`;
     }
 
-    /**
-     * 해당 연월의 모든 일간요약을 소프트 삭제한다
-     *
-     * 재반영 시 이전 데이터를 제거하기 위해 사용됩니다.
-     * 조회된 직원 목록과 이전에 적용되어 있던 직원 목록이 달라질 수 있기 때문에
-     * 해당 연월의 모든 요약 데이터를 소프트 삭제한 후 새로 생성합니다.
-     *
-     * @param startDate 시작 날짜 (yyyy-MM-dd)
-     * @param endDate 종료 날짜 (yyyy-MM-dd)
-     * @param performedBy 수행자 ID
-     * @param manager EntityManager
-     */
-    private async 해당연월일간요약소프트삭제(
-        startDate: string,
-        endDate: string,
-        performedBy: string,
-        manager: any,
-    ): Promise<void> {
-        const existingSummaries = await manager
-            .createQueryBuilder(DailyEventSummary, 'des')
-            .where('des.deleted_at IS NULL')
-            .andWhere('des.date >= :startDate', { startDate })
-            .andWhere('des.date <= :endDate', { endDate })
-            .getMany();
-
-        if (existingSummaries.length === 0) {
-            return;
-        }
-
-        const summaryIds = existingSummaries.map((s) => s.id);
-        const now = new Date();
-
-        // 1. 일간 요약 소프트 삭제
-        for (const summary of existingSummaries) {
-            summary.deleted_at = now;
-            summary.수정자설정한다(performedBy);
-            summary.메타데이터업데이트한다(performedBy);
-        }
-        await manager.save(DailyEventSummary, existingSummaries);
-
-        // 2. 해당 일간 요약과 연결된 근태 이슈 소프트 삭제
-        const existingIssues = await manager
-            .createQueryBuilder(AttendanceIssue, 'ai')
-            .where('ai.deleted_at IS NULL')
-            .andWhere('ai.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
-            .getMany();
-
-        if (existingIssues.length > 0) {
-            for (const issue of existingIssues) {
-                issue.deleted_at = now;
-                issue.수정자설정한다(performedBy);
-                issue.메타데이터업데이트한다(performedBy);
-            }
-            await manager.save(AttendanceIssue, existingIssues);
-        }
-
-        // 3. 해당 일간 요약과 연결된 변경 이력 소프트 삭제
-        const existingHistories = await manager
-            .createQueryBuilder(DailySummaryChangeHistory, 'dsh')
-            .where('dsh.deleted_at IS NULL')
-            .andWhere('dsh.daily_event_summary_id IN (:...summaryIds)', { summaryIds })
-            .getMany();
-
-        if (existingHistories.length > 0) {
-            for (const history of existingHistories) {
-                history.deleted_at = now;
-                history.수정자설정한다(performedBy);
-                history.메타데이터업데이트한다(performedBy);
-            }
-            await manager.save(DailySummaryChangeHistory, existingHistories);
-        }
-
-        this.logger.log(
-            `해당 연월 일간요약 소프트 삭제 완료: 일간요약=${existingSummaries.length}건, 이슈=${existingIssues.length}건, 변경이력=${existingHistories.length}건`,
-        );
-    }
-
-    /**
-     * 스냅샷 데이터를 기반으로 일일 요약을 생성한다
-     *
-     * flow.md의 "스냅샷 적용 흐름"에 해당
-     * - 스냅샷에 저장된 모든 데이터를 기반으로 일일 요약 생성
-     * - 기존 일일요약 데이터를 복원
-     */
-    private async 스냅샷기반일일요약생성(
-        snapshotData: {
-            dailyEventSummaries: Array<{
-                date: string;
-                employee_id: string;
-                is_holiday: boolean;
-                enter: string | null;
-                leave: string | null;
-                real_enter: string | null;
-                real_leave: string | null;
-                is_checked: boolean;
-                is_late: boolean;
-                is_early_leave: boolean;
-                is_absent: boolean;
-                has_attendance_conflict?: boolean;
-                has_attendance_overlap?: boolean;
-                work_time: number | null;
-                note: string | null;
-                used_attendances?: Array<{
-                    attendanceTypeId: string;
-                    title: string;
-                    workTime?: number;
-                    isRecognizedWorkTime?: boolean;
-                    startWorkTime?: string | null;
-                    endWorkTime?: string | null;
-                    deductedAnnualLeave?: number;
-                }> | null;
-            }>;
-        },
-        year: string,
-        month: string,
-        manager: any,
-    ): Promise<DailyEventSummary[]> {
-        const summaries: DailyEventSummary[] = [];
-
-        // 스냅샷 데이터를 기반으로 DailyEventSummary 생성 (모든 데이터 사용)
-        for (const snapshot of snapshotData.dailyEventSummaries) {
-            // 날짜 필터링 (해당 연월만)
-            const dateYear = snapshot.date.substring(0, 4);
-            const dateMonth = snapshot.date.substring(5, 7);
-            if (dateYear !== year || dateMonth !== month) {
-                continue;
-            }
-
-            const summary = new DailyEventSummary(
-                snapshot.date,
-                snapshot.employee_id,
-                undefined, // monthly_event_summary_id는 나중에 설정
-                snapshot.is_holiday,
-                snapshot.enter,
-                snapshot.leave,
-                snapshot.real_enter,
-                snapshot.real_leave,
-                snapshot.is_checked,
-                snapshot.is_late,
-                snapshot.is_early_leave,
-                snapshot.is_absent,
-                snapshot.has_attendance_conflict ?? false,
-                snapshot.has_attendance_overlap ?? false,
-                snapshot.work_time,
-                snapshot.note,
-                snapshot.used_attendances,
-            );
-
-            summaries.push(summary);
-        }
-
-        // 기존 데이터 조회 (소프트 삭제된 데이터 포함)
-        const yearNum = parseInt(year);
-        const monthNum = parseInt(month);
-        const startDate = startOfMonth(new Date(yearNum, monthNum - 1, 1));
-        const endDate = endOfMonth(new Date(yearNum, monthNum - 1, 1));
-        const startDateStr = format(startDate, 'yyyy-MM-dd');
-        const endDateStr = format(endDate, 'yyyy-MM-dd');
-
-        const existingSummaries = await manager
-            .createQueryBuilder(DailyEventSummary, 'des')
-            .where('des.date >= :startDate', { startDate: startDateStr })
-            .andWhere('des.date <= :endDate', { endDate: endDateStr })
-            .withDeleted() // 소프트 삭제된 데이터도 조회
-            .getMany();
-
-        const existingMap = new Map<string, DailyEventSummary>();
-        existingSummaries.forEach((existing) => {
-            const key = `${existing.date}_${existing.employee_id}`;
-            existingMap.set(key, existing);
-        });
-
-        // 복원 및 생성 데이터 분리
-        const toSave: DailyEventSummary[] = [];
-        summaries.forEach((summary) => {
-            const key = `${summary.date}_${summary.employee_id}`;
-            const existing = existingMap.get(key);
-
-            if (existing) {
-                // 기존 데이터 복원 및 업데이트
-                existing.deleted_at = null; // 소프트 삭제 해제
-                existing.enter = summary.enter;
-                existing.leave = summary.leave;
-                existing.real_enter = summary.real_enter;
-                existing.real_leave = summary.real_leave;
-                existing.is_holiday = summary.is_holiday;
-                existing.is_absent = summary.is_absent;
-                existing.is_late = summary.is_late;
-                existing.is_early_leave = summary.is_early_leave;
-                existing.is_checked = summary.is_checked;
-                existing.note = summary.note;
-                existing.work_time = summary.work_time;
-                existing.used_attendances = summary.used_attendances;
-                toSave.push(existing);
-            } else {
-                // 새 데이터 생성
-                toSave.push(summary);
-            }
-        });
-
-        // 배치 저장
-        const SUMMARY_BATCH_SIZE = 1000;
-        for (let i = 0; i < toSave.length; i += SUMMARY_BATCH_SIZE) {
-            const batch = toSave.slice(i, i + SUMMARY_BATCH_SIZE);
-            await manager.save(DailyEventSummary, batch);
-        }
-
-        return toSave;
-    }
 }

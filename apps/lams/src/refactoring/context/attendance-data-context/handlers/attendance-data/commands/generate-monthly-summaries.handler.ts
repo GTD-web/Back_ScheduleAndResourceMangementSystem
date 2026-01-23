@@ -49,10 +49,7 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                 const endDateStr = format(endDate, 'yyyy-MM-dd');
                 const yyyymm = `${year}-${month.padStart(2, '0')}`;
 
-                // 1. 해당 연월의 모든 월간 요약 소프트 삭제 (재반영 시 이전 데이터 제거)
-                await this.해당연월월간요약소프트삭제(yyyymm, performedBy, manager);
-
-                // 2. 해당 연월에 일간 요약이 있는 모든 직원 ID 조회
+                // 1. 해당 연월에 일간 요약이 있는 모든 직원 ID 조회
                 const employeesWithDailySummaries = await manager
                     .createQueryBuilder(DailyEventSummary, 'daily')
                     .select('DISTINCT daily.employee_id', 'employeeId')
@@ -80,10 +77,10 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                     };
                 }
 
-                // 3. 근태 유형 목록 조회 (한 번만 조회)
+                // 2. 근태 유형 목록 조회 (한 번만 조회)
                 const allAttendanceTypes = await this.attendanceTypeService.목록조회한다();
 
-                // 4. 근태 사용 내역 조회 (날짜 범위, 모든 직원)
+                // 3. 근태 사용 내역 조회 (날짜 범위, 모든 직원)
                 const usedAttendances = await manager
                     .createQueryBuilder(UsedAttendance, 'ua')
                     .leftJoinAndSelect('ua.attendanceType', 'at')
@@ -93,7 +90,7 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                     .andWhere('ua.employee_id IN (:...employeeIds)', { employeeIds: allEmployeeIds })
                     .getMany();
 
-                // 5. 직원별로 월간 요약 생성
+                // 4. 직원별로 월간 요약 생성
                 let monthlyEventSummaryCount = 0;
 
                 for (const employeeId of allEmployeeIds) {
@@ -117,7 +114,7 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                     const employeeUsedAttendances = usedAttendances.filter((ua) => ua.employee_id === employeeId);
 
                     try {
-                        // 6. 월간 요약 생성 또는 업데이트 (외부 트랜잭션의 manager 사용)
+                        // 5. 월간 요약 생성 또는 업데이트 (외부 트랜잭션의 manager 사용)
                         const monthlySummary = await this.monthlyEventSummaryService.생성또는갱신한다(
                             employeeId,
                             yyyymm,
@@ -127,7 +124,7 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                             { manager }, // EntityManager를 전달
                         );
 
-                        // 7. 일간 요약들의 monthly_event_summary_id 업데이트
+                        // 6. 일간 요약들의 monthly_event_summary_id 업데이트
                         for (const dailySummary of dailySummaries) {
                             dailySummary.업데이트한다(monthlySummary.id);
                             dailySummary.수정자설정한다(performedBy);
@@ -160,32 +157,4 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
         });
     }
 
-    /**
-     * 해당 연월의 모든 월간 요약을 소프트 삭제한다
-     *
-     * @param yyyymm 연월 (YYYY-MM 형식)
-     * @param performedBy 수행자 ID
-     * @param manager EntityManager
-     */
-    private async 해당연월월간요약소프트삭제(yyyymm: string, performedBy: string, manager: any): Promise<void> {
-        const existingSummaries = await manager
-            .createQueryBuilder(MonthlyEventSummary, 'mes')
-            .where('mes.yyyymm = :yyyymm', { yyyymm })
-            .withDeleted()
-            .getMany();
-
-        if (existingSummaries.length === 0) {
-            return;
-        }
-
-        const now = new Date();
-        for (const summary of existingSummaries) {
-            summary.deleted_at = now;
-            summary.수정자설정한다(performedBy);
-            summary.메타데이터업데이트한다(performedBy);
-        }
-
-        await manager.save(MonthlyEventSummary, existingSummaries);
-        this.logger.log(`해당 연월 월간요약 소프트 삭제 완료: ${existingSummaries.length}건 (yyyymm=${yyyymm})`);
-    }
 }

@@ -6,6 +6,7 @@ import { DomainEmployeeDepartmentPermissionModule } from '../../domain/employee-
 import { DomainEmployeeExtraInfoModule } from '../../domain/employee-extra-info/employee-extra-info.module';
 import { DomainHolidayInfoModule } from '../../domain/holiday-info/holiday-info.module';
 import { WorkTimeOverrideModule } from '../../domain/work-time-override/work-time-override.module';
+import { DomainAttendanceTypeModule } from '../../domain/attendance-type/attendance-type.module';
 import { DomainEmployeeModule } from '@libs/modules/employee/employee.module';
 import { DomainDepartmentModule } from '@libs/modules/department/department.module';
 import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/employee-department-position-history/employee-department-position-history.module';
@@ -20,6 +21,7 @@ import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/emp
         DomainEmployeeExtraInfoModule,
         DomainHolidayInfoModule,
         WorkTimeOverrideModule,
+        DomainAttendanceTypeModule,
         DomainEmployeeModule,
         DomainDepartmentModule,
         DomainEmployeeDepartmentPositionHistoryModule,

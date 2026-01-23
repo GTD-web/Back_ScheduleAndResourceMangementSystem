@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany, AfterLoad } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany, AfterLoad, BeforeInsert } from 'typeorm';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { DataSnapshotChild } from '../data-snapshot-child/data-snapshot-child.entity';
 import { Department } from '@libs/modules/department/department.entity';
@@ -43,8 +43,8 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
     })
     mm: string;
 
-    @Column({ name: 'department_id', type: 'uuid' })
-    department_id: string;
+    @Column({ name: 'department_id', type: 'uuid', nullable: true })
+    department_id: string | null;
 
     @Column({
         name: 'snapshot_version',
@@ -88,6 +88,14 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         comment: '결재 상태 (미제출, 제출됨)',
     })
     approval_status: ApprovalStatus | null;
+
+    @Column({
+        name: 'is_current',
+        type: 'boolean',
+        default: false,
+        comment: '현재 스냅샷 여부',
+    })
+    is_current: boolean;
 
     @OneToMany(() => DataSnapshotChild, (child) => child.parentSnapshot, {
         cascade: ['insert', 'update', 'remove'],
@@ -177,6 +185,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         submitted_at: Date | null = null,
         approver_name: string | null = null,
         approval_status: ApprovalStatus | null = null,
+        is_current: boolean = false,
     ) {
         super();
         this.snapshot_name = snapshot_name;
@@ -190,6 +199,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         this.submitted_at = submitted_at;
         this.approver_name = approver_name;
         this.approval_status = approval_status;
+        this.is_current = is_current;
         this.validateInvariants();
     }
 
@@ -204,6 +214,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         submitted_at?: Date | null,
         approver_name?: string | null,
         approval_status?: ApprovalStatus | null,
+        is_current?: boolean,
     ): void {
         if (snapshot_name !== undefined) {
             this.snapshot_name = snapshot_name;
@@ -226,6 +237,9 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         if (approval_status !== undefined) {
             this.approval_status = approval_status;
         }
+        if (is_current !== undefined) {
+            this.is_current = is_current;
+        }
         this.validateInvariants();
     }
 
@@ -246,6 +260,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
             submittedAt: this.submitted_at || undefined,
             approverName: this.approver_name || undefined,
             approvalStatus: this.approval_status || undefined,
+            isCurrent: this.is_current,
             createdAt: this.created_at,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,

@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetDepartmentListQuery } from './handlers/department/queries';
-import { IGetDepartmentListQuery, IGetDepartmentListResponse } from './interfaces';
+import { GetEmployeeIdsByNumbersQuery } from './handlers/employee/queries';
+import {
+    IGetDepartmentListQuery,
+    IGetDepartmentListResponse,
+    IGetEmployeeIdsByNumbersResponse,
+} from './interfaces';
 
 /**
  * 조직 관리 Context Service
@@ -24,5 +29,11 @@ export class OrganizationManagementContextService {
     async 부서목록을조회한다(query: IGetDepartmentListQuery): Promise<IGetDepartmentListResponse> {
         const queryInstance = new GetDepartmentListQuery(query);
         return await this.queryBus.execute(queryInstance);
+    }
+
+    async 직원번호목록을ID목록으로조회한다(employeeNumbers: string[]): Promise<string[]> {
+        const queryInstance = new GetEmployeeIdsByNumbersQuery({ employeeNumbers });
+        const result = await this.queryBus.execute(queryInstance);
+        return result.employeeIds;
     }
 }

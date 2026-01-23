@@ -3,12 +3,11 @@
  */
 
 /**
- * 파일 상태 열거형
+ * 파일 타입
  */
-export enum FileStatus {
-    UNREAD = 'unread',
-    READ = 'read',
-    ERROR = 'error',
+export enum FileType {
+    EVENT_HISTORY = 'event_history',
+    ATTENDANCE_DATA = 'attendance_data',
 }
 
 /**
@@ -17,11 +16,13 @@ export enum FileStatus {
 export interface CreateFileData {
     fileName: string;
     fileOriginalName?: string;
+    fileType?: FileType;    
     filePath: string;
     uploadBy: string;
     year?: string;
     month?: string;
     data?: Record<string, any>;
+    orgData?: Record<string, any>;
 }
 
 /**
@@ -30,12 +31,12 @@ export interface CreateFileData {
 export interface UpdateFileData {
     fileName?: string;
     fileOriginalName?: string;
+    fileType?: FileType;
     filePath?: string;
     year?: string;
     month?: string;
-    status?: FileStatus;
-    error?: string;
     data?: Record<string, any>;
+    orgData?: Record<string, any>;
 }
 
 /**
@@ -45,13 +46,12 @@ export interface FileDTO {
     id: string;
     fileName: string;
     fileOriginalName: string | null;
+    fileType: FileType | null;
     filePath: string;
     year: string | null;
     month: string | null;
-    readAt: string | null;
-    status: FileStatus;
-    error: string | null;
     data: Record<string, any> | null;
+    orgData: Record<string, any> | null;
     uploadBy: string;
     uploadedAt: Date;
     createdAt: Date;

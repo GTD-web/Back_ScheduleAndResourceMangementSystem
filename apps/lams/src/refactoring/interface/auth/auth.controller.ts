@@ -1,4 +1,4 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -6,7 +6,9 @@ import { Public } from '../../../common/decorators/public.decorator';
 import { GenerateTokenRequestDto, GenerateTokenResponseDto } from './dto/generate-token.dto';
 import { VerifyTokenRequestDto, VerifyTokenResponseDto } from './dto/verify-token.dto';
 import { MigrateOrganizationRequestDto, MigrateOrganizationResponseDto } from './dto/migrate-organization.dto';
+import { LoginRequestDto, LoginResponseDto } from './dto/login.dto';
 import { OrganizationMigrationService } from '../../integrations/migration/migration.service';
+import { SSOService } from '@libs/integrations/sso';
 
 /**
  * 인증 컨트롤러
@@ -20,7 +22,67 @@ export class AuthController {
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
         private readonly migrationService: OrganizationMigrationService,
+        private readonly ssoService: SSOService,
     ) {}
+
+    /**
+     * SSO 로그인
+     *
+     * SSO를 통해 로그인하고 JWT 토큰을 발급합니다.
+     */
+    @Public()
+    @Post('login')
+    @ApiOperation({
+        summary: 'SSO 로그인',
+        description: 'SSO를 통해 로그인하고 JWT 토큰을 발급합니다.',
+    })
+    async login(@Body() dto: LoginRequestDto): Promise<LoginResponseDto> {
+        try {
+            // SSO 로그인
+            const ssoResponse = await this.ssoService.login(dto.email, dto.password);
+
+            // SSO 응답에서 직원 번호 추출
+            if (!ssoResponse.employeeNumber) {
+                throw new UnauthorizedException('SSO 로그인 응답에 직원 번호가 없습니다.');
+            }
+
+            // SSO를 통해 직원 상세 정보 조회
+            const employee = await this.ssoService.getEmployee({
+                employeeNumber: ssoResponse.employeeNumber,
+                withDetail: true,
+            });
+
+            // JWT 토큰 생성
+            const jwtPayload = {
+                id: employee.id,
+                employeeNumber: employee.employeeNumber,
+                name: employee.name,
+                email: employee.email,
+            };
+
+            const token = this.jwtService.sign(jwtPayload);
+
+            return {
+                success: true,
+                token,
+                user: {
+                    id: employee.id,
+                    employeeNumber: employee.employeeNumber,
+                    name: employee.name,
+                    email: employee.email,
+                },
+                ssoToken: {
+                    accessToken: ssoResponse.accessToken,
+                    refreshToken: ssoResponse.refreshToken,
+                },
+            };
+        } catch (error: any) {
+            if (error instanceof UnauthorizedException) {
+                throw error;
+            }
+            throw new UnauthorizedException(`로그인 실패: ${error.message || '알 수 없는 오류'}`);
+        }
+    }
 
     /**
      * JWT 토큰 생성

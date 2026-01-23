@@ -10,6 +10,7 @@ import { SnapshotType } from '../../../../../domain/data-snapshot-info/data-snap
  *
  * 연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다.
  * 기본적으로 가장 최신 스냅샷을 반환하며, 조건 변경에 유연하게 대응할 수 있도록 구성됩니다.
+ * 기본적으로 스냅샷이 부서별로 구분이 되어있다는 전제조건으로 구현되어 있습니다.
  */
 @QueryHandler(GetSnapshotListQuery)
 export class GetSnapshotListHandler implements IQueryHandler<GetSnapshotListQuery, IGetSnapshotListResponse> {
@@ -28,7 +29,6 @@ export class GetSnapshotListHandler implements IQueryHandler<GetSnapshotListQuer
             month,
             SnapshotType.MONTHLY, // 기본 타입 (향후 filters로 확장 가능)
         );
-
         // 2. 부서별 필터링
         let filteredSnapshots = allSnapshots.filter((snapshot) => snapshot.departmentId === departmentId);
 

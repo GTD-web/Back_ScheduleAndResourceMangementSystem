@@ -122,4 +122,26 @@ export class DomainEventInfoService {
         // Hard Delete: 데이터베이스에서 완전히 삭제
         await repository.remove(eventInfo);
     }
+
+    /**
+     * 날짜 범위로 이벤트 정보를 조회한다
+     *
+     * @param startDate 시작 날짜 (yyyy-MM-dd 형식)
+     * @param endDate 종료 날짜 (yyyy-MM-dd 형식)
+     * @param manager 트랜잭션 EntityManager (선택적)
+     * @returns 이벤트 정보 목록
+     */
+    async 날짜범위로조회한다(startDate: string, endDate: string, manager?: EntityManager): Promise<EventInfo[]> {
+        const repository = this.getRepository(manager);
+        // 날짜를 YYYYMMDD 형식으로 변환
+        const startDateNum = parseInt(startDate.replace(/-/g, ''));
+        const endDateNum = parseInt(endDate.replace(/-/g, ''));
+
+        return await repository
+            .createQueryBuilder('ei')
+            .where('ei.yyyymmdd >= :startDateNum', { startDateNum })
+            .andWhere('ei.yyyymmdd <= :endDateNum', { endDateNum })
+            .andWhere('ei.deleted_at IS NULL')
+            .getMany();
+    }
 }

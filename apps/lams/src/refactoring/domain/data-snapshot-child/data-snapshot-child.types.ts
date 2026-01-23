@@ -22,6 +22,7 @@ export interface CreateDataSnapshotChildData {
     yyyy: string;
     mm: string;
     snapshotData: string;
+    rawData?: Record<string, any> | null;
 }
 
 /**
@@ -31,6 +32,7 @@ export interface UpdateDataSnapshotChildData {
     employeeName?: string;
     employeeNumber?: string;
     snapshotData?: string;
+    rawData?: Record<string, any> | null;
 }
 
 /**
@@ -44,6 +46,7 @@ export interface DataSnapshotChildDTO {
     yyyy: string;
     mm: string;
     snapshotData: string;
+    rawData?: Record<string, any> | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;

@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '@libs/database/base/base.entity';
-import { FileDTO, FileStatus } from './file.types';
+import { FileDTO, FileType   } from './file.types';
 
 /**
  * 파일 엔티티
@@ -23,6 +23,15 @@ export class File extends BaseEntity<FileDTO> {
     file_original_name: string | null;
 
     @Column({
+        name: 'file_type',
+        type: 'enum',
+        enum: FileType,
+        nullable: true,
+        comment: '파일 타입',
+    })
+    file_type: FileType | null;
+
+    @Column({
         name: 'file_path',
         comment: '파일 경로',
     })
@@ -42,29 +51,6 @@ export class File extends BaseEntity<FileDTO> {
     })
     month: string | null;
 
-    @Column({
-        name: 'read_at',
-        nullable: true,
-        comment: '읽은 시간',
-    })
-    read_at: string | null;
-
-    @Column({
-        name: 'status',
-        type: 'enum',
-        enum: FileStatus,
-        default: FileStatus.UNREAD,
-        comment: '파일 상태',
-    })
-    status: FileStatus;
-
-    @Column({
-        name: 'error',
-        nullable: true,
-        comment: '에러 메시지',
-    })
-    error: string | null;
-
     /**
      * 파일 내용 데이터 (JSONB)
      * 파일을 읽은 후 가공한 데이터
@@ -76,6 +62,17 @@ export class File extends BaseEntity<FileDTO> {
         comment: '파일 내용 데이터',
     })
     data: Record<string, any> | null;
+
+    /**
+     * 조직 정보 데이터 (JSONB)
+     */
+    @Column({
+        name: 'org_data',
+        type: 'jsonb',
+        nullable: true,
+        comment: '조직 정보 데이터',
+    })
+    org_data: Record<string, any> | null;
 
     /**
      * 파일 불변성 검증
@@ -125,20 +122,21 @@ export class File extends BaseEntity<FileDTO> {
         file_name: string,
         file_path: string,
         file_original_name?: string,
-        year?: string,
+        file_type?: FileType,
+        year?: string,  
         month?: string,
         data?: Record<string, any>,
+        org_data?: Record<string, any>,
     ) {
         super();
         this.file_name = file_name;
         this.file_path = file_path;
         this.file_original_name = file_original_name || null;
+        this.file_type = file_type || null;
         this.year = year || null;
         this.month = month ? month.padStart(2, '0') : null;
-        this.status = FileStatus.UNREAD;
-        this.read_at = null;
-        this.error = null;
         this.data = data || null;
+        this.org_data = org_data || null;
         this.validateInvariants();
     }
 
@@ -148,18 +146,21 @@ export class File extends BaseEntity<FileDTO> {
     업데이트한다(
         file_name?: string,
         file_original_name?: string,
+        file_type?: FileType,
         file_path?: string,
         year?: string,
         month?: string,
-        status?: FileStatus,
-        error?: string,
         data?: Record<string, any>,
+        org_data?: Record<string, any>,
     ): void {
         if (file_name !== undefined) {
             this.file_name = file_name;
         }
         if (file_original_name !== undefined) {
             this.file_original_name = file_original_name;
+        }
+        if (file_type !== undefined) {
+            this.file_type = file_type;
         }
         if (file_path !== undefined) {
             this.file_path = file_path;
@@ -170,33 +171,13 @@ export class File extends BaseEntity<FileDTO> {
         if (month !== undefined) {
             this.month = month.padStart(2, '0');
         }
-        if (status !== undefined) {
-            this.status = status;
-        }
-        if (error !== undefined) {
-            this.error = error;
-        }
         if (data !== undefined) {
             this.data = data;
         }
+        if (org_data !== undefined) {
+            this.org_data = org_data;
+        }
         this.validateInvariants();
-    }
-
-    /**
-     * 파일 읽음 처리
-     */
-    읽음처리한다(): void {
-        this.read_at = new Date().toISOString();
-        this.status = FileStatus.READ;
-    }
-
-    /**
-     * 파일 에러 처리
-     */
-    에러처리한다(error: any): void {
-        this.read_at = new Date().toISOString();
-        this.status = FileStatus.ERROR;
-        this.error = typeof error === 'string' ? error : JSON.stringify(error);
     }
 
     /**
@@ -215,13 +196,12 @@ export class File extends BaseEntity<FileDTO> {
             id: this.id,
             fileName: this.file_name,
             fileOriginalName: this.file_original_name,
+            fileType: this.file_type,
             filePath: this.file_path,
             year: this.year,
             month: this.month,
-            readAt: this.read_at,
-            status: this.status,
-            error: this.error,
             data: this.data,
+            orgData: this.org_data,
             uploadBy: this.created_by || '',
             uploadedAt: this.created_at,
             createdAt: this.created_at,

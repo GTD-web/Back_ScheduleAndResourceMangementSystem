@@ -185,4 +185,23 @@ export class DomainUsedAttendanceService {
         // Hard Delete: 데이터베이스에서 완전히 삭제
         await repository.remove(usedAttendance);
     }
+
+    /**
+     * 날짜 범위로 근태 사용 내역을 조회한다 (근태 유형 포함)
+     *
+     * @param startDate 시작 날짜 (yyyy-MM-dd 형식)
+     * @param endDate 종료 날짜 (yyyy-MM-dd 형식)
+     * @param manager 트랜잭션 EntityManager (선택적)
+     * @returns 근태 사용 내역 목록
+     */
+    async 날짜범위로조회한다(startDate: string, endDate: string, manager?: EntityManager): Promise<UsedAttendance[]> {
+        const repository = this.getRepository(manager);
+        return await repository
+            .createQueryBuilder('ua')
+            .leftJoinAndSelect('ua.attendanceType', 'at')
+            .where('ua.deleted_at IS NULL')
+            .andWhere('ua.used_at >= :startDate', { startDate })
+            .andWhere('ua.used_at <= :endDate', { endDate })
+            .getMany();
+    }
 }

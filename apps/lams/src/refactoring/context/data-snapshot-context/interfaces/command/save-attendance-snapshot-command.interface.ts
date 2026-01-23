@@ -6,7 +6,7 @@ import { ApprovalStatus } from '../../../../domain/data-snapshot-info/data-snaps
 export interface ISaveAttendanceSnapshotCommand {
     year: string;
     month: string;
-    departmentId: string;
+    departmentId?: string;
     snapshotName?: string;
     description?: string;
     performedBy: string;

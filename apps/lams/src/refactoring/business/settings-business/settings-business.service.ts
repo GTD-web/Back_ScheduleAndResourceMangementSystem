@@ -5,10 +5,12 @@ import {
     IGetDepartmentListForPermissionQuery,
     IGetHolidayListQuery,
     IGetWorkTimeOverrideListQuery,
+    IGetAttendanceTypeListQuery,
     IGetManagerEmployeeListResponse,
     IGetDepartmentListForPermissionResponse,
     IGetHolidayListResponse,
     IGetWorkTimeOverrideListResponse,
+    IGetAttendanceTypeListResponse,
     IUpdateEmployeeDepartmentPermissionCommand,
     IUpdateEmployeeExtraInfoCommand,
     ICreateHolidayInfoCommand,
@@ -17,6 +19,9 @@ import {
     ICreateWorkTimeOverrideCommand,
     IUpdateWorkTimeOverrideCommand,
     IDeleteWorkTimeOverrideCommand,
+    ICreateAttendanceTypeCommand,
+    IUpdateAttendanceTypeCommand,
+    IDeleteAttendanceTypeCommand,
     IUpdateEmployeeDepartmentPermissionResponse,
     IUpdateEmployeeExtraInfoResponse,
     ICreateHolidayInfoResponse,
@@ -25,6 +30,9 @@ import {
     ICreateWorkTimeOverrideResponse,
     IUpdateWorkTimeOverrideResponse,
     IDeleteWorkTimeOverrideResponse,
+    ICreateAttendanceTypeResponse,
+    IUpdateAttendanceTypeResponse,
+    IDeleteAttendanceTypeResponse,
 } from '../../context/settings-context/interfaces';
 
 /**
@@ -132,5 +140,33 @@ export class SettingsBusinessService {
         command: IDeleteWorkTimeOverrideCommand,
     ): Promise<IDeleteWorkTimeOverrideResponse> {
         return await this.settingsContextService.특별근태시간을삭제한다(command);
+    }
+
+    /**
+     * 근태유형 목록을 조회한다
+     */
+    async 근태유형목록을조회한다(query: IGetAttendanceTypeListQuery): Promise<IGetAttendanceTypeListResponse> {
+        return await this.settingsContextService.근태유형목록을조회한다(query);
+    }
+
+    /**
+     * 근태유형을 생성한다
+     */
+    async 근태유형을생성한다(command: ICreateAttendanceTypeCommand): Promise<ICreateAttendanceTypeResponse> {
+        return await this.settingsContextService.근태유형을생성한다(command);
+    }
+
+    /**
+     * 근태유형을 수정한다
+     */
+    async 근태유형을수정한다(command: IUpdateAttendanceTypeCommand): Promise<IUpdateAttendanceTypeResponse> {
+        return await this.settingsContextService.근태유형을수정한다(command);
+    }
+
+    /**
+     * 근태유형을 삭제한다
+     */
+    async 근태유형을삭제한다(command: IDeleteAttendanceTypeCommand): Promise<IDeleteAttendanceTypeResponse> {
+        return await this.settingsContextService.근태유형을삭제한다(command);
     }
 }

@@ -1,7 +1,8 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { File } from '../file/file.entity';
-import { FileContentReflectionHistoryDTO, ReflectionStatus, ReflectionType } from './file-content-reflection-history.types';
+import { DataSnapshotInfo } from '../data-snapshot-info/data-snapshot-info.entity';
+import { FileContentReflectionHistoryDTO } from './file-content-reflection-history.types';
 
 /**
  * 파일 내용 반영 이력 엔티티
@@ -30,41 +31,33 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
     file: File;
 
     /**
-     * 반영 상태
+     * 데이터 스냅샷 정보 ID (외래키)
      */
-    @Column({
-        name: 'status',
-        type: 'enum',
-        enum: ReflectionStatus,
-        default: ReflectionStatus.PENDING,
-        comment: '반영 상태',
-    })
-    status: ReflectionStatus;
+    @Column({ name: 'data_snapshot_info_id', type: 'uuid', nullable: true })
+    data_snapshot_info_id: string | null;
 
     /**
-     * 반영 타입
+     * 데이터 스냅샷 정보와의 관계
      */
-    @Column({
-        name: 'type',
-        type: 'enum',
-        enum: ReflectionType,
-        default: ReflectionType.OTHER,
-        comment: '반영 타입',
-    })
-    type: ReflectionType;
-
-    /**
-     * 반영 데이터 (JSONB)
-     * 파일 내용을 파싱한 결과 데이터
-     */
-    @Column({
-        name: 'data',
-        type: 'jsonb',
+    @ManyToOne(() => DataSnapshotInfo, {
         nullable: true,
-        comment: '반영 데이터',
+        onDelete: 'SET NULL',
     })
-    data: Record<string, any> | null;
+    @JoinColumn({ name: 'data_snapshot_info_id' })
+    data_snapshot_info: DataSnapshotInfo | null;
 
+    /**
+     * 부가 정보 (긴 문자열)
+     */
+    @Column({
+        name: 'info',
+        type: 'text',
+        nullable: true,
+        comment: '반영 이력 부가 정보',
+    })
+    info: string | null;
+
+   
     /**
      * 반영일자
      * 실제로 데이터가 반영된 시점
@@ -117,28 +110,30 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
      */
     constructor(
         file_id: string,
-        type: ReflectionType,
-        data?: Record<string, any>,
-        status: ReflectionStatus = ReflectionStatus.PENDING,
+        
+        data_snapshot_info_id?: string | null,
+        info?: string | null,
     ) {
         super();
         this.file_id = file_id;
-        this.type = type;
-        this.data = data || null;
-        this.status = status;
         this.reflected_at = null;
+        this.data_snapshot_info_id = data_snapshot_info_id || null;
+        this.info = info || null;
         this.validateInvariants();
     }
 
     /**
      * 파일 내용 반영 이력 정보를 업데이트한다
      */
-    업데이트한다(status?: ReflectionStatus, data?: Record<string, any>): void {
-        if (status !== undefined) {
-            this.status = status;
+    업데이트한다(
+        data_snapshot_info_id?: string | null,
+        info?: string | null,
+    ): void {
+        if (data_snapshot_info_id !== undefined) {
+            this.data_snapshot_info_id = data_snapshot_info_id;
         }
-        if (data !== undefined) {
-            this.data = data;
+        if (info !== undefined) {
+            this.info = info;
         }
         this.validateInvariants();
     }
@@ -147,23 +142,10 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
      * 반영 완료 처리
      */
     완료처리한다(): void {
-        this.status = ReflectionStatus.COMPLETED;
         this.reflected_at = new Date();
     }
 
-    /**
-     * 반영 실패 처리
-     */
-    실패처리한다(): void {
-        this.status = ReflectionStatus.FAILED;
-    }
-
-    /**
-     * 처리 중 상태로 변경
-     */
-    처리중처리한다(): void {
-        this.status = ReflectionStatus.PROCESSING;
-    }
+  
 
     /**
      * DTO로 변환한다
@@ -172,9 +154,8 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
         return {
             id: this.id,
             fileId: this.file_id,
-            status: this.status,
-            type: this.type,
-            data: this.data,
+            dataSnapshotInfoId: this.data_snapshot_info_id,
+            info: this.info,
             createdAt: this.created_at,
             reflectedAt: this.reflected_at,
             updatedAt: this.updated_at,

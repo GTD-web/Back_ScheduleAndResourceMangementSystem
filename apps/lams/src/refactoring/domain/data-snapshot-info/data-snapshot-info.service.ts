@@ -139,6 +139,48 @@ export class DomainDataSnapshotInfoService {
     }
 
     /**
+     * 특정 연월/타입 스냅샷 목록을 조회한다 (자식 직원 필터)
+     *
+     * 자식 데이터는 employee_id 목록에 포함된 항목만 반환한다.
+     */
+    async 연월과타입으로목록조회_자식직원필터한다(
+        yyyy: string,
+        mm: string,
+        snapshotType: SnapshotType,
+        employeeIds: string[],
+    ): Promise<DataSnapshotInfoDTO[]> {
+        if (!employeeIds || employeeIds.length === 0) {
+            const snapshots = await this.repository.find({
+                where: { yyyy, mm, snapshot_type: snapshotType, deleted_at: IsNull() },
+                order: {
+                    created_at: 'DESC',
+                },
+            });
+            return snapshots.map((snapshot) => ({
+                ...snapshot.DTO변환한다(),
+                children: [],
+            }));
+        }
+
+        const snapshots = await this.repository
+            .createQueryBuilder('snapshot')
+            .leftJoinAndSelect(
+                'snapshot.dataSnapshotChildInfoList',
+                'child',
+                'child.employee_id IN (:...employeeIds)',
+                { employeeIds },
+            )
+            .where('snapshot.yyyy = :yyyy', { yyyy })
+            .andWhere('snapshot.mm = :mm', { mm })
+            .andWhere('snapshot.snapshot_type = :snapshotType', { snapshotType })
+            .andWhere('snapshot.deleted_at IS NULL')
+            .orderBy('snapshot.created_at', 'DESC')
+            .getMany();
+
+        return snapshots.map((snapshot) => snapshot.DTO변환한다());
+    }
+
+    /**
      * 연도, 월, 부서별 스냅샷 목록을 조회한다 (버전 관리용)
      */
     async 연월부서별목록조회한다(

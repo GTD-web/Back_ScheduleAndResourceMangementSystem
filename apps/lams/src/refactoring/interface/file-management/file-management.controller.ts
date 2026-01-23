@@ -8,9 +8,13 @@ import {
     UseInterceptors,
     ParseUUIDPipe,
     BadRequestException,
+    Delete,
+    Param,
+    Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiQuery, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { User } from '../../../common/decorators/user.decorator';
 import { FileManagementBusinessService } from '../../business/file-management-business/file-management-business.service';
 import { UploadFileRequestDto, UploadFileResponseDto } from './dto/upload-file.dto';
@@ -107,12 +111,11 @@ export class FileManagementController {
      * 파일 내용 반영
      *
      * 업로드된 파일의 내용을 반영하고 일일/월간 요약을 생성합니다.
-     * 여러 파일을 순서대로 반영할 수 있습니다.
      */
     @Post('reflect')
     @ApiOperation({
         summary: '파일 내용 반영',
-        description: '업로드된 파일의 내용을 순서대로 반영하고 일일/월간 요약을 자동으로 생성합니다.',
+        description: '업로드된 파일의 내용을 반영하고 일일/월간 요약을 자동으로 생성합니다.',
     })
     async reflectFileContent(
         @Body() dto: ReflectFileContentRequestDto,
@@ -123,15 +126,17 @@ export class FileManagementController {
         }
 
         const result = await this.fileManagementBusinessService.파일내용을반영한다(
-            dto.fileIds,
-            dto.employeeIds,
+            dto.fileId,
+            dto.employeeNumbers,
             dto.year,
             dto.month,
             performedBy,
+            dto.info,
         );
 
         return {
-            reflections: result.reflections,
+            fileId: result.fileId,
+            reflectionHistoryId: result.reflectionHistoryId,
         };
     }
 
@@ -158,7 +163,7 @@ export class FileManagementController {
             throw new BadRequestException('반영 이력 ID는 필수입니다.');
         }
 
-        const result = await this.fileManagementBusinessService.이력으로되돌리기(
+        const result = await this.fileManagementBusinessService.파일내용반영이력으로되돌리기(
             dto.reflectionHistoryId,
             dto.year,
             dto.month,
@@ -167,8 +172,10 @@ export class FileManagementController {
 
         return {
             reflectionHistoryId: result.reflectionHistoryId,
-            dailySummaryResult: result.dailySummaryResult,
-            monthlySummaryResult: result.monthlySummaryResult,
+            restoreSnapshotResult: {
+                year: result.restoreSnapshotResult.year,
+                month: result.restoreSnapshotResult.month,
+            },
         };
     }
 
@@ -203,5 +210,49 @@ export class FileManagementController {
         });
 
         return result;
+    }
+
+    /**
+     * 파일 다운로드
+     *
+     * 파일 ID로 파일을 다운로드합니다.
+     */
+    @Get('files/:id/download')
+    @ApiOperation({
+        summary: '파일 다운로드',
+        description: '파일 ID로 파일을 다운로드합니다.',
+    })
+    @ApiParam({ name: 'id', description: '파일 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '파일 다운로드 성공',
+    })
+    async downloadFile(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
+        // TODO: 비즈니스 서비스에 파일 다운로드 메서드 구현 필요
+        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
+    }
+
+    /**
+     * 파일 삭제
+     *
+     * 파일 ID로 파일을 삭제합니다.
+     */
+    @Delete('files/:id')
+    @ApiOperation({
+        summary: '파일 삭제',
+        description: '파일 ID로 파일을 삭제합니다.',
+    })
+    @ApiParam({ name: 'id', description: '파일 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '파일 삭제 성공',
+    })
+    async deleteFile(@Param('id', ParseUUIDPipe) id: string, @User('id') userId: string) {
+        if (!userId) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        // TODO: 비즈니스 서비스에 파일 삭제 메서드 구현 필요
+        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
     }
 }

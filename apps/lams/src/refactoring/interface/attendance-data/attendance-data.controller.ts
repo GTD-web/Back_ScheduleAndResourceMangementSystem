@@ -12,6 +12,7 @@ import {
 import { RestoreFromSnapshotRequestDto, RestoreFromSnapshotResponseDto } from './dto/restore-from-snapshot.dto';
 import { GetSnapshotListRequestDto, GetSnapshotListResponseDto } from './dto/get-snapshot-list.dto';
 import { IGetSnapshotListResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-list-response.interface';
+import { IGetSnapshotByIdResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-by-id-response.interface';
 
 /**
  * 출입/근태 데이터 컨트롤러
@@ -158,7 +159,7 @@ export class AttendanceDataController {
     @ApiOperation({
         summary: '근태 스냅샷 저장',
         description:
-            '월간 요약 데이터를 기준으로 스냅샷을 생성합니다. 연월과 부서ID를 기준으로 해당 부서의 월간 요약 데이터를 스냅샷으로 저장합니다.',
+            '월간 요약 데이터를 기준으로 스냅샷을 생성합니다. 연월을 기준으로 회사 전체 월간 요약 데이터를 스냅샷으로 저장합니다.',
     })
     async saveAttendanceSnapshot(
         @Body() dto: SaveAttendanceSnapshotRequestDto,
@@ -168,16 +169,13 @@ export class AttendanceDataController {
             throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
         }
 
-        if (!dto.year || !dto.month || !dto.departmentId) {
-            throw new BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        if (!dto.year || !dto.month ) {
+            throw new BadRequestException('연도, 월은 필수입니다.');
         }
 
         const result = await this.attendanceDataBusinessService.근태스냅샷을저장한다({
             year: dto.year,
             month: dto.month,
-            departmentId: dto.departmentId,
-            snapshotName: dto.snapshotName,
-            description: dto.description,
             performedBy,
         });
 
@@ -212,7 +210,10 @@ export class AttendanceDataController {
             performedBy,
         });
 
-        return result;
+        return {
+            year: result.year,
+            month: result.month,
+        };
     }
 
     /**
@@ -258,6 +259,29 @@ export class AttendanceDataController {
             departmentId: dto.departmentId,
             sortBy: dto.sortBy || 'latest',
             filters: dto.filters,
+        });
+
+        return result;
+    }
+
+    /**
+     * 스냅샷 상세 조회
+     *
+     * 스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.
+     */
+    @Get('snapshots/:id')
+    @ApiOperation({
+        summary: '스냅샷 상세 조회',
+        description: '스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.',
+    })
+    @ApiParam({ name: 'id', description: '스냅샷 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '스냅샷 상세 조회 성공',
+    })
+    async getSnapshotById(@Param('id', ParseUUIDPipe) id: string): Promise<IGetSnapshotByIdResponse> {
+        const result = await this.attendanceDataBusinessService.스냅샷을ID로조회한다({
+            snapshotId: id,
         });
 
         return result;

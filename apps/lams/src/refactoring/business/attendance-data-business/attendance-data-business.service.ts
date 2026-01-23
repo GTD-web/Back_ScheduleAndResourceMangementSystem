@@ -8,13 +8,18 @@ import {
     IUpdateDailySummaryResponse,
 } from '../../context/attendance-data-context/interfaces';
 import {
-    ISaveAttendanceSnapshotCommand,
+    ISaveCompanyMonthlySnapshotCommand,
     ISaveAttendanceSnapshotResponse,
     IRestoreFromSnapshotCommand,
     IRestoreFromSnapshotResponse,
     IGetSnapshotListQuery,
     IGetSnapshotListResponse,
+    IGetSnapshotByIdQuery,
+    IGetSnapshotByIdResponse,
 } from '../../context/data-snapshot-context/interfaces';
+import { FileManagementContextService } from '../../context/file-management-context/file-management-context.service';
+
+
 
 /**
  * 출입/근태 데이터 비즈니스 서비스
@@ -29,6 +34,7 @@ export class AttendanceDataBusinessService {
     constructor(
         private readonly attendanceDataContextService: AttendanceDataContextService,
         private readonly dataSnapshotContextService: DataSnapshotContextService,
+        private readonly fileManagementContextService: FileManagementContextService,
     ) {}
 
     /**
@@ -60,16 +66,14 @@ export class AttendanceDataBusinessService {
     /**
      * 근태 스냅샷을 저장한다
      *
-     * 부서별로 계산된 월별요약-일별요약에 대한 데이터를 스냅샷으로 저장합니다.
+     * 회사 전체 월간 요약 데이터를 스냅샷으로 저장합니다.
      *
      * @param command 저장 명령
      * @returns 스냅샷 저장 결과
      */
-    async 근태스냅샷을저장한다(command: ISaveAttendanceSnapshotCommand): Promise<ISaveAttendanceSnapshotResponse> {
-        this.logger.log(
-            `근태 스냅샷 저장: year=${command.year}, month=${command.month}, departmentId=${command.departmentId}`,
-        );
-        return await this.dataSnapshotContextService.근태스냅샷을저장한다(command);
+    async 근태스냅샷을저장한다(command: ISaveCompanyMonthlySnapshotCommand): Promise<ISaveAttendanceSnapshotResponse> {
+        this.logger.log(`근태 스냅샷 저장: year=${command.year}, month=${command.month}`);
+        return await this.dataSnapshotContextService.회사전체월간요약스냅샷을저장한다(command);
     }
 
     /**
@@ -82,7 +86,64 @@ export class AttendanceDataBusinessService {
      */
     async 스냅샷으로부터복원한다(command: IRestoreFromSnapshotCommand): Promise<IRestoreFromSnapshotResponse> {
         this.logger.log(`스냅샷으로부터 복원: snapshotId=${command.snapshotId}`);
-        return await this.dataSnapshotContextService.스냅샷으로부터복원한다(command);
+
+        const snapshotData = await this.dataSnapshotContextService.스냅샷을ID로조회한다({
+            snapshotId: command.snapshotId,
+        });
+
+        // 2. children의 rawData를 수집하여 전체 eventInfo와 usedAttendance 재구성
+        if (!snapshotData.snapshot.children || snapshotData.snapshot.children.length === 0) {
+            throw new Error('스냅샷에 저장된 자식 데이터가 없습니다.');
+        }
+
+        const allEventInfos: any[] = [];
+        const allUsedAttendances: any[] = [];
+
+        snapshotData.snapshot.children.forEach((child) => {
+            if (child.rawData) {
+                if (child.rawData.eventInfo) {
+                    allEventInfos.push(...child.rawData.eventInfo);
+                }
+                if (child.rawData.usedAttendance) {
+                    allUsedAttendances.push(...child.rawData.usedAttendance);
+                }
+            }
+        });
+
+        // 3. 스냅샷 데이터로 파일 데이터 복원 (EventInfo, UsedAttendance 복원)
+        await this.fileManagementContextService.스냅샷데이터로파일데이터를복원한다(
+            {
+                year: snapshotData.snapshot.yyyy,
+                month: snapshotData.snapshot.mm,
+                eventInfos: allEventInfos,
+                usedAttendances: allUsedAttendances,
+                snapshot: snapshotData.snapshot,
+            },
+         
+        );
+
+        // 3. 일일요약 복원 (스냅샷 데이터에서 내부적으로 추출)
+        await this.attendanceDataContextService.일일요약을복원한다({
+            snapshotData: snapshotData.snapshot,
+            year: snapshotData.snapshot.yyyy,
+            month: snapshotData.snapshot.mm,
+            performedBy: command.performedBy,
+        });
+    
+        this.logger.log(`일일요약 복원 완료`);
+
+        // 4. 월간요약 복원 (스냅샷 데이터에서 내부적으로 추출)
+        await this.attendanceDataContextService.월간요약을복원한다({
+            snapshotData: snapshotData.snapshot,
+            year: snapshotData.snapshot.yyyy,
+            month: snapshotData.snapshot.mm,
+            performedBy: command.performedBy,
+        });
+
+        return {
+            year: snapshotData.snapshot.yyyy,
+            month: snapshotData.snapshot.mm,
+        };
     }
 
     /**
@@ -99,5 +160,18 @@ export class AttendanceDataBusinessService {
             `스냅샷 목록 조회: year=${query.year}, month=${query.month}, departmentId=${query.departmentId}`,
         );
         return await this.dataSnapshotContextService.스냅샷목록을조회한다(query);
+    }
+
+    /**
+     * 스냅샷을 ID로 조회한다
+     *
+     * 스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.
+     *
+     * @param query 스냅샷 ID 조회 쿼리
+     * @returns 스냅샷과 하위 스냅샷 조회 결과
+     */
+    async 스냅샷을ID로조회한다(query: IGetSnapshotByIdQuery): Promise<IGetSnapshotByIdResponse> {
+        this.logger.log(`스냅샷 ID로 조회: snapshotId=${query.snapshotId}`);
+        return await this.dataSnapshotContextService.스냅샷을ID로조회한다(query);
     }
 }

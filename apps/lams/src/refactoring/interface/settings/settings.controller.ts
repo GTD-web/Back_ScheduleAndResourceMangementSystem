@@ -1,5 +1,5 @@
-import { Controller, Get, Patch, Post, Delete, Body, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Patch, Post, Delete, Body, UseGuards, Param, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { SettingsBusinessService } from '../../business/settings-business/settings-business.service';
 import {
     GetManagerEmployeeListResponseDto,
@@ -22,11 +22,18 @@ import {
     UpdateWorkTimeOverrideResponseDto,
     DeleteWorkTimeOverrideRequestDto,
     DeleteWorkTimeOverrideResponseDto,
+    GetAttendanceTypeListResponseDto,
+    CreateAttendanceTypeRequestDto,
+    CreateAttendanceTypeResponseDto,
+    UpdateAttendanceTypeRequestDto,
+    UpdateAttendanceTypeResponseDto,
+    DeleteAttendanceTypeResponseDto,
 } from './dto/settings.dto';
 import { IGetManagerEmployeeListResponse } from '../../context/settings-context/interfaces';
 import { IGetDepartmentListForPermissionResponse } from '../../context/settings-context/interfaces';
 import { IGetHolidayListResponse } from '../../context/settings-context/interfaces';
 import { IGetWorkTimeOverrideListResponse } from '../../context/settings-context/interfaces';
+import { IGetAttendanceTypeListResponse } from '../../context/settings-context/interfaces';
 import { IUpdateEmployeeDepartmentPermissionResponse } from '../../context/settings-context/interfaces';
 import { IUpdateEmployeeExtraInfoResponse } from '../../context/settings-context/interfaces';
 import { ICreateHolidayInfoResponse } from '../../context/settings-context/interfaces';
@@ -35,6 +42,9 @@ import { IDeleteHolidayInfoResponse } from '../../context/settings-context/inter
 import { ICreateWorkTimeOverrideResponse } from '../../context/settings-context/interfaces';
 import { IUpdateWorkTimeOverrideResponse } from '../../context/settings-context/interfaces';
 import { IDeleteWorkTimeOverrideResponse } from '../../context/settings-context/interfaces';
+import { ICreateAttendanceTypeResponse } from '../../context/settings-context/interfaces';
+import { IUpdateAttendanceTypeResponse } from '../../context/settings-context/interfaces';
+import { IDeleteAttendanceTypeResponse } from '../../context/settings-context/interfaces';
 import { User } from '../../../common/decorators/user.decorator';
 
 /**
@@ -112,6 +122,26 @@ export class SettingsController {
             hasReviewPermission: dto.hasReviewPermission,
             performedBy: userId,
         });
+    }
+
+    /**
+     * 부서별 권한 조회
+     *
+     * 특정 부서에 대한 권한을 가진 직원 목록을 조회합니다.
+     */
+    @Get('permissions/departments/:departmentId')
+    @ApiOperation({
+        summary: '부서별 권한 조회',
+        description: '특정 부서에 대한 권한을 가진 직원 목록을 조회합니다.',
+    })
+    @ApiParam({ name: 'departmentId', description: '부서 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '부서별 권한 조회 성공',
+    })
+    async getDepartmentPermissions(@Param('departmentId', ParseUUIDPipe) departmentId: string) {
+        // TODO: 비즈니스 서비스에 부서별 권한 조회 메서드 구현 필요
+        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
     }
 
     /**
@@ -333,6 +363,114 @@ export class SettingsController {
     ): Promise<IDeleteWorkTimeOverrideResponse> {
         return await this.settingsBusinessService.특별근태시간을삭제한다({
             id: dto.id,
+            performedBy: userId,
+        });
+    }
+
+    /**
+     * 근태유형 목록 조회
+     *
+     * 전체 근태유형 목록을 조회합니다.
+     */
+    @Get('attendance-types')
+    @ApiOperation({
+        summary: '근태유형 목록 조회',
+        description: '전체 근태유형 목록을 조회합니다.',
+    })
+    @ApiResponse({
+        status: 200,
+        description: '근태유형 목록 조회 성공',
+        type: GetAttendanceTypeListResponseDto,
+    })
+    async getAttendanceTypeList(): Promise<IGetAttendanceTypeListResponse> {
+        return await this.settingsBusinessService.근태유형목록을조회한다({});
+    }
+
+    /**
+     * 근태유형 생성
+     *
+     * 새로운 근태유형을 추가합니다.
+     */
+    @Post('attendance-types')
+    @ApiOperation({
+        summary: '근태유형 생성',
+        description: '새로운 근태유형을 추가합니다.',
+    })
+    @ApiResponse({
+        status: 201,
+        description: '근태유형 생성 성공',
+        type: CreateAttendanceTypeResponseDto,
+    })
+    async createAttendanceType(
+        @Body() dto: CreateAttendanceTypeRequestDto,
+        @User('id') userId: string,
+    ): Promise<ICreateAttendanceTypeResponse> {
+        return await this.settingsBusinessService.근태유형을생성한다({
+            title: dto.title,
+            workTime: dto.workTime,
+            isRecognizedWorkTime: dto.isRecognizedWorkTime,
+            startWorkTime: dto.startWorkTime,
+            endWorkTime: dto.endWorkTime,
+            deductedAnnualLeave: dto.deductedAnnualLeave,
+            performedBy: userId,
+        });
+    }
+
+    /**
+     * 근태유형 수정
+     *
+     * 기존 근태유형 정보를 수정합니다.
+     */
+    @Patch('attendance-types/:id')
+    @ApiOperation({
+        summary: '근태유형 수정',
+        description: '기존 근태유형 정보를 수정합니다.',
+    })
+    @ApiParam({ name: 'id', description: '근태유형 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '근태유형 수정 성공',
+        type: UpdateAttendanceTypeResponseDto,
+    })
+    async updateAttendanceType(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateAttendanceTypeRequestDto,
+        @User('id') userId: string,
+    ): Promise<IUpdateAttendanceTypeResponse> {
+        return await this.settingsBusinessService.근태유형을수정한다({
+            id,
+            title: dto.title,
+            workTime: dto.workTime,
+            isRecognizedWorkTime: dto.isRecognizedWorkTime,
+            startWorkTime: dto.startWorkTime,
+            endWorkTime: dto.endWorkTime,
+            deductedAnnualLeave: dto.deductedAnnualLeave,
+            performedBy: userId,
+        });
+    }
+
+    /**
+     * 근태유형 삭제
+     *
+     * 근태유형을 삭제합니다.
+     */
+    @Delete('attendance-types/:id')
+    @ApiOperation({
+        summary: '근태유형 삭제',
+        description: '근태유형을 삭제합니다.',
+    })
+    @ApiParam({ name: 'id', description: '근태유형 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '근태유형 삭제 성공',
+        type: DeleteAttendanceTypeResponseDto,
+    })
+    async deleteAttendanceType(
+        @Param('id', ParseUUIDPipe) id: string,
+        @User('id') userId: string,
+    ): Promise<IDeleteAttendanceTypeResponse> {
+        return await this.settingsBusinessService.근태유형을삭제한다({
+            id,
             performedBy: userId,
         });
     }

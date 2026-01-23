@@ -12,9 +12,8 @@ import { DomainFileContentReflectionHistoryModule } from '../../domain/file-cont
 import { DomainEventInfoModule } from '../../domain/event-info/event-info.module';
 import { DomainUsedAttendanceModule } from '../../domain/used-attendance/used-attendance.module';
 import { DomainAttendanceTypeModule } from '../../domain/attendance-type/attendance-type.module';
-import { DomainEmployeeModule } from '@libs/modules/employee/employee.module';
-import { DataSnapshotContextModule } from '../data-snapshot-context/data-snapshot-context.module';
 import { StorageServiceProvider } from '../../integrations/storage';
+import { DomainDataSnapshotInfoModule } from '../../domain/data-snapshot-info/data-snapshot-info.module';
 
 /**
  * 파일관리 컨텍스트 모듈
@@ -37,8 +36,7 @@ export class FileManagementContextModule {
                 DomainEventInfoModule,
                 DomainUsedAttendanceModule,
                 DomainAttendanceTypeModule,
-                DomainEmployeeModule,
-                DataSnapshotContextModule, // 스냅샷 저장을 위해 필요
+                DomainDataSnapshotInfoModule,
                 // 두 스토리지 모듈을 모두 임포트 (StorageServiceProvider에서 환경 변수에 따라 선택)
                 S3StorageModule,
                 LocalStorageModule,

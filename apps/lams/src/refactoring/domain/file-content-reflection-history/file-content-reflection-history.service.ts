@@ -5,8 +5,6 @@ import { FileContentReflectionHistory } from './file-content-reflection-history.
 import {
     CreateFileContentReflectionHistoryData,
     UpdateFileContentReflectionHistoryData,
-    ReflectionStatus,
-    ReflectionType,
     FileContentReflectionHistoryDTO,
 } from './file-content-reflection-history.types';
 
@@ -41,9 +39,8 @@ export class DomainFileContentReflectionHistoryService {
 
         const history = new FileContentReflectionHistory(
             data.fileId,
-            data.type,
-            data.data,
-            data.status || ReflectionStatus.PENDING,
+            data.dataSnapshotInfoId || null,
+            data.info || null,
         );
 
         const saved = await repository.save(history);
@@ -76,56 +73,6 @@ export class DomainFileContentReflectionHistoryService {
     }
 
     /**
-     * 상태별 반영 이력 목록을 조회한다
-     */
-    async 상태별목록조회한다(status: ReflectionStatus): Promise<FileContentReflectionHistoryDTO[]> {
-        const histories = await this.repository.find({
-            where: { status, deleted_at: IsNull() },
-            order: { created_at: 'DESC' },
-        });
-        return histories.map((history) => history.DTO변환한다());
-    }
-
-    /**
-     * 타입별 반영 이력 목록을 조회한다
-     */
-    async 타입별목록조회한다(type: ReflectionType): Promise<FileContentReflectionHistoryDTO[]> {
-        const histories = await this.repository.find({
-            where: { type, deleted_at: IsNull() },
-            order: { created_at: 'DESC' },
-        });
-        return histories.map((history) => history.DTO변환한다());
-    }
-
-    /**
-     * 대기 중인 반영 이력 목록을 조회한다
-     */
-    async 대기중목록조회한다(): Promise<FileContentReflectionHistoryDTO[]> {
-        return this.상태별목록조회한다(ReflectionStatus.PENDING);
-    }
-
-    /**
-     * 처리 중인 반영 이력 목록을 조회한다
-     */
-    async 처리중목록조회한다(): Promise<FileContentReflectionHistoryDTO[]> {
-        return this.상태별목록조회한다(ReflectionStatus.PROCESSING);
-    }
-
-    /**
-     * 완료된 반영 이력 목록을 조회한다
-     */
-    async 완료된목록조회한다(): Promise<FileContentReflectionHistoryDTO[]> {
-        return this.상태별목록조회한다(ReflectionStatus.COMPLETED);
-    }
-
-    /**
-     * 실패한 반영 이력 목록을 조회한다
-     */
-    async 실패한목록조회한다(): Promise<FileContentReflectionHistoryDTO[]> {
-        return this.상태별목록조회한다(ReflectionStatus.FAILED);
-    }
-
-    /**
      * 파일 내용 반영 이력 정보를 수정한다
      */
     async 수정한다(
@@ -140,7 +87,13 @@ export class DomainFileContentReflectionHistoryService {
             throw new NotFoundException(`파일 내용 반영 이력을 찾을 수 없습니다. (id: ${id})`);
         }
 
-        history.업데이트한다(data.status, data.data);
+        history.업데이트한다(
+            data.dataSnapshotInfoId || null,
+            data.info || null,
+        );
+        if (data.reflectedAt !== undefined) {
+            history.reflected_at = data.reflectedAt;
+        }
 
         // 수정자 정보 설정
         history.수정자설정한다(userId);
@@ -161,46 +114,6 @@ export class DomainFileContentReflectionHistoryService {
         }
 
         history.완료처리한다();
-        history.수정자설정한다(userId);
-        history.메타데이터업데이트한다(userId);
-
-        const saved = await repository.save(history);
-        return saved.DTO변환한다();
-    }
-
-    /**
-     * 반영 실패 처리
-     */
-    async 실패처리한다(id: string, userId: string, manager?: EntityManager): Promise<FileContentReflectionHistoryDTO> {
-        const repository = this.getRepository(manager);
-        const history = await repository.findOne({ where: { id } });
-        if (!history) {
-            throw new NotFoundException(`파일 내용 반영 이력을 찾을 수 없습니다. (id: ${id})`);
-        }
-
-        history.실패처리한다();
-        history.수정자설정한다(userId);
-        history.메타데이터업데이트한다(userId);
-
-        const saved = await repository.save(history);
-        return saved.DTO변환한다();
-    }
-
-    /**
-     * 처리 중 상태로 변경
-     */
-    async 처리중처리한다(
-        id: string,
-        userId: string,
-        manager?: EntityManager,
-    ): Promise<FileContentReflectionHistoryDTO> {
-        const repository = this.getRepository(manager);
-        const history = await repository.findOne({ where: { id } });
-        if (!history) {
-            throw new NotFoundException(`파일 내용 반영 이력을 찾을 수 없습니다. (id: ${id})`);
-        }
-
-        history.처리중처리한다();
         history.수정자설정한다(userId);
         history.메타데이터업데이트한다(userId);
 

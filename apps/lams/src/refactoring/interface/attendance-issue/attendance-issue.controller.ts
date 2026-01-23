@@ -154,4 +154,51 @@ export class AttendanceIssueController {
         );
         return result.issue;
     }
+
+    /**
+     * 근태 이슈 수정 요청 (직원용)
+     */
+    @Patch(':id/request-correction')
+    @ApiOperation({
+        summary: '근태 이슈 수정 요청',
+        description: '근태 이슈에 대한 수정을 요청합니다. 관리자가 수정 정보를 설정할 수 있도록 요청합니다.',
+    })
+    @ApiParam({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    async requestCorrection(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: { description?: string },
+        @User('id') userId: string,
+    ): Promise<AttendanceIssueResponseDto> {
+        if (!userId) {
+            throw new BadRequestException('직원 정보를 찾을 수 없습니다.');
+        }
+
+        // TODO: 비즈니스 서비스에 수정요청 메서드 구현 필요
+        const result = await this.attendanceIssueBusinessService.근태이슈를조회한다(id);
+        return result.issue;
+    }
+
+    /**
+     * 근태 이슈 재요청 (직원용)
+     */
+    @Patch(':id/re-request')
+    @ApiOperation({
+        summary: '근태 이슈 재요청',
+        description: '미반영 처리된 근태 이슈를 재요청합니다. 사유를 수정하여 다시 요청할 수 있습니다.',
+    })
+    @ApiParam({ name: 'id', description: '근태 이슈 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    async reRequest(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateAttendanceIssueDescriptionRequestDto,
+        @User('id') userId: string,
+    ): Promise<AttendanceIssueResponseDto> {
+        if (!userId) {
+            throw new BadRequestException('직원 정보를 찾을 수 없습니다.');
+        }
+
+        // TODO: 비즈니스 서비스에 재요청 메서드 구현 필요
+        // 일단 사유 수정으로 처리
+        const result = await this.attendanceIssueBusinessService.근태이슈사유를수정한다(id, dto.description, userId);
+        return result.issue;
+    }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, IsNull, Repository } from 'typeorm';
 import { File } from './file.entity';
 import { FileDTO } from './file.types';
-import { CreateFileData, UpdateFileData, FileStatus } from './file.types';
+import { CreateFileData, UpdateFileData } from './file.types';
 
 /**
  * 파일 서비스
@@ -35,9 +35,11 @@ export class DomainFileService {
             data.fileName,
             data.filePath,
             data.fileOriginalName,
+            data.fileType,
             data.year,
             data.month,
             data.data,
+            data.orgData,
         );
 
         const saved = await repository.save(file);
@@ -77,17 +79,6 @@ export class DomainFileService {
     }
 
     /**
-     * 파일 상태별 목록을 조회한다
-     */
-    async 상태별목록조회한다(status: FileStatus): Promise<FileDTO[]> {
-        const files = await this.repository.find({
-            where: { status, deleted_at: IsNull() },
-            order: { created_at: 'DESC' },
-        });
-        return files.map((file) => file.DTO변환한다());
-    }
-
-    /**
      * 연도/월별 파일 목록을 조회한다
      */
     async 연도월별목록조회한다(year: string, month: string): Promise<FileDTO[]> {
@@ -114,20 +105,6 @@ export class DomainFileService {
     }
 
     /**
-     * 읽지 않은 파일 목록을 조회한다
-     */
-    async 읽지않은목록조회한다(): Promise<FileDTO[]> {
-        return this.상태별목록조회한다(FileStatus.UNREAD);
-    }
-
-    /**
-     * 에러 파일 목록을 조회한다
-     */
-    async 에러목록조회한다(): Promise<FileDTO[]> {
-        return this.상태별목록조회한다(FileStatus.ERROR);
-    }
-
-    /**
      * 파일 정보를 수정한다
      */
     async 수정한다(id: string, data: UpdateFileData, userId: string, manager?: EntityManager): Promise<FileDTO> {
@@ -140,50 +117,15 @@ export class DomainFileService {
         file.업데이트한다(
             data.fileName,
             data.fileOriginalName,
+            data.fileType,
             data.filePath,
             data.year,
             data.month,
-            data.status,
-            data.error,
+            data.data,
+            data.orgData,
         );
 
         // 수정자 정보 설정
-        file.수정자설정한다(userId);
-        file.메타데이터업데이트한다(userId);
-
-        const saved = await repository.save(file);
-        return saved.DTO변환한다();
-    }
-
-    /**
-     * 파일 읽음 처리
-     */
-    async 읽음처리한다(id: string, userId: string, manager?: EntityManager): Promise<FileDTO> {
-        const repository = this.getRepository(manager);
-        const file = await repository.findOne({ where: { id } });
-        if (!file) {
-            throw new NotFoundException(`파일을 찾을 수 없습니다. (id: ${id})`);
-        }
-
-        file.읽음처리한다();
-        file.수정자설정한다(userId);
-        file.메타데이터업데이트한다(userId);
-
-        const saved = await repository.save(file);
-        return saved.DTO변환한다();
-    }
-
-    /**
-     * 파일 에러 처리
-     */
-    async 에러처리한다(id: string, error: any, userId: string, manager?: EntityManager): Promise<FileDTO> {
-        const repository = this.getRepository(manager);
-        const file = await repository.findOne({ where: { id } });
-        if (!file) {
-            throw new NotFoundException(`파일을 찾을 수 없습니다. (id: ${id})`);
-        }
-
-        file.에러처리한다(error);
         file.수정자설정한다(userId);
         file.메타데이터업데이트한다(userId);
 

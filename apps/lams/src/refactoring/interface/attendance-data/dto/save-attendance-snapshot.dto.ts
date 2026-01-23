@@ -18,8 +18,8 @@ export class SaveAttendanceSnapshotRequestDto {
 
     @ApiProperty({ description: '부서 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
     @IsUUID()
-    @IsNotEmpty()
-    departmentId: string;
+    @IsOptional()
+    departmentId?: string;
 
     @ApiPropertyOptional({ description: '스냅샷 이름', example: '2024년 1월 근태 스냅샷' })
     @IsString()

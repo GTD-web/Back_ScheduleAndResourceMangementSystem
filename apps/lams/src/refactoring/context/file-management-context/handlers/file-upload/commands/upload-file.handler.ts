@@ -4,10 +4,9 @@ import { DataSource } from 'typeorm';
 import { UploadFileCommand } from './upload-file.command';
 import { IUploadFileResponse } from '../../../interfaces';
 import { DomainFileService } from '../../../../../domain/file/file.service';
-import { FileStatus } from '../../../../../domain/file/file.types';
 import { IStorageService } from '../../../../../integrations/storage';
 import { ExcelReaderService } from '../../../../../integrations/excel-reader/excel-reader.service';
-import { ReflectionType } from '../../../../../domain/file-content-reflection-history/file-content-reflection-history.types';
+import { FileType } from '../../../../../domain/file/file.types';
 
 /**
  * 파일 업로드 핸들러
@@ -24,6 +23,7 @@ import { ReflectionType } from '../../../../../domain/file-content-reflection-hi
 @CommandHandler(UploadFileCommand)
 export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUploadFileResponse> {
     private readonly logger = new Logger(UploadFileHandler.name);
+ 
 
     // 한글-영어 컬럼명 매핑 (타입별로 분리)
     private readonly koreanToEnglish = {
@@ -48,10 +48,22 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
         },
         attendance: {
             기간: 'period',
+            이름: 'name',
+            상태: 'status',
+            신청내역: 'requestHistory',
+            신청일: 'requestDate',
+            사용일수: 'usedDays',
+            문서번호: 'documentNumber',
             신청일수: 'requestDays',
+            근태항목: 'attendanceItem',
             근태구분: 'type',
             ERP사번: 'employeeNumber',
             부서: 'department',
+            종결일자: 'closingDate',
+            출장지: 'businessTripLocation',
+            교통수단: 'transportation',
+            출장목적: 'businessTripPurpose',
+            비고: 'remarks',
         },
     };
 
@@ -79,7 +91,8 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
                 // 2. 엑셀 파일 읽기 및 검증 (저장소에 저장하기 전에)
                 let rawExcelData: Record<string, any>[] = [];
                 let excelData: Record<string, Record<string, any>[]> = {}; // 직원별로 그룹화된 데이터
-                let fileType: ReflectionType | null = null;
+                let fileType: string | null = null;
+                let orgData: Record<string, any> | null = null;
 
                 try {
                     // 엑셀 파일 파싱 (메모리에서 직접 읽기)
@@ -120,14 +133,17 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
 
                     // 엑셀 데이터를 영문 키값으로 재구성 (매핑된 키값만 저장)
                     const mapping =
-                        fileType === ReflectionType.EVENT_HISTORY
+                        fileType === FileType.EVENT_HISTORY
                             ? this.koreanToEnglish.event
                             : this.koreanToEnglish.attendance;
 
-                    const reconstructedData = this.reconstructDataWithEnglishKeys(rawExcelData, mapping, fileType);
+                    const reconstructedData = this.reconstructDataWithEnglishKeys(rawExcelData, mapping);
 
                     // 직원별로 구분 (employeeNumber가 있는 경우만)
-                    excelData = this.groupByEmployee(reconstructedData, fileType);
+                    excelData = this.groupByEmployee(reconstructedData);
+
+                    // 조직/부서 정보 구성
+                    orgData = this.buildOrgData(reconstructedData);
 
                     // 2-2. 검증 성공
                 } catch (error) {
@@ -156,19 +172,15 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
                         fileName: uploadResult.fileKey,
                         filePath: uploadResult.url || uploadResult.fileKey,
                         fileOriginalName: file.originalname, // 컨트롤러에서 이미 디코딩된 파일명
+                        fileType: fileType as FileType,
                         uploadBy,
                         year,
                         month,
-                        data: {
-                            fileType,
-                            excelData, // 직원별로 그룹화된 데이터 (영문 키값, employeeNumber 필수) - 그룹별 구조 유지
-                        },
+                        data: excelData,
+                        orgData: orgData ?? null,
                     },
                     manager,
                 );
-
-                // 파일 상태를 읽음으로 변경
-                await this.fileService.읽음처리한다(refactoringFile.id, uploadBy, manager);
 
                 this.logger.log(`✅ 파일 업로드 처리 완료: ${refactoringFile.id}`);
 
@@ -203,7 +215,7 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
      */
     private validateAndDetermineFileType(columnNames: string[]): {
         isValid: boolean;
-        fileType: ReflectionType | null;
+        fileType: string | null;
     } {
         const requiredColumns = this.getRequiredColumns();
 
@@ -220,14 +232,14 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
         if (isEventFormat) {
             return {
                 isValid: true,
-                fileType: ReflectionType.EVENT_HISTORY,
+                fileType: FileType.EVENT_HISTORY,
             };
         }
 
         if (isAttendanceFormat) {
             return {
                 isValid: true,
-                fileType: ReflectionType.ATTENDANCE_DATA,
+                fileType: FileType.ATTENDANCE_DATA,
             };
         }
 
@@ -259,7 +271,6 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
     private reconstructDataWithEnglishKeys(
         excelData: Record<string, any>[],
         mapping: Record<string, string>,
-        fileType: ReflectionType,
     ): Record<string, any>[] {
         return excelData.map((row) => {
             const reconstructedRow: Record<string, any> = {};
@@ -287,10 +298,7 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
      * 직원별로 데이터 그룹화
      * employeeNumber가 없는 경우는 저장하지 않습니다.
      */
-    private groupByEmployee(
-        excelData: Record<string, any>[],
-        fileType: ReflectionType,
-    ): Record<string, Record<string, any>[]> {
+    private groupByEmployee(excelData: Record<string, any>[]): Record<string, Record<string, any>[]> {
         const grouped: Record<string, Record<string, any>[]> = {};
 
         excelData.forEach((row) => {
@@ -306,5 +314,39 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
         });
 
         return grouped;
+    }
+
+    /**
+     * 조직/부서 정보 구성
+     *
+     * koreanToEnglish 매핑 결과를 기준으로 조직/부서와 이름을 연결해 저장합니다.
+     */
+    private buildOrgData(excelData: Record<string, any>[]): Record<string, any> | null {
+        const departments: Record<string, Array<{ employeeNumber: string; name: string | null; position: string | null }>> =
+            {};
+
+        excelData.forEach((row) => {
+            const employeeNumber = row.employeeNumber;
+            const department = row.department;
+            if (!employeeNumber || !department) {
+                return;
+            }
+
+            if (!departments[department]) {
+                departments[department] = [];
+            }
+
+            departments[department].push({
+                employeeNumber,
+                name: row.name ?? null,
+                position: row.position ?? null,
+            });
+        });
+
+        if (Object.keys(departments).length === 0) {
+            return null;
+        }
+
+        return departments;
     }
 }

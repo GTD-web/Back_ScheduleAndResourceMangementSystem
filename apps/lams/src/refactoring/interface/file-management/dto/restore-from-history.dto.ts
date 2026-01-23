@@ -37,18 +37,9 @@ export class RestoreFromHistoryResponseDto {
     @ApiProperty({ description: '원본 반영 이력 ID' })
     reflectionHistoryId: string;
 
-    @ApiProperty({ description: '일일 요약 생성 결과' })
-    dailySummaryResult: {
-        statistics: {
-            dailyEventSummaryCount: number;
-            attendanceIssueCount: number;
-        };
-    };
-
-    @ApiProperty({ description: '월간 요약 생성 결과' })
-    monthlySummaryResult: {
-        statistics: {
-            monthlyEventSummaryCount: number;
-        };
+    @ApiProperty({ description: '스냅샷으로부터 복원 결과' })
+    restoreSnapshotResult: {
+        year: string;
+        month: string;
     };
 }

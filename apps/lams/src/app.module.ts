@@ -13,6 +13,7 @@ import { jwtConfig } from '@libs/configs/jwt.config';
 import { JwtStrategy } from '../libs/strategies/jwt.strategy';
 import { OrganizationMigrationModule } from './refactoring/integrations/migration/migration.module';
 import { InitModule } from './refactoring/integrations/init/init.module';
+import { PrvDbMgrModule } from './refactoring/integrations/prv-db-mgr/prv-db-mgr.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { InitModule } from './refactoring/integrations/init/init.module';
         InterfaceModule, // 인터페이스 모듈 (API 엔드포인트)
         OrganizationMigrationModule,
         InitModule, // 기본 데이터 초기화 모듈
+        PrvDbMgrModule,
     ],
     controllers: [],
     providers: [

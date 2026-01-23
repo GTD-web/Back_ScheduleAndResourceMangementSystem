@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrganizationManagementContextService } from './organization-management-context.service';
-import { DEPARTMENT_QUERY_HANDLERS } from './handlers';
+import { QUERY_HANDLERS } from './handlers';
 import { DomainDepartmentModule } from '@libs/modules/department/department.module';
 import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/employee-department-position-history/employee-department-position-history.module';
+import { DomainEmployeeModule } from '@libs/modules/employee/employee.module';
 
 /**
  * 조직 관리 Context Module
@@ -17,10 +18,11 @@ import { DomainEmployeeDepartmentPositionHistoryModule } from '@libs/modules/emp
         TypeOrmModule.forFeature([]),
         DomainDepartmentModule,
         DomainEmployeeDepartmentPositionHistoryModule,
+        DomainEmployeeModule,
     ],
     providers: [
         OrganizationManagementContextService,
-        ...DEPARTMENT_QUERY_HANDLERS, // Query Handler 등록
+        ...QUERY_HANDLERS, // Query Handler 등록
     ],
     exports: [OrganizationManagementContextService],
 })
