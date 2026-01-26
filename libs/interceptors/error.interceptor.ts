@@ -8,7 +8,6 @@ export class ErrorInterceptor implements NestInterceptor {
         return next.handle().pipe(
             catchError((error) => {
                 if (error instanceof HttpException) {
-                    console.error('Error:', error);
                     const response = error.getResponse();
                     const message = (response as any).message;
                     const errorMessage =
@@ -26,7 +25,6 @@ export class ErrorInterceptor implements NestInterceptor {
                 }
 
                 // 예상치 못한 에러의 경우
-                console.error('Unexpected error:', error);
                 return throwError(() => ({
                     success: false,
                     message: '예상치 못한 오류가 발생했습니다.',
