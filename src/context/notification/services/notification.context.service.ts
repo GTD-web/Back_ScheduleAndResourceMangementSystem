@@ -427,7 +427,6 @@ export class NotificationContextService {
         }
 
         // 포털 알림 전송 (FCM) - deviceType이 'prod'인 토큰만 필터링
-        this.logger.log('linkUrl', PORTALTokens.map((emp) => emp.tokens));
         const prodEmployeeTokens = PORTALTokens.map((emp) => ({
             ...emp,
             tokens: emp.tokens.filter((token) => token.deviceType.includes(ENV()) || token.deviceType === 'prod'),
