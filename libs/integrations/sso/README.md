@@ -7,7 +7,7 @@ Lumir Company SSO SDK를 NestJS에서 사용하기 위한 통합 모듈입니다
 `.env` 파일에 다음 환경 변수를 추가해주세요:
 
 ```bash
-SSO_BASE_URL=https://lsso.vercel.app
+SSO_BASE_URL=https://lsso.lumir.space
 SSO_CLIENT_ID=your-client-id
 SSO_CLIENT_SECRET=your-client-secret
 ```
@@ -16,10 +16,10 @@ SSO_CLIENT_SECRET=your-client-secret
 
 ```bash
 # 개발 서버
-SSO_BASE_URL=https://lsso-git-dev-lumir-tech7s-projects.vercel.app
+SSO_BASE_URL=https://lsso-dev.lumir.space
 
 # 실서버
-SSO_BASE_URL=https://lsso.vercel.app
+SSO_BASE_URL=https://lsso.lumir.space
 ```
 
 ## 사용 방법
