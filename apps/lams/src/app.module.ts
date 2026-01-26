@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from '@libs/database/database.module';
-import { DomainModule } from './refactoring/domain/domain.module';
-import { InterfaceModule } from './refactoring/interface/interface.module';
+import { DomainModule } from './domain/domain.module';
+import { InterfaceModule } from './interface/interface.module';
 import * as path from 'path';
 import { DB_CONFIG, JWT_CONFIG, SSO_CONFIG } from '../libs/configs/env.config';
 import { APP_GUARD } from '@nestjs/core';
@@ -11,9 +11,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from '@libs/configs/jwt.config';
 import { JwtStrategy } from '../libs/strategies/jwt.strategy';
-import { OrganizationMigrationModule } from './refactoring/integrations/migration/migration.module';
-import { InitModule } from './refactoring/integrations/init/init.module';
-import { PrvDbMgrModule } from './refactoring/integrations/prv-db-mgr/prv-db-mgr.module';
+import { OrganizationMigrationModule } from './integrations/migration/migration.module';
+import { InitModule } from './integrations/init/init.module';
+import { PrvDbMgrModule } from './integrations/prv-db-mgr/prv-db-mgr.module';
 
 @Module({
     imports: [

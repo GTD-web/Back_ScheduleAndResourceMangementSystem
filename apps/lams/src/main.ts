@@ -1,9 +1,8 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
-import { RequestInterceptor } from './common/interceptors/request.interceptor';
+import { RequestInterceptor } from '../libs/interceptors/request.interceptor';
 import { ValidationPipe } from '@nestjs/common';
-import { setupSwagger } from './common/swagger/swagger';
+import { setupSwagger } from '../libs/swagger/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { config } from 'dotenv';
 
@@ -43,6 +42,6 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
     setupSwagger(app, []);
-    await app.listen(process.env.APP_PORT || 3060);
+    await app.listen(process.env.APP_PORT || 3060);8
 }
 bootstrap();

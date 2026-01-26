@@ -1,0 +1,289 @@
+import { Controller, Get, Query, Patch, Body, Param, BadRequestException, ParseUUIDPipe, Post } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { User } from '../../../libs/decorators/user.decorator';
+import { AttendanceDataBusinessService } from '../../business/attendance-data-business/attendance-data-business.service';
+import { GetMonthlySummariesRequestDto, GetMonthlySummariesResponseDto } from './dto/get-monthly-summaries.dto';
+import { IGetMonthlySummariesResponse } from '../../context/attendance-data-context/interfaces/response/get-monthly-summaries-response.interface';
+import { UpdateDailySummaryRequestDto, UpdateDailySummaryResponseDto } from './dto/update-daily-summary.dto';
+import {
+    SaveAttendanceSnapshotRequestDto,
+    SaveAttendanceSnapshotResponseDto,
+} from './dto/save-attendance-snapshot.dto';
+import { RestoreFromSnapshotRequestDto, RestoreFromSnapshotResponseDto } from './dto/restore-from-snapshot.dto';
+import { GetSnapshotListRequestDto, GetSnapshotListResponseDto } from './dto/get-snapshot-list.dto';
+import { IGetSnapshotListResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-list-response.interface';
+import { IGetSnapshotByIdResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-by-id-response.interface';
+
+/**
+ * 출입/근태 데이터 컨트롤러
+ *
+ * 출입/근태 데이터 조회 API를 제공합니다.
+ */
+@ApiTags('출입/근태 데이터')
+@ApiBearerAuth()
+@Controller('attendance-data')
+export class AttendanceDataController {
+    constructor(private readonly attendanceDataBusinessService: AttendanceDataBusinessService) {}
+
+    /**
+     * 월간 요약 조회
+     *
+     * 연도, 월, 부서ID를 기준으로 월간 요약, 일간 요약, 일간 요약의 수정이력을 조회합니다.
+     */
+    @Get('monthly-summaries')
+    @ApiOperation({
+        summary: '월간 요약 조회',
+        description: '연도, 월, 부서ID를 기준으로 월간 요약, 일간 요약, 일간 요약의 수정이력을 조회합니다.',
+    })
+    @ApiQuery({ name: 'year', description: '연도', example: '2024', required: true })
+    @ApiQuery({ name: 'month', description: '월', example: '01', required: true })
+    @ApiQuery({
+        name: 'departmentId',
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    })
+    @ApiResponse({
+        status: 200,
+        description: '월간 요약 조회 성공',
+        type: GetMonthlySummariesResponseDto,
+    })
+    async getMonthlySummaries(
+        @Query('year') year: string,
+        @Query('month') month: string,
+        @Query('departmentId') departmentId: string,
+    ): Promise<IGetMonthlySummariesResponse> {
+        if (!year || !month || !departmentId) {
+            throw new BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.월간요약을조회한다({
+            year,
+            month,
+            departmentId,
+        });
+
+        return result;
+    }
+
+    /**
+     * 일간 요약 수정
+     *
+     * 일간 요약의 출근시간, 퇴근시간 또는 근태유형을 수정하고 수정이력을 생성합니다.
+     * 출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없으며, 둘 중 하나만 선택하여 수정할 수 있습니다.
+     */
+    @Patch('daily-summaries/:id')
+    @ApiOperation({
+        summary: '일간 요약 수정',
+        description: `일간 요약의 출근시간/퇴근시간 또는 근태유형을 수정하고 수정이력을 생성합니다.
+
+**수정 유형:**
+- 출퇴근 시간 수정: enter와 leave를 함께 제공
+- 근태유형 수정: attendanceTypeId를 제공
+
+**근태 유형 ID 목록:**
+- 7d45683d-7476-4e86-859f-961637e48526: 연차
+- 1d6c5ba5-aeca-470b-9277-259d673b5e0d: 오전반차
+- 71f93733-6cab-4cab-bbaa-95a95814dc0c: 오후반차
+- a9c8ff8a-c352-4049-be2b-3a0d27f3d380: 공가
+- 9aaf5f97-ecdf-47b0-89c5-a7bd92da8655: 오전공가
+- 75160594-81c4-48b3-bb80-6c1ab9082536: 오후공가
+- b3b3be88-100c-436d-a772-3b0daeecf352: 출장
+- f4482432-fab2-4b2d-8efc-fe3a216d3015: 오전출장
+- 1d35f520-7f61-47f1-ab7d-0d7ad8e70725: 오후출장
+- 55181add-95a5-4908-95de-0a4b77ac5e07: 교육
+- 33e5d2ad-7481-4f27-97f4-59b708a53f98: 오전교육
+- bb07d807-1a25-4164-a1ee-ffe64ab277ea: 오후교육
+- 287c156f-70d4-4eca-b482-d17b0be6d620: 경조휴가
+- 6f97ad90-1b39-4450-9d92-7517bdaed833: 보건휴가(오전 반차)
+- 7e098c10-880b-463f-85b2-88d11f541249: 병가
+- 3eb5efba-a7d4-4828-9118-0d360f55a7d7: 생일오전반차
+- bc84e4a1-bb97-4a8f-b04b-88d0d65e4895: 생일오후반차
+- f99cbfc9-456e-43a0-bf60-717b9bf65dc5: 대체휴가
+- c5d8642a-6697-44b9-9eab-715ac3aa2198: 오전대체휴가
+- 140bcff6-c34f-419c-8ea6-826e4243d0c3: 오후대체휴가
+- fd7dee04-cfc1-4c8f-9aea-c8d8876aa6cb: 무급휴가
+- 3d2f3517-8aef-4277-b055-bb5d7a0b5e22: 보건휴가(오전반차)
+- ec38a9d6-0c28-4d4b-bd0d-6fb6e173f479: 국내출장
+- e5242c22-9be8-4fb3-b041-dfa01614539d: 국외출장
+- 012db601-840d-4777-b1ee-4eecdd7df041: 사외교육
+- fe305bb7-f228-4695-90af-9ad46fd57424: 사내교육`,
+    })
+    @ApiParam({ name: 'id', description: '일간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    async updateDailySummary(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateDailySummaryRequestDto,
+        @User('id') performedBy: string,
+    ): Promise<UpdateDailySummaryResponseDto> {
+        if (!performedBy) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        // 출퇴근 시간 수정 또는 근태유형 수정 중 하나만 가능
+        const isTimeUpdate = dto.enter !== undefined || dto.leave !== undefined;
+        const isAttendanceTypeUpdate = dto.attendanceTypeIds !== undefined && dto.attendanceTypeIds.length > 0;
+
+        if (!isTimeUpdate && !isAttendanceTypeUpdate) {
+            throw new BadRequestException(
+                '출퇴근 시간(enter 또는 leave) 또는 근태유형(attendanceTypeIds) 중 하나는 필수입니다.',
+            );
+        }
+
+        if (isTimeUpdate && isAttendanceTypeUpdate) {
+            throw new BadRequestException('출퇴근 시간 수정과 근태유형 수정은 동시에 할 수 없습니다.');
+        }
+
+        // 근태유형은 최대 2개까지
+        if (isAttendanceTypeUpdate && dto.attendanceTypeIds!.length > 2) {
+            throw new BadRequestException('근태유형은 최대 2개까지 설정 가능합니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.일간요약을수정한다({
+            dailySummaryId: id,
+            enter: dto.enter,
+            leave: dto.leave,
+            attendanceTypeIds: dto.attendanceTypeIds,
+            reason: dto.reason,
+            performedBy,
+        });
+
+        return result;
+    }
+
+    /**
+     * 근태 스냅샷 저장
+     *
+     * 월간 요약 데이터를 기준으로 스냅샷을 생성합니다.
+     */
+    @Post('snapshots')
+    @ApiOperation({
+        summary: '근태 스냅샷 저장',
+        description:
+            '월간 요약 데이터를 기준으로 스냅샷을 생성합니다. 연월을 기준으로 회사 전체 월간 요약 데이터를 스냅샷으로 저장합니다.',
+    })
+    async saveAttendanceSnapshot(
+        @Body() dto: SaveAttendanceSnapshotRequestDto,
+        @User('id') performedBy: string,
+    ): Promise<SaveAttendanceSnapshotResponseDto> {
+        if (!performedBy) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        if (!dto.year || !dto.month ) {
+            throw new BadRequestException('연도, 월은 필수입니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.근태스냅샷을저장한다({
+            year: dto.year,
+            month: dto.month,
+            performedBy,
+        });
+
+        return result;
+    }
+
+    /**
+     * 스냅샷으로부터 복원
+     *
+     * 선택된 스냅샷 데이터를 기반으로 월간/일간 요약 데이터를 덮어씌웁니다.
+     */
+    @Post('snapshots/restore')
+    @ApiOperation({
+        summary: '스냅샷으로부터 복원',
+        description:
+            '선택된 스냅샷 데이터를 기반으로 월간/일간 요약 데이터를 덮어씌웁니다. 스냅샷에 저장된 데이터를 기반으로 해당 연월의 요약 데이터를 재생성합니다.',
+    })
+    async restoreFromSnapshot(
+        @Body() dto: RestoreFromSnapshotRequestDto,
+        @User('id') performedBy: string,
+    ): Promise<RestoreFromSnapshotResponseDto> {
+        if (!performedBy) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        if (!dto.snapshotId) {
+            throw new BadRequestException('스냅샷 ID는 필수입니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.스냅샷으로부터복원한다({
+            snapshotId: dto.snapshotId,
+            performedBy,
+        });
+
+        return {
+            year: result.year,
+            month: result.month,
+        };
+    }
+
+    /**
+     * 스냅샷 목록 조회
+     *
+     * 연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다.
+     * 기본적으로 가장 최신 스냅샷을 반환하며, 조건 변경에 유연하게 대응할 수 있도록 구성됩니다.
+     */
+    @Get('snapshots')
+    @ApiOperation({
+        summary: '스냅샷 목록 조회',
+        description:
+            '연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다. 기본적으로 가장 최신 스냅샷을 반환하며, 정렬 및 필터 조건을 통해 유연하게 조회할 수 있습니다.',
+    })
+    @ApiQuery({ name: 'year', description: '연도', example: '2024', required: true })
+    @ApiQuery({ name: 'month', description: '월', example: '01', required: true })
+    @ApiQuery({
+        name: 'departmentId',
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    })
+    @ApiQuery({
+        name: 'sortBy',
+        description: '정렬 기준',
+        enum: ['latest', 'oldest', 'name', 'type'],
+        example: 'latest',
+        required: false,
+    })
+    @ApiResponse({
+        status: 200,
+        description: '스냅샷 목록 조회 성공',
+        type: GetSnapshotListResponseDto,
+    })
+    async getSnapshotList(@Query() dto: GetSnapshotListRequestDto): Promise<IGetSnapshotListResponse> {
+        if (!dto.year || !dto.month || !dto.departmentId) {
+            throw new BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.스냅샷목록을조회한다({
+            year: dto.year,
+            month: dto.month,
+            departmentId: dto.departmentId,
+            sortBy: dto.sortBy || 'latest',
+            filters: dto.filters,
+        });
+
+        return result;
+    }
+
+    /**
+     * 스냅샷 상세 조회
+     *
+     * 스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.
+     */
+    @Get('snapshots/:id')
+    @ApiOperation({
+        summary: '스냅샷 상세 조회',
+        description: '스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.',
+    })
+    @ApiParam({ name: 'id', description: '스냅샷 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '스냅샷 상세 조회 성공',
+    })
+    async getSnapshotById(@Param('id', ParseUUIDPipe) id: string): Promise<IGetSnapshotByIdResponse> {
+        const result = await this.attendanceDataBusinessService.스냅샷을ID로조회한다({
+            snapshotId: id,
+        });
+
+        return result;
+    }
+}

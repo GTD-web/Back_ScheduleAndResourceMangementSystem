@@ -1,0 +1,26 @@
+import { Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Public } from '../../../libs/decorators/public.decorator';
+import { PrvDbMgrService } from './prv-db-mgr.service';
+
+@ApiTags('prv-db-mgr')
+@Controller('prv-db-mgr')
+export class PrvDbMgrController {
+    constructor(private readonly prvDbMgrService: PrvDbMgrService) {}
+
+    @Public()
+    @Post('migrate')
+    @ApiOperation({ summary: 'PRV DB 마이그레이션 실행' })
+    async 마이그레이션을실행한다(): Promise<{ message: string }> {
+        await this.prvDbMgrService.마이그레이션을실행한다();
+        return { message: 'PRV DB 마이그레이션 실행 완료' };
+    }
+
+    @Public()
+    @Post('cleanup-scenarios')
+    @ApiOperation({ summary: '시나리오 테스트 데이터 정리' })
+    async 시나리오데이터를정리한다(): Promise<{ message: string }> {
+        await this.prvDbMgrService.시나리오데이터를정리한다();
+        return { message: '시나리오 데이터 정리 완료' };
+    }
+}
