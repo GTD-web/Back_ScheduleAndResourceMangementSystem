@@ -185,7 +185,6 @@ export class ScheduleStateTransitionService {
             });
             return true;
         } catch (error) {
-            console.error(error);
             if (shouldManageTransaction) {
                 await queryRunner.rollbackTransaction();
             }

@@ -137,7 +137,6 @@ export class ScheduleManagementService {
             return { schedules: [] };
         }
 
-        console.time('scheduleDataList');
         // 3. 벌크 데이터 조회 (한 번의 호출로 모든 관련 데이터 조회)
         const scheduleDataList = await this.scheduleQueryContextService.복수_일정과_관계정보들을_조회한다(scheduleIds, {
             withReservation: true,
@@ -145,7 +144,6 @@ export class ScheduleManagementService {
             withProject: true,
             withParticipants: true, // 예약자 정보 필요
         });
-        console.timeEnd('scheduleDataList');
         // employeeIds 필터링 적용 (해당 직원이 참여하는 일정만)
         // TODO : 부서 및 회사 일정도 추가 필요
         let filteredScheduleDataList = scheduleDataList;
@@ -1038,7 +1036,6 @@ export class ScheduleManagementService {
                 schedule,
                 reservation,
             );
-            console.log(policyResult);
             return policyResult.isAllowed;
         } catch (error) {
             // 에러 발생 시 연장 불가능으로 처리
@@ -1132,9 +1129,7 @@ export class ScheduleManagementService {
     async updateSchedule(user: Employee, scheduleId: string, updateDto: ScheduleUpdateRequestDto): Promise<boolean> {
         this.logger.log(`일정 수정 요청 - 사용자: ${user.employeeId}, 일정: ${scheduleId}`);
         // 0. 수정 시나리오 분석 및 검증
-        console.log('updateDto', JSON.stringify(updateDto, null, 2));
         const updateScenarios = this.schedulePolicyService.수정_시나리오를_분석한다(updateDto);
-        console.log('updateScenarios', JSON.stringify(updateScenarios, null, 2));
         this.schedulePolicyService.수정요청을_기본검증한다(updateDto, updateScenarios);
 
         // 1. 권한: 요청자/역할 확인

@@ -27,7 +27,6 @@ export class FCMMicroserviceAdapter {
         this.fcmServiceUrl =
             this.configService.get<string>('FCM_API_URL') ||
             'https://lnms-dev.lumir.space';
-        console.log(this.fcmServiceUrl);
     }
 
     /**
@@ -235,7 +234,6 @@ export class FCMMicroserviceAdapter {
                 this.logger.log(
                     `FCM 다중 알림 전송 성공: 성공 ${response.successCount}개, 실패 ${response.failureCount}개`,
                 );
-                console.log(response);
                 responses.push(response);
             }
 

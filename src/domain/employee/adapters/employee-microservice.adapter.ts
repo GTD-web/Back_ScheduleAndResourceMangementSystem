@@ -483,7 +483,6 @@ export class EmployeeMicroserviceAdapter {
         authorization: string,
         requestDto: DeleteFcmTokensRequestDto,
     ): Promise<DeleteFcmTokensResponseDto> {
-        console.log('deleteFcmTokens', requestDto);
         try {
             const totalTokens = requestDto.employees.reduce((sum, emp) => sum + emp.fcmTokens.length, 0);
             this.logger.log(`FCM 토큰 일괄 제거 요청: ${requestDto.employees.length}명, 총 ${totalTokens}개 토큰`);
