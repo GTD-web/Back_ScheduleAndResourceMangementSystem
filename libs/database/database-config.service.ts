@@ -18,7 +18,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
 
         const isProduction = this.configService.get('NODE_ENV') === 'production';
         const isDevelopment = this.configService.get('NODE_ENV') === 'development'; // 'development' 'local'
-
+        
         // database 네임스페이스에서 설정 가져오기 (registerAs로 등록된 경우)
         const dbHost =
             this.configService.get<string>('database.host') ||
@@ -53,7 +53,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
 
             // 개발 환경 설정
             synchronize: isDevelopment, // 개발 환경에서만 스키마 자동 동기화
-            logging: isDevelopment ? ['query', 'error', 'warn'] : ['error'],
+            logging: isDevelopment ? ['error', 'warn'] : ['error'],
 
             // 연결 풀 설정
             extra: {
