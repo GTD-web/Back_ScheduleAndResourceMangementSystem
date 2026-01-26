@@ -92,7 +92,6 @@ export class S3Service {
                 Key: fileKey,
             });
             const result = await this.s3Client.send(command);
-            console.log(result);
             return result.ContentLength !== undefined && result.ContentLength > 0;
         } catch (error) {
             console.error(error);

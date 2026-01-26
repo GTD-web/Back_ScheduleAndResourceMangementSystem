@@ -4,7 +4,6 @@ import { Entities } from '../entities';
 import { join } from 'path';
 
 export const typeOrmConfig = (configService: ConfigService): TypeOrmModuleOptions => {
-    console.log('configService.get(NODE_ENV)', configService.get('database.database'));
     return {
         type: 'postgres',
         host: configService.get('database.host'),

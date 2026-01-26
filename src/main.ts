@@ -20,6 +20,8 @@ async function bootstrap() {
                   const whitelist = [
                       'https://portal.lumir.space',
                       'https://lsms.lumir.space',
+                      'https://portal-dev.lumir.space',
+                      'https://lsms-dev.lumir.space',
                       'https://lrms.lumir.space',
                       'https://rms-backend-iota.vercel.app',
                       'https://rms-backend-lumir-web-dev.vercel.app',
@@ -28,6 +30,7 @@ async function bootstrap() {
                       'https://lrim.lumir.space',
                       'http://localhost:3002',
                   ];
+
                   if (!isProduction || !origin || whitelist.includes(origin)) {
                       callback(null, true);
                   } else {

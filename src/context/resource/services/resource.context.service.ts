@@ -259,7 +259,6 @@ export class ResourceContextService {
                     resourceWithTypeInfo.equipmentInfo?.equipmentInfoId,
             };
         } catch (err) {
-            console.error(err);
             await queryRunner.rollbackTransaction();
             throw new InternalServerErrorException(ERROR_MESSAGE.BUSINESS.RESOURCE.FAILED_CREATE);
         } finally {
@@ -335,7 +334,6 @@ export class ResourceContextService {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
-        console.log('updateResourceInfoDto', updateResourceInfoDto);
         try {
             if (updateResourceInfoDto.resource) {
                 // 리소스 정보 업데이트 (이미지 제외)
@@ -364,7 +362,6 @@ export class ResourceContextService {
                     // 리소스에 파일들을 연결 (기존 연결 삭제 후 새로 생성)
                     await this.fileContextService.리소스에_파일들을_연결한다(resourceId, fileIds, queryRunner);
                 }
-                console.log('updateResourceInfoDto.resource', updateResourceInfoDto.resource);
                 // 리소스의 images 컬럼에 filePath 배열 저장
                 await this.domainResourceService.update(resourceId, updateResourceInfoDto.resource, { queryRunner });
             }
@@ -437,7 +434,6 @@ export class ResourceContextService {
 
             return this.자원_상세정보를_조회한다(resourceId);
         } catch (err) {
-            console.error(err);
             await queryRunner.rollbackTransaction();
             throw new InternalServerErrorException(ERROR_MESSAGE.BUSINESS.RESOURCE.FAILED_UPDATE);
         } finally {
@@ -514,7 +510,6 @@ export class ResourceContextService {
 
             await queryRunner.commitTransaction();
         } catch (err) {
-            console.error(err);
             await queryRunner.rollbackTransaction();
             throw new InternalServerErrorException(ERROR_MESSAGE.BUSINESS.RESOURCE.FAILED_DELETE);
         } finally {
@@ -719,7 +714,6 @@ export class ResourceContextService {
         // if (currentStartTime > operatingStartTime) {
         //     operatingStartTime = `${roundedStartTime.getHours().toString().padStart(2, '0')}:${roundedStartTime.getMinutes().toString().padStart(2, '0')}:00`;
         // }
-        console.log('currentStartTime', roundedStartTime, currentStartTime);
         // roundedStartTime > new Date(operatingStartTime)
         //     ?
         //     : operatingStartTime.toTimeString().slice(0, 8);

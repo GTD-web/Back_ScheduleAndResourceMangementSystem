@@ -55,13 +55,11 @@ export class ReservationService {
 
         // 3. 각 예약별로 schedule ID 조회
         const scheduleIds = await this.scheduleQueryContextService.예약의_일정ID들을_조회한다(reservationIds);
-        console.log(scheduleIds);
         // 4. 키워드 검색 적용
         const filteredScheduleIds = await this.scheduleQueryContextService.키워드로_일정ID들을_조회한다(
             scheduleIds,
             keyword,
         );
-        console.log(filteredScheduleIds);
         // 5. 페이지네이션 적용
         const { paginatedIds, totalCount, filteredCount, totalPages, hasNext, hasPrevious } =
             this.scheduleQueryContextService.페이지네이션_일정ID들을_계산한다(filteredScheduleIds, page, limit);

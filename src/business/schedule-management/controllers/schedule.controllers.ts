@@ -264,7 +264,6 @@ export class ScheduleController {
         @Param('scheduleId') scheduleId: string,
         @Body() updateScheduleDto: ScheduleUpdateRequestDto,
     ): Promise<boolean> {
-        console.log('updateScheduleDto', JSON.stringify(updateScheduleDto, null, 2));
         return this.scheduleManagementService.updateSchedule(user, scheduleId, updateScheduleDto);
     }
 }

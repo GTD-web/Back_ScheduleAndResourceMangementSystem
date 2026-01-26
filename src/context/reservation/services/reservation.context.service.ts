@@ -98,7 +98,6 @@ export class ReservationContextService {
                 startDate: sortOrder,
             },
         });
-        console.log(reservations.map((reservation) => reservation.startDate));
         return reservations;
     }
 
@@ -151,7 +150,6 @@ export class ReservationContextService {
             ],
             withDeleted: true,
         });
-        console.log(reservation);
         if (!reservation) {
             throw new NotFoundException(ERROR_MESSAGE.BUSINESS.RESERVATION.NOT_FOUND);
         }
@@ -388,7 +386,6 @@ export class ReservationContextService {
             return true;
         } catch (error) {
             await queryRunner.rollbackTransaction();
-            console.error('Error in returnVehicle:', error);
             throw error;
         } finally {
             await queryRunner.release();

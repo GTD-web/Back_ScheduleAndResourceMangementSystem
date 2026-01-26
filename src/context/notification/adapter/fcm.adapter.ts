@@ -26,8 +26,7 @@ export class FCMMicroserviceAdapter {
         // 환경변수에서 FCM API URL 가져오기
         this.fcmServiceUrl =
             this.configService.get<string>('FCM_API_URL') ||
-            'https://lumir-notification-server-git-fcm-lumir-tech7s-projects.vercel.app';
-        console.log(this.fcmServiceUrl);
+            'https://lnms-dev.lumir.space';
     }
 
     /**
@@ -110,6 +109,7 @@ export class FCMMicroserviceAdapter {
                 linkUrl: payload.linkUrl,
                 metadata: {
                     icon: payload.icon || 'https://lumir-erp.vercel.app/%EC%82%BC%EC%A1%B1%EC%98%A4_black.png',
+                    linkUrl: payload.linkUrl,
                     notificationType: payload.notificationType,
                     notificationData: payload.notificationData,
                 },
@@ -234,7 +234,6 @@ export class FCMMicroserviceAdapter {
                 this.logger.log(
                     `FCM 다중 알림 전송 성공: 성공 ${response.successCount}개, 실패 ${response.failureCount}개`,
                 );
-                console.log(response);
                 responses.push(response);
             }
 

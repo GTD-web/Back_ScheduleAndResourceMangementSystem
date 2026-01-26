@@ -177,7 +177,6 @@ export class EmployeeContextService {
             const data = response.data;
             return data.isValid;
         } catch (error) {
-            console.log(error);
             throw new UnauthorizedException(ERROR_MESSAGE.BUSINESS.AUTH.SSO_LOGIN_FAILED);
         }
     }
@@ -205,11 +204,9 @@ export class EmployeeContextService {
                 },
             );
             const data = response.data;
-            console.log(data);
             employee.password = await bcrypt.hash(password, 10);
             await this.domainEmployeeService.update(employee.employeeId, employee);
         } catch (error) {
-            console.log(error);
             throw new UnauthorizedException(ERROR_MESSAGE.BUSINESS.AUTH.SSO_LOGIN_FAILED);
         }
     }
