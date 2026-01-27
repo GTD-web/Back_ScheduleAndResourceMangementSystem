@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import {
-    IGetManagerEmployeeListQuery,
     IGetDepartmentListForPermissionQuery,
     IUpdateEmployeeDepartmentPermissionCommand,
     IUpdateEmployeeExtraInfoCommand,
     IGetHolidayListQuery,
     IGetWorkTimeOverrideListQuery,
     IGetAttendanceTypeListQuery,
-    IGetManagerEmployeeListResponse,
     IGetDepartmentListForPermissionResponse,
+    IGetDepartmentPermissionsQuery,
+    IGetDepartmentPermissionsResponse,
     IGetHolidayListResponse,
     IGetWorkTimeOverrideListResponse,
     IGetAttendanceTypeListResponse,
@@ -34,8 +34,8 @@ import {
     IUpdateAttendanceTypeResponse,
     IDeleteAttendanceTypeResponse,
 } from './interfaces';
-import { GetManagerEmployeeListQuery } from './handlers/employee/queries/get-manager-employee-list.query';
 import { GetDepartmentListForPermissionQuery } from './handlers/department/queries/get-department-list-for-permission.query';
+import { GetDepartmentPermissionsQuery } from './handlers/permission/queries/get-department-permissions.query';
 import { GetHolidayListQuery } from './handlers/holiday-info/queries/get-holiday-list.query';
 import { GetWorkTimeOverrideListQuery } from './handlers/work-time-override/queries/get-work-time-override-list.query';
 import { GetAttendanceTypeListQuery } from './handlers/attendance-type/queries/get-attendance-type-list.query';
@@ -64,19 +64,19 @@ export class SettingsContextService {
     ) {}
 
     /**
-     * 관리자 직원 목록을 조회한다
-     */
-    async 관리자직원목록을조회한다(query: IGetManagerEmployeeListQuery): Promise<IGetManagerEmployeeListResponse> {
-        return await this.queryBus.execute(new GetManagerEmployeeListQuery(query));
-    }
-
-    /**
      * 권한 관리용 부서 목록을 조회한다
      */
     async 권한관리용부서목록을조회한다(
         query: IGetDepartmentListForPermissionQuery,
     ): Promise<IGetDepartmentListForPermissionResponse> {
         return await this.queryBus.execute(new GetDepartmentListForPermissionQuery(query));
+    }
+
+    /**
+     * 부서별 권한을 조회한다
+     */
+    async 부서별권한을조회한다(query: IGetDepartmentPermissionsQuery): Promise<IGetDepartmentPermissionsResponse> {
+        return await this.queryBus.execute(new GetDepartmentPermissionsQuery(query));
     }
 
     /**

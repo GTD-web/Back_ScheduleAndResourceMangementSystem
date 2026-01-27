@@ -2,9 +2,10 @@ import { Controller, Get, Patch, Post, Delete, Body, UseGuards, Param, ParseUUID
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { SettingsBusinessService } from '../../business/settings-business/settings-business.service';
 import {
-    GetManagerEmployeeListResponseDto,
     UpdateEmployeeDepartmentPermissionRequestDto,
     UpdateEmployeeDepartmentPermissionResponseDto,
+    GetDepartmentPermissionsRequestDto,
+    GetDepartmentPermissionsResponseDto,
 } from './dto/employee-permission.dto';
 import { GetDepartmentListForPermissionResponseDto } from './dto/department-permission.dto';
 import {
@@ -38,8 +39,8 @@ import {
     UpdateAttendanceTypeResponseDto,
     DeleteAttendanceTypeResponseDto,
 } from './dto/attendance-type.dto';
-import { IGetManagerEmployeeListResponse } from '../../context/settings-context/interfaces';
 import { IGetDepartmentListForPermissionResponse } from '../../context/settings-context/interfaces';
+import { IGetDepartmentPermissionsResponse } from '../../context/settings-context/interfaces';
 import { IGetHolidayListResponse } from '../../context/settings-context/interfaces';
 import { IGetWorkTimeOverrideListResponse } from '../../context/settings-context/interfaces';
 import { IGetAttendanceTypeListResponse } from '../../context/settings-context/interfaces';
@@ -68,25 +69,6 @@ export class SettingsController {
     constructor(private readonly settingsBusinessService: SettingsBusinessService) {}
 
     /**
-     * 관리자 직원 목록 조회
-     *
-     * 배치이력에서 관리자였던 적이 있는 직원들만 조회합니다.
-     */
-    @Get('employees/managers')
-    @ApiOperation({
-        summary: '관리자 직원 목록 조회',
-        description: '배치이력에서 관리자였던 적이 있는 직원들만 조회합니다.',
-    })
-    @ApiResponse({
-        status: 200,
-        description: '관리자 직원 목록 조회 성공',
-        type: GetManagerEmployeeListResponseDto,
-    })
-    async getManagerEmployeeList(): Promise<IGetManagerEmployeeListResponse> {
-        return await this.settingsBusinessService.관리자직원목록을조회한다({});
-    }
-
-    /**
      * 권한 관리용 부서 목록 조회
      *
      * 퇴사자 부서를 제외한 전체 부서 목록을 조회합니다.
@@ -108,12 +90,13 @@ export class SettingsController {
     /**
      * 직원-부서 권한 변경
      *
-     * 직원의 부서에 대한 접근권한과 검토권한을 변경합니다.
+     * 직원의 여러 부서에 대한 접근권한과 검토권한을 변경합니다.
+     * 해당 직원의 모든 기존 권한을 삭제한 후 요청된 부서 권한들을 재생성합니다.
      */
     @Patch('permissions')
     @ApiOperation({
         summary: '직원-부서 권한 변경',
-        description: '직원의 부서에 대한 접근권한과 검토권한을 변경합니다.',
+        description: '직원의 여러 부서에 대한 접근권한과 검토권한을 변경합니다. 해당 직원의 모든 기존 권한을 삭제한 후 요청된 부서 권한들을 재생성합니다.',
     })
     @ApiResponse({
         status: 200,
@@ -126,31 +109,50 @@ export class SettingsController {
     ): Promise<IUpdateEmployeeDepartmentPermissionResponse> {
         return await this.settingsBusinessService.직원부서권한을변경한다({
             employeeId: dto.employeeId,
-            departmentId: dto.departmentId,
-            hasAccessPermission: dto.hasAccessPermission,
-            hasReviewPermission: dto.hasReviewPermission,
+            departments: dto.departments.map((dept) => ({
+                departmentId: dept.departmentId,
+                hasAccessPermission: dept.hasAccessPermission,
+                hasReviewPermission: dept.hasReviewPermission,
+            })),
             performedBy: userId,
         });
     }
 
     /**
-     * 부서별 권한 조회
+     * 직원별 부서 권한 조회
      *
-     * 특정 부서에 대한 권한을 가진 직원 목록을 조회합니다.
+     * 모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다.
+     * 직원명과 부서명으로 검색이 가능합니다.
      */
-    @Get('permissions/departments/:departmentId')
+    @Get('permissions/employees')
     @ApiOperation({
-        summary: '부서별 권한 조회',
-        description: '특정 부서에 대한 권한을 가진 직원 목록을 조회합니다.',
+        summary: '직원별 부서 권한 조회',
+        description: '모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다. 직원명과 부서명으로 검색이 가능합니다.',
     })
-    @ApiParam({ name: 'departmentId', description: '부서 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiQuery({
+        name: 'employeeName',
+        description: '직원명 검색 (선택사항)',
+        example: '홍길동',
+        required: false,
+    })
+    @ApiQuery({
+        name: 'departmentName',
+        description: '부서명 검색 (선택사항)',
+        example: '개발팀',
+        required: false,
+    })
     @ApiResponse({
         status: 200,
-        description: '부서별 권한 조회 성공',
+        description: '직원별 부서 권한 조회 성공',
+        type: GetDepartmentPermissionsResponseDto,
     })
-    async getDepartmentPermissions(@Param('departmentId', ParseUUIDPipe) departmentId: string) {
-        // TODO: 비즈니스 서비스에 부서별 권한 조회 메서드 구현 필요
-        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
+    async getDepartmentPermissions(
+        @Query() dto: GetDepartmentPermissionsRequestDto,
+    ): Promise<IGetDepartmentPermissionsResponse> {
+        return await this.settingsBusinessService.부서별권한을조회한다({
+            employeeName: dto.employeeName,
+            departmentName: dto.departmentName,
+        });
     }
 
     /**

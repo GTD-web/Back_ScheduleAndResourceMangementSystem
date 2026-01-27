@@ -1,5 +1,5 @@
-export * from './employee/queries/get-manager-employee-list.handler';
 export * from './department/queries/get-department-list-for-permission.handler';
+export * from './permission/queries/get-department-permissions.handler';
 export * from './holiday-info/queries/get-holiday-list.handler';
 export * from './work-time-override/queries/get-work-time-override-list.handler';
 export * from './attendance-type/queries/get-attendance-type-list.handler';
@@ -15,8 +15,8 @@ export * from './attendance-type/commands/create-attendance-type.handler';
 export * from './attendance-type/commands/update-attendance-type.handler';
 export * from './attendance-type/commands/delete-attendance-type.handler';
 
-import { GetManagerEmployeeListHandler } from './employee/queries/get-manager-employee-list.handler';
 import { GetDepartmentListForPermissionHandler } from './department/queries/get-department-list-for-permission.handler';
+import { GetDepartmentPermissionsHandler } from './permission/queries/get-department-permissions.handler';
 import { GetHolidayListHandler } from './holiday-info/queries/get-holiday-list.handler';
 import { GetWorkTimeOverrideListHandler } from './work-time-override/queries/get-work-time-override-list.handler';
 import { GetAttendanceTypeListHandler } from './attendance-type/queries/get-attendance-type-list.handler';
@@ -33,8 +33,8 @@ import { UpdateAttendanceTypeHandler } from './attendance-type/commands/update-a
 import { DeleteAttendanceTypeHandler } from './attendance-type/commands/delete-attendance-type.handler';
 
 export const QUERY_HANDLERS = [
-    GetManagerEmployeeListHandler,
     GetDepartmentListForPermissionHandler,
+    GetDepartmentPermissionsHandler,
     GetHolidayListHandler,
     GetWorkTimeOverrideListHandler,
     GetAttendanceTypeListHandler,

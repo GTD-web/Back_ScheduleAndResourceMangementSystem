@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { SettingsContextService } from '../../context/settings-context/settings-context.service';
 import {
-    IGetManagerEmployeeListQuery,
     IGetDepartmentListForPermissionQuery,
     IGetHolidayListQuery,
     IGetWorkTimeOverrideListQuery,
     IGetAttendanceTypeListQuery,
-    IGetManagerEmployeeListResponse,
     IGetDepartmentListForPermissionResponse,
+    IGetDepartmentPermissionsQuery,
+    IGetDepartmentPermissionsResponse,
     IGetHolidayListResponse,
     IGetWorkTimeOverrideListResponse,
     IGetAttendanceTypeListResponse,
@@ -45,19 +45,19 @@ export class SettingsBusinessService {
     constructor(private readonly settingsContextService: SettingsContextService) {}
 
     /**
-     * 관리자 직원 목록을 조회한다
-     */
-    async 관리자직원목록을조회한다(query: IGetManagerEmployeeListQuery): Promise<IGetManagerEmployeeListResponse> {
-        return await this.settingsContextService.관리자직원목록을조회한다(query);
-    }
-
-    /**
      * 권한 관리용 부서 목록을 조회한다
      */
     async 권한관리용부서목록을조회한다(
         query: IGetDepartmentListForPermissionQuery,
     ): Promise<IGetDepartmentListForPermissionResponse> {
         return await this.settingsContextService.권한관리용부서목록을조회한다(query);
+    }
+
+    /**
+     * 부서별 권한을 조회한다
+     */
+    async 부서별권한을조회한다(query: IGetDepartmentPermissionsQuery): Promise<IGetDepartmentPermissionsResponse> {
+        return await this.settingsContextService.부서별권한을조회한다(query);
     }
 
     /**

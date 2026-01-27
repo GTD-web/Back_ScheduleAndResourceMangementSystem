@@ -81,8 +81,9 @@ export class DomainEmployeeDepartmentPermissionService {
     /**
      * 직원 ID로 권한 목록을 조회한다
      */
-    async 직원으로목록조회한다(employeeId: string): Promise<EmployeeDepartmentPermissionDTO[]> {
-        const permissions = await this.repository.find({
+    async 직원으로목록조회한다(employeeId: string, manager?: EntityManager): Promise<EmployeeDepartmentPermissionDTO[]> {
+        const repository = this.getRepository(manager);
+        const permissions = await repository.find({
             where: { employee_id: employeeId, deleted_at: IsNull() },
             relations: ['employee', 'department'],
             order: {
@@ -191,5 +192,14 @@ export class DomainEmployeeDepartmentPermissionService {
         }
         // Hard Delete: 데이터베이스에서 완전히 삭제
         await repository.remove(permission);
+    }
+
+    /**
+     * 직원 ID로 모든 권한을 일괄 삭제한다 (Hard Delete)
+     */
+    async 직원으로일괄삭제한다(employeeId: string, manager?: EntityManager): Promise<void> {
+        const repository = this.getRepository(manager);
+        // Hard Delete: 직원 ID로 일괄 삭제
+        await repository.delete({ employee_id: employeeId });
     }
 }

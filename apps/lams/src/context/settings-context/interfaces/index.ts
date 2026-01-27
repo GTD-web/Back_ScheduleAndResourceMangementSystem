@@ -1,5 +1,5 @@
-export * from './query/get-manager-employee-list-query.interface';
 export * from './query/get-department-list-for-permission-query.interface';
+export * from './query/get-department-permissions-query.interface';
 export * from './query/get-holiday-list-query.interface';
 export * from './query/get-work-time-override-list-query.interface';
 export * from './query/get-attendance-type-list-query.interface';
@@ -14,8 +14,8 @@ export * from './command/delete-work-time-override-command.interface';
 export * from './command/create-attendance-type-command.interface';
 export * from './command/update-attendance-type-command.interface';
 export * from './command/delete-attendance-type-command.interface';
-export * from './response/get-manager-employee-list-response.interface';
 export * from './response/get-department-list-for-permission-response.interface';
+export * from './response/get-department-permissions-response.interface';
 export * from './response/update-employee-department-permission-response.interface';
 export * from './response/update-employee-extra-info-response.interface';
 export * from './response/get-holiday-list-response.interface';
