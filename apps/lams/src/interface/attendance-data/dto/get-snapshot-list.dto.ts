@@ -56,15 +56,6 @@ export class GetSnapshotListRequestDto {
     @IsNotEmpty()
     month: string;
 
-    @ApiProperty({
-        description: '부서 ID',
-        example: '123e4567-e89b-12d3-a456-426614174000',
-        required: true,
-    })
-    @IsString()
-    @IsNotEmpty()
-    departmentId: string;
-
     @ApiPropertyOptional({
         description: '정렬 기준',
         enum: ['latest', 'oldest', 'name', 'type'],

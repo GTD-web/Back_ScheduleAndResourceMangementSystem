@@ -5,6 +5,7 @@ import {
     GenerateMonthlySummariesCommand,
     UpdateDailySummaryCommand,
     GetMonthlySummariesQuery,
+    GetDailySummaryHistoryQuery,
     SoftDeleteDailySummariesCommand,
     SoftDeleteMonthlySummariesCommand,
     CreateAttendanceIssuesCommand,
@@ -16,6 +17,8 @@ import {
     IGenerateMonthlySummariesResponse,
     IGetMonthlySummariesResponse,
     IGetMonthlySummariesQuery,
+    IGetDailySummaryHistoryQuery,
+    IGetDailySummaryHistoryResponse,
     IUpdateDailySummaryCommand,
     IUpdateDailySummaryResponse,
     IGenerateDailySummariesCommand,
@@ -182,5 +185,18 @@ export class AttendanceDataContextService {
     async 일간요약을수정한다(command: IUpdateDailySummaryCommand): Promise<IUpdateDailySummaryResponse> {
         const commandInstance = new UpdateDailySummaryCommand(command);
         return await this.commandBus.execute(commandInstance);
+    }
+
+    /**
+     * 일간 요약 수정이력을 조회한다
+     *
+     * 일간 요약 ID를 기준으로 해당 일간 요약의 수정이력을 조회합니다.
+     *
+     * @param query 조회 조건
+     * @returns 일간 요약 수정이력 조회 결과
+     */
+    async 일간요약수정이력을조회한다(query: IGetDailySummaryHistoryQuery): Promise<IGetDailySummaryHistoryResponse> {
+        const queryInstance = new GetDailySummaryHistoryQuery(query);
+        return await this.queryBus.execute(queryInstance);
     }
 }

@@ -251,6 +251,45 @@ export class DomainEmployeeDepartmentPositionHistoryService {
     }
 
     /**
+     * 특정 연월 및 부서에 유효한 배치이력 목록을 조회한다
+     *
+     * 해당 월의 범위(첫 날짜 ~ 마지막 날짜) 내에 유효한 배치 정보를 조회하여 배치이력 엔티티를 반환합니다.
+     * 특정 부서에 속한 직원의 배치이력만 조회합니다.
+     *
+     * @param year 연도
+     * @param month 월
+     * @param departmentId 부서 ID
+     *
+     * @returns 배치이력 엔티티 목록 (department 관계 포함)
+     */
+    async 특정연월부서의배치이력목록을조회한다(
+        year: string,
+        month: string,
+        departmentId: string,
+    ): Promise<EmployeeDepartmentPositionHistory[]> {
+        const repository = this.repository;
+
+        // 해당 월의 시작일과 종료일 계산
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const startDate = format(monthStart, 'yyyy-MM-dd');
+        const endDate = format(monthEnd, 'yyyy-MM-dd');
+
+        return await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .leftJoinAndSelect('eh.employee', 'emp')
+            .leftJoinAndSelect('eh.position', 'pos')
+            .leftJoinAndSelect('eh.rank', 'rank')
+            .where('eh.departmentId = :departmentId', { departmentId })
+            .andWhere('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getMany();
+    }
+
+    /**
      * 특정 부서 ID의 부서 정보를 조회한다
      *
      * @param departmentId 부서 ID

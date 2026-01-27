@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext, Logger } from '@nestjs/common';
+import { Injectable, ExecutionContext, Logger, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
@@ -48,7 +48,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     handleRequest(err: any, user: any, info: any) {
         if (err || !user) {
             this.logger.warn(`인증 실패: err=${err?.message}, info=${info?.message}, user=${user ? '있음' : '없음'}`);
-            throw err || new Error('인증에 실패했습니다.');
+            throw err || new UnauthorizedException('인증에 실패했습니다.');
         }
         return user;
     }

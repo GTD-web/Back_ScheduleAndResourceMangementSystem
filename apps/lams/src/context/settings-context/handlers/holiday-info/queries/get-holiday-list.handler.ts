@@ -18,10 +18,20 @@ export class GetHolidayListHandler implements IQueryHandler<GetHolidayListQuery,
     ) {}
 
     async execute(query: GetHolidayListQuery): Promise<IGetHolidayListResponse> {
+        const { year } = query.data;
+
+        if (year) {
+            this.logger.log(`휴일 목록 조회 시작: year=${year}`);
+            const holidays = await this.holidayInfoService.연도별목록조회한다(year);
+            this.logger.log(`휴일 목록 조회 완료: year=${year}, totalCount=${holidays.length}`);
+            return {
+                holidays,
+                totalCount: holidays.length,
+            };
+        }
+
         this.logger.log('휴일 목록 조회 시작');
-
         const holidays = await this.holidayInfoService.목록조회한다();
-
         this.logger.log(`휴일 목록 조회 완료: totalCount=${holidays.length}`);
 
         return {

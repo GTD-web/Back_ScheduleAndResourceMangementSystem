@@ -3,7 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileManagementContextService } from './file-management-context.service';
-import { FILE_UPLOAD_HANDLERS, FILE_CONTENT_REFLECTION_HANDLERS, FILE_LIST_QUERY_HANDLERS } from './handlers';
+import {
+    FILE_UPLOAD_HANDLERS,
+    FILE_CONTENT_REFLECTION_HANDLERS,
+    FILE_LIST_QUERY_HANDLERS,
+    FILE_DELETE_HANDLERS,
+} from './handlers';
 import { S3StorageModule } from '../../integrations/s3-storage/s3-storage.module';
 import { LocalStorageModule } from '../../integrations/local-storage/local-storage.module';
 import { ExcelReaderModule } from '../../integrations/excel-reader/excel-reader.module';
@@ -47,6 +52,7 @@ export class FileManagementContextModule {
                 ...FILE_UPLOAD_HANDLERS,
                 ...FILE_CONTENT_REFLECTION_HANDLERS,
                 ...FILE_LIST_QUERY_HANDLERS,
+                ...FILE_DELETE_HANDLERS,
             ],
             exports: [FileManagementContextService],
         };

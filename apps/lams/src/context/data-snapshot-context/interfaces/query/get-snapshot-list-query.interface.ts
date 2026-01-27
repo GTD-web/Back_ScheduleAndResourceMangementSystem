@@ -4,7 +4,6 @@
 export interface IGetSnapshotListQuery {
     year: string;
     month: string;
-    departmentId: string;
     /**
      * 정렬 기준 (기본값: 'latest' - 최신순)
      * 향후 확장 가능: 'oldest', 'name', 'type' 등

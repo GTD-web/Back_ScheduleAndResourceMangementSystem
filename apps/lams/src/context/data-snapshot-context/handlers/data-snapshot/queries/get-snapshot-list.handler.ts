@@ -8,9 +8,8 @@ import { SnapshotType } from '../../../../../domain/data-snapshot-info/data-snap
 /**
  * 스냅샷 목록 조회 Query Handler
  *
- * 연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다.
+ * 연월을 기준으로 스냅샷 데이터를 조회합니다.
  * 기본적으로 가장 최신 스냅샷을 반환하며, 조건 변경에 유연하게 대응할 수 있도록 구성됩니다.
- * 기본적으로 스냅샷이 부서별로 구분이 되어있다는 전제조건으로 구현되어 있습니다.
  */
 @QueryHandler(GetSnapshotListQuery)
 export class GetSnapshotListHandler implements IQueryHandler<GetSnapshotListQuery, IGetSnapshotListResponse> {
@@ -19,9 +18,9 @@ export class GetSnapshotListHandler implements IQueryHandler<GetSnapshotListQuer
     constructor(private readonly dataSnapshotInfoService: DomainDataSnapshotInfoService) {}
 
     async execute(query: GetSnapshotListQuery): Promise<IGetSnapshotListResponse> {
-        const { year, month, departmentId, sortBy = 'latest', filters } = query.data;
+        const { year, month, sortBy = 'latest', filters } = query.data;
 
-        this.logger.log(`스냅샷 목록 조회 시작: year=${year}, month=${month}, departmentId=${departmentId}`);
+        this.logger.log(`스냅샷 목록 조회 시작: year=${year}, month=${month}`);
 
         // 1. 기본 조건으로 스냅샷 목록 조회
         const allSnapshots = await this.dataSnapshotInfoService.연월과타입으로목록조회한다(
@@ -29,15 +28,14 @@ export class GetSnapshotListHandler implements IQueryHandler<GetSnapshotListQuer
             month,
             SnapshotType.MONTHLY, // 기본 타입 (향후 filters로 확장 가능)
         );
-        // 2. 부서별 필터링
-        let filteredSnapshots = allSnapshots.filter((snapshot) => snapshot.departmentId === departmentId);
 
-        // 3. 추가 필터 적용 (향후 확장 가능)
+        // 2. 추가 필터 적용 (향후 확장 가능)
+        let filteredSnapshots = allSnapshots;
         if (filters) {
             filteredSnapshots = this.필터적용한다(filteredSnapshots, filters);
         }
 
-        // 4. 정렬 적용
+        // 3. 정렬 적용
         const sortedSnapshots = this.정렬적용한다(filteredSnapshots, sortBy);
 
         // 5. 가장 최신 스냅샷 추출

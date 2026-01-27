@@ -1,13 +1,18 @@
-import { Controller, Get, Patch, Post, Delete, Body, UseGuards, Param, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { Controller, Get, Patch, Post, Delete, Body, UseGuards, Param, ParseUUIDPipe, BadRequestException, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { SettingsBusinessService } from '../../business/settings-business/settings-business.service';
 import {
     GetManagerEmployeeListResponseDto,
-    GetDepartmentListForPermissionResponseDto,
     UpdateEmployeeDepartmentPermissionRequestDto,
     UpdateEmployeeDepartmentPermissionResponseDto,
+} from './dto/employee-permission.dto';
+import { GetDepartmentListForPermissionResponseDto } from './dto/department-permission.dto';
+import {
     UpdateEmployeeExtraInfoRequestDto,
     UpdateEmployeeExtraInfoResponseDto,
+} from './dto/employee-extra-info.dto';
+import {
+    GetHolidayListRequestDto,
     GetHolidayListResponseDto,
     CreateHolidayInfoRequestDto,
     CreateHolidayInfoResponseDto,
@@ -15,6 +20,8 @@ import {
     UpdateHolidayInfoResponseDto,
     DeleteHolidayInfoRequestDto,
     DeleteHolidayInfoResponseDto,
+} from './dto/holiday-info.dto';
+import {
     GetWorkTimeOverrideListResponseDto,
     CreateWorkTimeOverrideRequestDto,
     CreateWorkTimeOverrideResponseDto,
@@ -22,13 +29,15 @@ import {
     UpdateWorkTimeOverrideResponseDto,
     DeleteWorkTimeOverrideRequestDto,
     DeleteWorkTimeOverrideResponseDto,
+} from './dto/work-time-override.dto';
+import {
     GetAttendanceTypeListResponseDto,
     CreateAttendanceTypeRequestDto,
     CreateAttendanceTypeResponseDto,
     UpdateAttendanceTypeRequestDto,
     UpdateAttendanceTypeResponseDto,
     DeleteAttendanceTypeResponseDto,
-} from './dto/settings.dto';
+} from './dto/attendance-type.dto';
 import { IGetManagerEmployeeListResponse } from '../../context/settings-context/interfaces';
 import { IGetDepartmentListForPermissionResponse } from '../../context/settings-context/interfaces';
 import { IGetHolidayListResponse } from '../../context/settings-context/interfaces';
@@ -173,20 +182,26 @@ export class SettingsController {
     /**
      * 휴일 목록 조회
      *
-     * 전체 공휴일 목록을 조회합니다.
+     * 전체 공휴일 목록을 조회합니다. 연도 파라미터를 제공하면 해당 연도의 휴일만 조회합니다.
      */
     @Get('holidays')
     @ApiOperation({
         summary: '휴일 목록 조회',
-        description: '전체 공휴일 목록을 조회합니다.',
+        description: '전체 공휴일 목록을 조회합니다. 연도 파라미터를 제공하면 해당 연도의 휴일만 조회합니다.',
+    })
+    @ApiQuery({
+        name: 'year',
+        description: '연도 (선택사항)',
+        example: '2024',
+        required: false,
     })
     @ApiResponse({
         status: 200,
         description: '휴일 목록 조회 성공',
         type: GetHolidayListResponseDto,
     })
-    async getHolidayList(): Promise<IGetHolidayListResponse> {
-        return await this.settingsBusinessService.휴일목록을조회한다({});
+    async getHolidayList(@Query() dto: GetHolidayListRequestDto): Promise<IGetHolidayListResponse> {
+        return await this.settingsBusinessService.휴일목록을조회한다({ year: dto.year });
     }
 
     /**

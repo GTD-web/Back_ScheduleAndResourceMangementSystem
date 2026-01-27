@@ -4,6 +4,8 @@ import { DataSnapshotContextService } from '../../context/data-snapshot-context/
 import {
     IGetMonthlySummariesResponse,
     IGetMonthlySummariesQuery,
+    IGetDailySummaryHistoryQuery,
+    IGetDailySummaryHistoryResponse,
     IUpdateDailySummaryCommand,
     IUpdateDailySummaryResponse,
 } from '../../context/attendance-data-context/interfaces';
@@ -149,16 +151,14 @@ export class AttendanceDataBusinessService {
     /**
      * 스냅샷 목록을 조회한다
      *
-     * 연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다.
+     * 연월을 기준으로 스냅샷 데이터를 조회합니다.
      * 기본적으로 가장 최신 스냅샷을 반환하며, 조건 변경에 유연하게 대응할 수 있도록 구성됩니다.
      *
      * @param query 스냅샷 목록 조회 쿼리
      * @returns 스냅샷 목록 조회 결과
      */
     async 스냅샷목록을조회한다(query: IGetSnapshotListQuery): Promise<IGetSnapshotListResponse> {
-        this.logger.log(
-            `스냅샷 목록 조회: year=${query.year}, month=${query.month}, departmentId=${query.departmentId}`,
-        );
+        this.logger.log(`스냅샷 목록 조회: year=${query.year}, month=${query.month}`);
         return await this.dataSnapshotContextService.스냅샷목록을조회한다(query);
     }
 
@@ -166,12 +166,26 @@ export class AttendanceDataBusinessService {
      * 스냅샷을 ID로 조회한다
      *
      * 스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.
+     * 부서 ID를 제공하면 해당 부서의 해당 연월에 소속되었던 직원들의 스냅샷 child 데이터만 반환합니다.
      *
      * @param query 스냅샷 ID 조회 쿼리
      * @returns 스냅샷과 하위 스냅샷 조회 결과
      */
     async 스냅샷을ID로조회한다(query: IGetSnapshotByIdQuery): Promise<IGetSnapshotByIdResponse> {
-        this.logger.log(`스냅샷 ID로 조회: snapshotId=${query.snapshotId}`);
+        this.logger.log(`스냅샷 ID로 조회: snapshotId=${query.snapshotId}, departmentId=${query.departmentId}`);
         return await this.dataSnapshotContextService.스냅샷을ID로조회한다(query);
+    }
+
+    /**
+     * 일간 요약 수정이력을 조회한다
+     *
+     * 일간 요약 ID를 기준으로 해당 일간 요약의 수정이력을 조회합니다.
+     *
+     * @param query 조회 조건
+     * @returns 일간 요약 수정이력 조회 결과
+     */
+    async 일간요약수정이력을조회한다(query: IGetDailySummaryHistoryQuery): Promise<IGetDailySummaryHistoryResponse> {
+        this.logger.log(`일간 요약 수정이력 조회: dailyEventSummaryId=${query.dailyEventSummaryId}`);
+        return await this.attendanceDataContextService.일간요약수정이력을조회한다(query);
     }
 }

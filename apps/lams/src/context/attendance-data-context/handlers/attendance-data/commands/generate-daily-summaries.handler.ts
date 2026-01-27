@@ -204,10 +204,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         const endDate = new Date(yearNum, monthNum, 0);
         const allDates = this.날짜범위생성(startDate, endDate);
 
-        // 날짜 범위의 모든 커스텀 시간을 일괄 조회 (N+1 방지)
-        const dateStrings = allDates.map((date) => format(date, 'yyyy-MM-dd'));
-        const workTimeOverrides = await this.workTimeOverrideService.날짜목록으로조회한다(dateStrings, manager);
-
         // 직원별, 날짜별로 이벤트 그룹화
         const eventsByEmployeeAndDate = new Map<string, Map<string, EventInfo[]>>();
         events.forEach((event) => {
@@ -595,61 +591,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
         const hours = parseInt(parts[0], 10);
         const minutes = parseInt(parts[1], 10);
         return hours * 60 + minutes;
-    }
-
-    /**
-     * 인정되는 근태를 기반으로 출입 시간을 계산한다
-     *
-     * 정책에 따라 다음 우선순위로 출입 시간을 결정합니다:
-     * 1. 오전과 오후 모두 인정되는 경우 (여러 근태 유형 조합 포함) → 하루 종일 근무
-     * 2. 하루 종일 인정되는 단일 근태 유형이 있는 경우 → 하루 종일 근무
-     * 3. 부분 인정되는 경우 (오전만 또는 오후만) → 해당 시간대만 설정
-     *
-     * 정책 변경 시 WorkTimePolicyService만 수정하면 됩니다.
-     *
-     * @param dayAttendances 해당 날짜의 근태 사용 내역 목록
-     * @returns 출입 시간 정보 (enter, leave)
-     */
-    private 인정근태기반출입시간을계산한다(dayAttendances: UsedAttendance[]): {
-        enter: string | null;
-        leave: string | null;
-    } {
-        // 정책 서비스를 통해 근태 인정 여부 확인
-        const hasMorningRecognized = this.workTimePolicyService.hasMorningRecognized(dayAttendances);
-        const hasAfternoonRecognized = this.workTimePolicyService.hasAfternoonRecognized(dayAttendances);
-        const hasFullDayAttendance = this.workTimePolicyService.hasFullDayRecognized(dayAttendances);
-
-        // 정상 근무 시간을 정책 서비스에서 가져옴
-        const normalStartTime = this.workTimePolicyService.getNormalWorkStartTime();
-        const normalEndTime = this.workTimePolicyService.getNormalWorkEndTime();
-
-        // HH:MM:SS 형식을 HH:MM:00 형식으로 변환
-        const formatTime = (time: string): string => {
-            return time.substring(0, 5) + ':00';
-        };
-
-        // 1. 오전과 오후 모두 인정되는 경우 하루 종일 근무로 처리
-        // (여러 근태 유형 조합으로 하루 종일을 구성하는 경우 포함)
-        if (hasMorningRecognized && hasAfternoonRecognized) {
-            return {
-                enter: formatTime(normalStartTime),
-                leave: formatTime(normalEndTime),
-            };
-        }
-
-        // 2. 하루 종일 인정되는 단일 근태 유형이 있는 경우
-        if (hasFullDayAttendance) {
-            return {
-                enter: formatTime(normalStartTime),
-                leave: formatTime(normalEndTime),
-            };
-        }
-
-        // 3. 부분 인정되는 경우 (오전만 또는 오후만)
-        return {
-            enter: hasMorningRecognized ? formatTime(normalStartTime) : null,
-            leave: hasAfternoonRecognized ? formatTime(normalEndTime) : null,
-        };
     }
 
     /**

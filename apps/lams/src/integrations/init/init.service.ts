@@ -2,9 +2,11 @@ import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { DomainAttendanceTypeService } from '../../domain/attendance-type/attendance-type.service';
 import { DomainHolidayInfoService } from '../../domain/holiday-info/holiday-info.service';
+import { DomainProjectService } from '../../domain/project/project.service';
 import { OrganizationMigrationService } from '../migration/migration.service';
 import { AttendanceType } from '../../domain/attendance-type/attendance-type.entity';
 import { HolidayInfo } from '../../domain/holiday-info/holiday-info.entity';
+import { Project } from '../../domain/project/project.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { IsNull } from 'typeorm';
 
@@ -23,6 +25,7 @@ export class InitService implements OnApplicationBootstrap {
         private readonly dataSource: DataSource,
         private readonly attendanceTypeService: DomainAttendanceTypeService,
         private readonly holidayInfoService: DomainHolidayInfoService,
+        private readonly projectService: DomainProjectService,
         private readonly organizationMigrationService: OrganizationMigrationService,
     ) {}
 
@@ -41,7 +44,10 @@ export class InitService implements OnApplicationBootstrap {
             // 2. 휴일 정보 기본 데이터 생성
             await this.휴일정보기본데이터생성();
 
-            // 3. 조직 데이터 마이그레이션 (직원 데이터가 없으면 실행)
+            // 3. 프로젝트 기본 데이터 생성
+            await this.프로젝트기본데이터생성();
+
+            // 4. 조직 데이터 마이그레이션 (직원 데이터가 없으면 실행)
             await this.조직데이터마이그레이션();
 
             this.logger.log('✅ 기본 데이터 초기화 완료');
@@ -389,6 +395,73 @@ export class InitService implements OnApplicationBootstrap {
             this.logger.log(`휴일 정보 기본 데이터 생성 완료: ${createdCount}개 생성됨`);
         } else {
             this.logger.log('휴일 정보 기본 데이터가 모두 존재합니다.');
+        }
+    }
+
+    /**
+     * 프로젝트 기본 데이터를 생성한다
+     */
+    private async 프로젝트기본데이터생성(): Promise<void> {
+        this.logger.log('프로젝트 기본 데이터 확인 중...');
+
+        const defaultProjects = [
+            {
+                projectCode: 'EDUCATION',
+                projectName: '교육',
+                description: '교육 프로젝트',
+            },
+            {
+                projectCode: 'LEAVE',
+                projectName: '휴가',
+                description: '휴가 프로젝트',
+            },
+            {
+                projectCode: 'SSX1_SDIP',
+                projectName: 'SSX1.SDIP',
+                description: 'SSX1.SDIP 프로젝트',
+            },
+            {
+                projectCode: 'SSX2_DEV',
+                projectName: 'SSX2.개발',
+                description: 'SSX2.개발 프로젝트',
+            },
+            {
+                projectCode: 'SSX3_OPS',
+                projectName: 'SSX3.운영',
+                description: 'SSX3.운영 프로젝트',
+            },
+        ];
+
+        const existingProjects = await this.dataSource.manager.find(Project, {
+            where: { deleted_at: IsNull() },
+        });
+        const existingCodes = new Set(existingProjects.map((p) => p.project_code));
+
+        let createdCount = 0;
+        for (const projectData of defaultProjects) {
+            if (existingCodes.has(projectData.projectCode)) {
+                this.logger.log(`프로젝트 "${projectData.projectName} (${projectData.projectCode})"이 이미 존재합니다.`);
+                continue;
+            }
+
+            try {
+                await this.projectService.생성한다({
+                    projectCode: projectData.projectCode,
+                    projectName: projectData.projectName,
+                    description: projectData.description,
+                    isActive: true,
+                });
+                createdCount++;
+                this.logger.log(`프로젝트 "${projectData.projectName} (${projectData.projectCode})" 생성 완료`);
+            } catch (error) {
+                this.logger.warn(`프로젝트 "${projectData.projectName} (${projectData.projectCode})" 생성 실패: ${error.message}`);
+            }
+        }
+
+        if (createdCount > 0) {
+            this.logger.log(`프로젝트 기본 데이터 생성 완료: ${createdCount}개 생성됨`);
+        } else {
+            this.logger.log('프로젝트 기본 데이터가 모두 존재합니다.');
         }
     }
 

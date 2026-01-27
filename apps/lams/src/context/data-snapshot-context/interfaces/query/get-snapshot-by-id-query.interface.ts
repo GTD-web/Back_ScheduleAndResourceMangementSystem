@@ -3,4 +3,5 @@
  */
 export interface IGetSnapshotByIdQuery {
     snapshotId: string;
+    departmentId?: string;
 }

@@ -3,16 +3,20 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
     GetAttendanceIssuesQuery,
     GetAttendanceIssueQuery,
+    GetAttendanceIssuesByDepartmentQuery,
     UpdateAttendanceIssueDescriptionCommand,
     UpdateAttendanceIssueCorrectionCommand,
     ApplyAttendanceIssueCommand,
     RejectAttendanceIssueCommand,
+    ReRequestAttendanceIssueCommand,
 } from './handlers/attendance-issue';
 import {
     IGetAttendanceIssuesQuery,
     IGetAttendanceIssuesResponse,
     IGetAttendanceIssueQuery,
     IGetAttendanceIssueResponse,
+    IGetAttendanceIssuesByDepartmentQuery,
+    IGetAttendanceIssuesByDepartmentResponse,
     IUpdateAttendanceIssueDescriptionCommand,
     IUpdateAttendanceIssueDescriptionResponse,
     IUpdateAttendanceIssueCorrectionCommand,
@@ -21,6 +25,8 @@ import {
     IApplyAttendanceIssueResponse,
     IRejectAttendanceIssueCommand,
     IRejectAttendanceIssueResponse,
+    IReRequestAttendanceIssueCommand,
+    IReRequestAttendanceIssueResponse,
 } from './interfaces';
 
 /**
@@ -40,6 +46,18 @@ export class AttendanceIssueContextService {
      */
     async 근태이슈목록을조회한다(query: IGetAttendanceIssuesQuery): Promise<IGetAttendanceIssuesResponse> {
         const queryInstance = new GetAttendanceIssuesQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 연월/부서별 근태 이슈를 조회한다
+     *
+     * 해당 연월과 부서에 소속되었던 직원들의 근태 이슈를 조회하고 직원별로 그룹핑합니다.
+     */
+    async 연월부서별근태이슈를조회한다(
+        query: IGetAttendanceIssuesByDepartmentQuery,
+    ): Promise<IGetAttendanceIssuesByDepartmentResponse> {
+        const queryInstance = new GetAttendanceIssuesByDepartmentQuery(query);
         return await this.queryBus.execute(queryInstance);
     }
 
@@ -84,6 +102,16 @@ export class AttendanceIssueContextService {
      */
     async 근태이슈를미반영처리한다(command: IRejectAttendanceIssueCommand): Promise<IRejectAttendanceIssueResponse> {
         const commandInstance = new RejectAttendanceIssueCommand(command);
+        return await this.commandBus.execute(commandInstance);
+    }
+
+    /**
+     * 근태 이슈를 재요청한다 (직원용)
+     */
+    async 근태이슈를재요청한다(
+        command: IReRequestAttendanceIssueCommand,
+    ): Promise<IReRequestAttendanceIssueResponse> {
+        const commandInstance = new ReRequestAttendanceIssueCommand(command);
         return await this.commandBus.execute(commandInstance);
     }
 }

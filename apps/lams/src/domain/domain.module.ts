@@ -12,6 +12,7 @@ import { DomainMonthlyEventSummaryModule } from './monthly-event-summary/monthly
 import { DomainUsedAttendanceModule } from './used-attendance/used-attendance.module';
 import { DomainDailySummaryChangeHistoryModule } from './daily-summary-change-history/daily-summary-change-history.module';
 import { WorkTimeOverrideModule } from './work-time-override/work-time-override.module';
+import { WorkScheduleTypeModule } from './work-schedule-type/work-schedule-type.module';
 import { DomainProjectModule } from './project/project.module';
 import { DomainAssignedProjectModule } from './assigned-project/assigned-project.module';
 import { DomainWorkHoursModule } from './work-hours/work-hours.module';
@@ -49,6 +50,7 @@ import { DomainEmployeeDepartmentPositionModule } from '@libs/modules/employee-d
         DomainUsedAttendanceModule,
         DomainMonthlyEventSummaryModule,
         WorkTimeOverrideModule,
+        WorkScheduleTypeModule,
 
         // 데이터 스냅샷 관련 (LAMS 전용)
         DomainDataSnapshotInfoModule,

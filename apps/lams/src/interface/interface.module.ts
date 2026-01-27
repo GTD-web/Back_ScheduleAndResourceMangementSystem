@@ -5,6 +5,8 @@ import { AttendanceDataInterfaceModule } from './attendance-data/attendance-data
 import { AttendanceIssueInterfaceModule } from './attendance-issue/attendance-issue-interface.module';
 import { OrganizationManagementInterfaceModule } from './organization-management/organization-management-interface.module';
 import { SettingsInterfaceModule } from './settings/settings-interface.module';
+import { WorkHoursInterfaceModule } from './work-hours/work-hours-interface.module';
+import { DashboardInterfaceModule } from './dashboard/dashboard-interface.module';
 
 /**
  * 인터페이스 모듈
@@ -19,6 +21,8 @@ import { SettingsInterfaceModule } from './settings/settings-interface.module';
         AttendanceIssueInterfaceModule,
         OrganizationManagementInterfaceModule,
         SettingsInterfaceModule,
+        WorkHoursInterfaceModule,
+        DashboardInterfaceModule,
     ],
     controllers: [],
     providers: [],

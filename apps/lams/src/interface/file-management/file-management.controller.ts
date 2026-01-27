@@ -11,6 +11,7 @@ import {
     Delete,
     Param,
     Res,
+    NotFoundException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,6 +26,18 @@ import {
     GetFileListWithHistoryResponseDto,
 } from './dto/get-file-list-with-history.dto';
 import { IGetFileListWithHistoryResponse } from '../../context/file-management-context/interfaces/response/get-file-list-with-history-response.interface';
+import {
+    GetFileListRequestDto,
+    GetFileListResponseDto,
+} from './dto/get-file-list.dto';
+import { IGetFileListResponse } from '../../context/file-management-context/interfaces/response/get-file-list-response.interface';
+import {
+    GetReflectionHistoryRequestDto,
+    GetReflectionHistoryResponseDto,
+} from './dto/get-reflection-history.dto';
+import { IGetReflectionHistoryResponse } from '../../context/file-management-context/interfaces/response/get-reflection-history-response.interface';
+import { GetFileOrgDataResponseDto } from './dto/get-file-org-data.dto';
+import { IGetFileOrgDataResponse } from '../../context/file-management-context/interfaces/response/get-file-org-data-response.interface';
 
 /**
  * 파일 관리 컨트롤러
@@ -180,33 +193,83 @@ export class FileManagementController {
     }
 
     /**
-     * 파일 목록과 반영이력 조회
+     * 파일 목록 조회
      *
-     * 파일 목록을 조회하고 각 파일의 반영이력을 함께 조회합니다.
-     * 연도와 월을 선택적으로 필터링할 수 있습니다.
+     * 파일 목록만 조회합니다. 반영이력은 포함되지 않습니다.
+     * 연도와 월을 필수로 제공해야 합니다.
      */
-    @Get('files')
+    @Get('files/list')
     @ApiOperation({
-        summary: '파일 목록과 반영이력 조회',
-        description: '파일 목록을 조회하고 각 파일의 반영이력을 함께 조회합니다. 연도와 월을 필수로 제공해야 합니다.',
+        summary: '파일 목록 조회',
+        description: '파일 목록만 조회합니다. 반영이력은 포함되지 않습니다. 연도와 월을 필수로 제공해야 합니다.',
     })
     @ApiQuery({ name: 'year', description: '연도', example: '2024', required: true })
     @ApiQuery({ name: 'month', description: '월', example: '01', required: true })
     @ApiResponse({
         status: 200,
-        description: '파일 목록과 반영이력 조회 성공',
-        type: GetFileListWithHistoryResponseDto,
+        description: '파일 목록 조회 성공',
+        type: GetFileListResponseDto,
     })
-    async getFileListWithHistory(
-        @Query() dto: GetFileListWithHistoryRequestDto,
-    ): Promise<IGetFileListWithHistoryResponse> {
+    async getFileList(@Query() dto: GetFileListRequestDto): Promise<IGetFileListResponse> {
         if (!dto.year || !dto.month) {
             throw new BadRequestException('연도와 월은 필수입니다.');
         }
 
-        const result = await this.fileManagementBusinessService.파일목록과반영이력을조회한다({
+        const result = await this.fileManagementBusinessService.파일목록을조회한다({
             year: dto.year,
             month: dto.month,
+        });
+
+        return result;
+    }
+
+    /**
+     * 반영이력 조회
+     *
+     * 특정 파일의 반영이력만 조회합니다.
+     * 파일 ID를 필수로 제공해야 합니다.
+     */
+    @Get('files/:fileId/reflection-history')
+    @ApiOperation({
+        summary: '반영이력 조회',
+        description: '특정 파일의 반영이력만 조회합니다. 파일 ID를 필수로 제공해야 합니다.',
+    })
+    @ApiParam({ name: 'fileId', description: '파일 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '반영이력 조회 성공',
+        type: GetReflectionHistoryResponseDto,
+    })
+    async getReflectionHistory(
+        @Param('fileId', ParseUUIDPipe) fileId: string,
+    ): Promise<IGetReflectionHistoryResponse> {
+        const result = await this.fileManagementBusinessService.반영이력을조회한다({
+            fileId,
+        });
+
+        return result;
+    }
+
+    /**
+     * 파일 orgData 조회
+     *
+     * 특정 파일의 orgData(조직/부서 정보)만 조회합니다.
+     * 파일 ID를 필수로 제공해야 합니다.
+     */
+    @Get('files/:fileId/org-data')
+    @ApiOperation({
+        summary: '파일 orgData 조회',
+        description: '특정 파일의 orgData(조직/부서 정보)만 조회합니다. 파일 ID를 필수로 제공해야 합니다.',
+    })
+    @ApiParam({ name: 'fileId', description: '파일 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '파일 orgData 조회 성공',
+        type: GetFileOrgDataResponseDto,
+    })
+    async getFileOrgData(@Param('fileId', ParseUUIDPipe) fileId: string): Promise<IGetFileOrgDataResponse> {
+        const result = await this.fileManagementBusinessService.파일orgData를조회한다({
+            fileId,
         });
 
         return result;
@@ -228,19 +291,36 @@ export class FileManagementController {
         description: '파일 다운로드 성공',
     })
     async downloadFile(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
-        // TODO: 비즈니스 서비스에 파일 다운로드 메서드 구현 필요
-        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
+        try {
+            const result = await this.fileManagementBusinessService.파일을다운로드한다(id);
+
+            // 파일명 인코딩 처리 (한글 파일명 지원)
+            const encodedFileName = encodeURIComponent(result.fileName);
+
+            // 응답 헤더 설정
+            res.setHeader('Content-Type', 'application/octet-stream');
+            res.setHeader('Content-Disposition', `attachment; filename="${encodedFileName}"; filename*=UTF-8''${encodedFileName}`);
+            res.setHeader('Content-Length', result.buffer.length);
+
+            // 파일 전송
+            res.send(result.buffer);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
+        }
     }
 
     /**
      * 파일 삭제
      *
-     * 파일 ID로 파일을 삭제합니다.
+     * 파일 ID로 파일을 삭제합니다. (Soft Delete)
      */
     @Delete('files/:id')
     @ApiOperation({
         summary: '파일 삭제',
-        description: '파일 ID로 파일을 삭제합니다.',
+        description: '파일 ID로 파일을 삭제합니다. (Soft Delete)',
     })
     @ApiParam({ name: 'id', description: '파일 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
     @ApiResponse({
@@ -252,7 +332,14 @@ export class FileManagementController {
             throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
         }
 
-        // TODO: 비즈니스 서비스에 파일 삭제 메서드 구현 필요
-        throw new BadRequestException('아직 구현되지 않은 기능입니다.');
+        try {
+            await this.fileManagementBusinessService.파일을삭제한다(id, userId);
+            return { message: '파일이 성공적으로 삭제되었습니다.', fileId: id };
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException(`파일 삭제 중 오류가 발생했습니다: ${error.message}`);
+        }
     }
 }

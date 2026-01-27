@@ -37,9 +37,14 @@ export class UpdateAttendanceIssueDescriptionRequestDto {
 }
 
 /**
- * 근태 이슈 수정 요청 DTO (관리자용)
+ * 근태 이슈 반영 요청 DTO
  */
-export class UpdateAttendanceIssueCorrectionRequestDto {
+export class ApplyAttendanceIssueRequestDto {
+    @ApiPropertyOptional({ description: '확인자 이름', example: '관리자' })
+    @IsOptional()
+    @IsString()
+    confirmedBy?: string;
+
     @ApiPropertyOptional({ description: '변경할 출근 시간 (HH:MM:SS)', example: '09:00:00' })
     @IsOptional()
     @IsString()
@@ -61,16 +66,6 @@ export class UpdateAttendanceIssueCorrectionRequestDto {
     @ArrayMaxSize(2)
     @IsUUID('4', { each: true })
     correctedAttendanceTypeIds?: string[];
-}
-
-/**
- * 근태 이슈 반영 요청 DTO
- */
-export class ApplyAttendanceIssueRequestDto {
-    @ApiPropertyOptional({ description: '확인자 이름', example: '관리자' })
-    @IsOptional()
-    @IsString()
-    confirmedBy?: string;
 }
 
 /**

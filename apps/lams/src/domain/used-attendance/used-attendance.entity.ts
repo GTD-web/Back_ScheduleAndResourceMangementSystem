@@ -119,6 +119,7 @@ export class UsedAttendance extends BaseEntity<UsedAttendanceDTO> {
             createdBy: this.created_by,
             updatedBy: this.updated_by,
             version: this.version,
+            attendanceType: this.attendanceType?.DTO변환한다() || null,
         };
     }
 }

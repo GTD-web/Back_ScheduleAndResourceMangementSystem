@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { FileManagementContextService } from '../../context/file-management-context/file-management-context.service';
 import { AttendanceDataContextService } from '../../context/attendance-data-context/attendance-data-context.service';
 import { DataSnapshotContextService } from '../../context/data-snapshot-context/data-snapshot-context.service';
@@ -7,6 +7,12 @@ import {
     IUploadFileResponse,
     IGetFileListWithHistoryQuery,
     IGetFileListWithHistoryResponse,
+    IGetFileListQuery,
+    IGetFileListResponse,
+    IGetReflectionHistoryQuery,
+    IGetReflectionHistoryResponse,
+    IGetFileOrgDataQuery,
+    IGetFileOrgDataResponse,
 } from '../../context/file-management-context/interfaces';
 import {
     IGenerateDailySummariesResponse,
@@ -225,15 +231,107 @@ export class FileManagementBusinessService {
     }
 
     /**
-     * 파일 목록과 반영이력을 조회한다
+     * 파일 목록을 조회한다
      *
-     * @param query 파일 목록과 반영이력 조회 쿼리
-     * @returns 파일 목록과 반영이력 조회 결과
+     * @param query 파일 목록 조회 쿼리
+     * @returns 파일 목록 조회 결과 (data 컬럼 제외)
      */
-    async 파일목록과반영이력을조회한다(
-        query: IGetFileListWithHistoryQuery,
-    ): Promise<IGetFileListWithHistoryResponse> {
-        this.logger.log(`파일 목록과 반영이력 조회: year=${query.year}, month=${query.month}`);
-        return await this.fileManagementContextService.파일목록과반영이력을조회한다(query);
+    async 파일목록을조회한다(query: IGetFileListQuery): Promise<IGetFileListResponse> {
+        this.logger.log(`파일 목록 조회: year=${query.year}, month=${query.month}`);
+        return await this.fileManagementContextService.파일목록을조회한다(query);
+    }
+
+    /**
+     * 반영이력을 조회한다
+     *
+     * @param query 반영이력 조회 쿼리
+     * @returns 반영이력 조회 결과
+     */
+    async 반영이력을조회한다(
+        query: IGetReflectionHistoryQuery,
+    ): Promise<IGetReflectionHistoryResponse> {
+        this.logger.log(`반영이력 조회: fileId=${query.fileId}`);
+        return await this.fileManagementContextService.반영이력을조회한다(query);
+    }
+
+    /**
+     * 파일 orgData를 조회한다
+     *
+     * @param query 파일 orgData 조회 쿼리
+     * @returns 파일 orgData 조회 결과
+     */
+    async 파일orgData를조회한다(query: IGetFileOrgDataQuery): Promise<IGetFileOrgDataResponse> {
+        this.logger.log(`파일 orgData 조회: fileId=${query.fileId}`);
+        return await this.fileManagementContextService.파일orgData를조회한다(query);
+    }
+
+    /**
+     * 파일을 삭제한다
+     *
+     * 실제 저장소의 파일과 데이터베이스 레코드를 모두 삭제합니다.
+     *
+     * @param fileId 파일 ID
+     * @param userId 사용자 ID
+     */
+    async 파일을삭제한다(fileId: string, userId: string): Promise<void> {
+        this.logger.log(`파일 삭제 시작: fileId=${fileId}, userId=${userId}`);
+
+        // 1. 파일 정보 조회
+        const file = await this.fileManagementContextService.파일정보를조회한다(fileId);
+
+        if (!file) {
+            throw new NotFoundException(`파일을 찾을 수 없습니다. (id: ${fileId})`);
+        }
+
+        // 2. filePath에서 fileKey 추출
+        // filePath는 `/storage/${fileKey}` 형식이거나 `fileKey` 형식일 수 있음
+        let fileKey = file.filePath;
+        if (fileKey.startsWith('/storage/')) {
+            fileKey = fileKey.replace('/storage/', '');
+        }
+
+        // 3. StorageService를 통해 실제 파일 삭제
+        try {
+            const storageService = this.fileManagementContextService.getStorageService();
+            await storageService.deleteFile({ fileKey });
+            this.logger.log(`저장소 파일 삭제 완료: fileKey=${fileKey}`);
+        } catch (error) {
+            // 파일이 이미 삭제되었거나 없는 경우에도 계속 진행 (Soft Delete는 수행)
+            this.logger.warn(`저장소 파일 삭제 실패 (계속 진행): fileKey=${fileKey}, error=${error.message}`);
+        }
+
+        // 4. 데이터베이스 Soft Delete 수행
+        await this.fileManagementContextService.파일을삭제한다(fileId, userId);
+
+        this.logger.log(`파일 삭제 완료: fileId=${fileId}`);
+    }
+
+    /**
+     * 파일을 다운로드한다
+     *
+     * @param fileId 파일 ID
+     * @returns 파일 다운로드 스트림 (Buffer) 및 파일명
+     */
+    async 파일을다운로드한다(fileId: string): Promise<{ buffer: Buffer; fileName: string }> {
+        this.logger.log(`파일 다운로드 시작: fileId=${fileId}`);
+
+        // 파일 정보 조회
+        const file = await this.fileManagementContextService.파일정보를조회한다(fileId);
+
+        if (!file) {
+            throw new NotFoundException(`파일을 찾을 수 없습니다. (id: ${fileId})`);
+        }
+
+        // StorageService를 통해 파일 다운로드
+        const storageService = this.fileManagementContextService.getStorageService();
+        const buffer = await storageService.downloadFileStream(file.filePath);
+
+        const fileName = file.fileOriginalName || file.fileName;
+        this.logger.log(`파일 다운로드 완료: fileId=${fileId}, fileName=${fileName}`);
+
+        return {
+            buffer,
+            fileName,
+        };
     }
 }

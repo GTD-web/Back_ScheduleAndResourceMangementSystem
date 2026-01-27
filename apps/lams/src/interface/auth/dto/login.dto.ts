@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class LoginRequestDto {
     @ApiProperty({
         description: '이메일',
-        example: 'test@example.com',
+        example: 'test@lumir.space',
     })
     @IsEmail()
     @IsNotEmpty()
@@ -15,7 +15,7 @@ export class LoginRequestDto {
 
     @ApiProperty({
         description: '비밀번호',
-        example: 'password123',
+        example: '12341234',
     })
     @IsString()
     @IsNotEmpty()

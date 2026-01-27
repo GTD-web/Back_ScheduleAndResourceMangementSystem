@@ -10,10 +10,12 @@ export * from './command/restore-monthly-summaries-from-snapshot-command.interfa
 
 // Query 인터페이스
 export * from './query/get-monthly-summaries-query.interface';
+export * from './query/get-daily-summary-history-query.interface';
 
 // Response 인터페이스
 export * from './response/generate-daily-summaries-response.interface';
 export * from './response/generate-monthly-summaries-response.interface';
 export * from './response/get-monthly-summaries-response.interface';
 export * from './response/update-daily-summary-response.interface';
+export * from './response/get-daily-summary-history-response.interface';
 

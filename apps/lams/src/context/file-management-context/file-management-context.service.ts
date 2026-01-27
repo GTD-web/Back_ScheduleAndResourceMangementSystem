@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UploadFileCommand } from './handlers/file-upload/commands';
+import { DeleteFileCommand } from './handlers/file-delete/commands';
 import {
     ProcessFileContentCommand,
     DeleteExistingDataForReflectionCommand,
@@ -8,18 +9,31 @@ import {
     SaveReflectionHistoryCommand,
 } from './handlers/file-content-reflection/commands';
 import { GetSnapshotDataFromHistoryQuery } from './handlers/file-content-reflection/queries';
-import { GetFileListWithHistoryQuery } from './handlers/file-list/queries';
+import {
+    GetFileListWithHistoryQuery,
+    GetFileListQuery,
+    GetReflectionHistoryQuery,
+    GetFileOrgDataQuery,
+} from './handlers/file-list/queries';
 import {
     IUploadFileResponse,
     IRestoreFromHistoryCommand,
     IRestoreFromHistoryResponse,
     IGetFileListWithHistoryQuery,
     IGetFileListWithHistoryResponse,
+    IGetFileListQuery,
+    IGetFileListResponse,
+    IGetReflectionHistoryQuery,
+    IGetReflectionHistoryResponse,
+    IGetFileOrgDataQuery,
+    IGetFileOrgDataResponse,
     ISaveReflectionHistoryCommand,
     IGetSnapshotDataFromHistoryQuery,
     IGetSnapshotDataFromHistoryResponse,
 } from './interfaces';
 import { DomainFileContentReflectionHistoryService } from '../../domain/file-content-reflection-history/file-content-reflection-history.service';
+import { DomainFileService } from '../../domain/file/file.service';
+import { IStorageService } from '../../integrations/storage';
 
 /**
  * 파일관리 컨텍스트 서비스
@@ -32,6 +46,9 @@ export class FileManagementContextService {
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus,
         private readonly fileContentReflectionHistoryService: DomainFileContentReflectionHistoryService,
+        private readonly fileService: DomainFileService,
+        @Inject('IStorageService')
+        private readonly storageService: IStorageService,
     ) {}
 
     /**
@@ -233,5 +250,73 @@ export class FileManagementContextService {
     ): Promise<IGetFileListWithHistoryResponse> {
         const queryInstance = new GetFileListWithHistoryQuery(query);
         return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 파일 목록을 조회한다
+     *
+     * @param query 파일 목록 조회 쿼리
+     * @returns 파일 목록 조회 결과
+     */
+    async 파일목록을조회한다(query: IGetFileListQuery): Promise<IGetFileListResponse> {
+        const queryInstance = new GetFileListQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 반영이력을 조회한다
+     *
+     * @param query 반영이력 조회 쿼리
+     * @returns 반영이력 조회 결과
+     */
+    async 반영이력을조회한다(
+        query: IGetReflectionHistoryQuery,
+    ): Promise<IGetReflectionHistoryResponse> {
+        const queryInstance = new GetReflectionHistoryQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 파일 orgData를 조회한다
+     *
+     * @param query 파일 orgData 조회 쿼리
+     * @returns 파일 orgData 조회 결과
+     */
+    async 파일orgData를조회한다(query: IGetFileOrgDataQuery): Promise<IGetFileOrgDataResponse> {
+        const queryInstance = new GetFileOrgDataQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 파일을 삭제한다
+     *
+     * @param fileId 파일 ID
+     * @param userId 사용자 ID
+     */
+    async 파일을삭제한다(fileId: string, userId: string): Promise<void> {
+        const command = new DeleteFileCommand({
+            fileId,
+            userId,
+        });
+        return await this.commandBus.execute(command);
+    }
+
+    /**
+     * 파일 정보를 조회한다
+     *
+     * @param fileId 파일 ID
+     * @returns 파일 정보
+     */
+    async 파일정보를조회한다(fileId: string) {
+        return await this.fileService.ID로조회한다(fileId);
+    }
+
+    /**
+     * StorageService를 가져온다
+     *
+     * @returns StorageService 인스턴스
+     */
+    getStorageService(): IStorageService {
+        return this.storageService;
     }
 }

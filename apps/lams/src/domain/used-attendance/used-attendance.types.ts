@@ -1,3 +1,5 @@
+import { AttendanceTypeDTO } from "../attendance-type/attendance-type.types";
+
 /**
  * 사용된 근태 관련 타입 정의
  */
@@ -33,5 +35,6 @@ export interface UsedAttendanceDTO {
     createdBy?: string;
     updatedBy?: string;
     version: number;
+    attendanceType: AttendanceTypeDTO;
 }
 

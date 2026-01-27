@@ -319,11 +319,13 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
     /**
      * 조직/부서 정보 구성
      *
-     * koreanToEnglish 매핑 결과를 기준으로 조직/부서와 이름을 연결해 저장합니다.
+     * koreanToEnglish 매핑 결과를 기준으로 부서별로 그룹핑하고,
+     * 각 부서 그룹 안에 직원 정보를 하나씩만 저장합니다.
      */
     private buildOrgData(excelData: Record<string, any>[]): Record<string, any> | null {
         const departments: Record<string, Array<{ employeeNumber: string; name: string | null; position: string | null }>> =
             {};
+        const employeeInDepartment: Record<string, Set<string>> = {}; // 부서별로 이미 추가된 직원번호 추적
 
         excelData.forEach((row) => {
             const employeeNumber = row.employeeNumber;
@@ -332,15 +334,21 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
                 return;
             }
 
+            // 부서별로 그룹핑
             if (!departments[department]) {
                 departments[department] = [];
+                employeeInDepartment[department] = new Set();
             }
 
-            departments[department].push({
-                employeeNumber,
-                name: row.name ?? null,
-                position: row.position ?? null,
-            });
+            // 같은 부서 내에서 같은 직원번호가 이미 추가되었는지 확인
+            if (!employeeInDepartment[department].has(employeeNumber)) {
+                departments[department].push({
+                    employeeNumber,
+                    name: row.name ?? null,
+                    position: row.position ?? null,
+                });
+                employeeInDepartment[department].add(employeeNumber);
+            }
         });
 
         if (Object.keys(departments).length === 0) {

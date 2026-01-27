@@ -82,7 +82,7 @@ export class LocalStorageService implements IStorageService {
             this.logger.log(`파일 업로드 완료: ${fileKey}`);
 
             // 파일 URL 생성 (로컬 파일 경로)
-            const fileUrl = `/storage/${fileKey}`;
+            const fileUrl = fileKey;
 
             return {
                 success: true,

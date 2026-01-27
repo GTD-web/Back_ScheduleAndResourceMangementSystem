@@ -6,6 +6,8 @@ import {
     IGetAttendanceIssuesResponse,
     IGetAttendanceIssueQuery,
     IGetAttendanceIssueResponse,
+    IGetAttendanceIssuesByDepartmentQuery,
+    IGetAttendanceIssuesByDepartmentResponse,
     IUpdateAttendanceIssueDescriptionCommand,
     IUpdateAttendanceIssueDescriptionResponse,
     IUpdateAttendanceIssueCorrectionCommand,
@@ -14,6 +16,8 @@ import {
     IApplyAttendanceIssueResponse,
     IRejectAttendanceIssueCommand,
     IRejectAttendanceIssueResponse,
+    IReRequestAttendanceIssueCommand,
+    IReRequestAttendanceIssueResponse,
 } from '../../context/attendance-issue-context/interfaces';
 import { AttendanceIssueStatus } from '../../domain/attendance-issue/attendance-issue.types';
 
@@ -42,6 +46,20 @@ export class AttendanceIssueBusinessService {
     }): Promise<IGetAttendanceIssuesResponse> {
         this.logger.log(`근태 이슈 목록 조회: ${JSON.stringify(params)}`);
         return await this.attendanceIssueContextService.근태이슈목록을조회한다(params);
+    }
+
+    /**
+     * 연월/부서별 근태 이슈를 조회한다
+     *
+     * 해당 연월과 부서에 소속되었던 직원들의 근태 이슈를 조회하고 직원별로 그룹핑합니다.
+     */
+    async 연월부서별근태이슈를조회한다(
+        query: IGetAttendanceIssuesByDepartmentQuery,
+    ): Promise<IGetAttendanceIssuesByDepartmentResponse> {
+        this.logger.log(
+            `연월/부서별 근태 이슈 조회: year=${query.year}, month=${query.month}, departmentId=${query.departmentId}`,
+        );
+        return await this.attendanceIssueContextService.연월부서별근태이슈를조회한다(query);
     }
 
     /**
@@ -91,29 +109,49 @@ export class AttendanceIssueBusinessService {
     /**
      * 근태 이슈를 반영한다 (관리자용)
      */
-    async 근태이슈를반영한다(id: string, confirmedBy: string, userId: string): Promise<IApplyAttendanceIssueResponse> {
+    async 근태이슈를반영한다(
+        id: string,
+        data: {
+            confirmedBy: string;
+            correctedEnterTime?: string;
+            correctedLeaveTime?: string;
+            correctedAttendanceTypeIds?: string[];
+        },
+        userId: string,
+    ): Promise<IApplyAttendanceIssueResponse> {
         this.logger.log(`근태 이슈 반영: id=${id}`);
 
-        // 1. 이슈 조회 (수정 정보 확인)
-        const issueResponse = await this.attendanceIssueContextService.근태이슈를조회한다({ id });
-        const issue = issueResponse.issue;
+        // 2. 수정 정보가 요청에 포함된 경우 이슈 업데이트
+        if (data.correctedEnterTime || data.correctedLeaveTime || data.correctedAttendanceTypeIds) {
+            await this.attendanceIssueContextService.근태이슈수정정보를설정한다({
+                id,
+                correctedEnterTime: data.correctedEnterTime,
+                correctedLeaveTime: data.correctedLeaveTime,
+                correctedAttendanceTypeIds: data.correctedAttendanceTypeIds,
+                userId,
+            });
+        }
 
-        // 2. 일간 요약 수정 (수정 정보가 있는 경우)
-        if (issue.dailyEventSummaryId) {
+        // 3. 업데이트된 이슈 정보 조회 (수정 정보 반영 확인)
+        const updatedIssueResponse = await this.attendanceIssueContextService.근태이슈를조회한다({ id });
+        const updatedIssue = updatedIssueResponse.issue;
+
+        // 4. 일간 요약 수정 (수정 정보가 있는 경우)
+        if (updatedIssue.dailyEventSummaryId) {
             await this.attendanceDataContextService.일간요약을수정한다({
-                dailySummaryId: issue.dailyEventSummaryId,
-                enter: issue.correctedEnterTime || undefined,
-                leave: issue.correctedLeaveTime || undefined,
-                attendanceTypeIds: issue.correctedAttendanceTypeIds || undefined,
-                reason: `근태 이슈 반영: ${issue.description || '사유 없음'}`,
+                dailySummaryId: updatedIssue.dailyEventSummaryId,
+                enter: updatedIssue.correctedEnterTime || undefined,
+                leave: updatedIssue.correctedLeaveTime || undefined,
+                attendanceTypeIds: updatedIssue.correctedAttendanceTypeIds || undefined,
+                reason: `근태 이슈 반영: ${updatedIssue.description || '사유 없음'}`,
                 performedBy: userId,
             });
         }
 
-        // 3. 이슈 상태를 반영으로 변경
+        // 5. 이슈 상태를 반영으로 변경
         return await this.attendanceIssueContextService.근태이슈를반영한다({
             id,
-            confirmedBy,
+            confirmedBy: data.confirmedBy,
             userId,
         });
     }
@@ -130,6 +168,20 @@ export class AttendanceIssueBusinessService {
         return await this.attendanceIssueContextService.근태이슈를미반영처리한다({
             id,
             rejectionReason,
+            userId,
+        });
+    }
+
+    /**
+     * 근태 이슈를 재요청한다 (직원용)
+     */
+    async 근태이슈를재요청한다(
+        id: string,
+        userId: string,
+    ): Promise<IReRequestAttendanceIssueResponse> {
+        this.logger.log(`근태 이슈 재요청: id=${id}`);
+        return await this.attendanceIssueContextService.근태이슈를재요청한다({
+            id,
             userId,
         });
     }

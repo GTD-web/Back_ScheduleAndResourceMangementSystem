@@ -6,3 +6,5 @@ export * from './apply-attendance-issue.command';
 export * from './apply-attendance-issue.handler';
 export * from './reject-attendance-issue.command';
 export * from './reject-attendance-issue.handler';
+export * from './re-request-attendance-issue.command';
+export * from './re-request-attendance-issue.handler';

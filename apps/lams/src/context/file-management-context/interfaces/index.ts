@@ -5,9 +5,15 @@ export * from './command/delete-existing-data-for-reflection-command.interface';
 export * from './command/save-reflected-data-command.interface';
 export * from './command/save-reflection-history-command.interface';
 export * from './query/get-file-list-with-history-query.interface';
+export * from './query/get-file-list-query.interface';
+export * from './query/get-reflection-history-query.interface';
+export * from './query/get-file-org-data-query.interface';
 export * from './query/get-snapshot-data-from-history-query.interface';
 export * from './response/upload-file-response.interface';
 export * from './response/restore-from-history-response.interface';
 export * from './response/get-snapshot-data-from-history-response.interface';
 export * from './response/get-file-list-with-history-response.interface';
+export * from './response/get-file-list-response.interface';
+export * from './response/get-reflection-history-response.interface';
+export * from './response/get-file-org-data-response.interface';
 

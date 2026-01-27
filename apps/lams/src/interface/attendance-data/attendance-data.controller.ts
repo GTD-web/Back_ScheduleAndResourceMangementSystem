@@ -13,6 +13,10 @@ import { RestoreFromSnapshotRequestDto, RestoreFromSnapshotResponseDto } from '.
 import { GetSnapshotListRequestDto, GetSnapshotListResponseDto } from './dto/get-snapshot-list.dto';
 import { IGetSnapshotListResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-list-response.interface';
 import { IGetSnapshotByIdResponse } from '../../context/data-snapshot-context/interfaces/response/get-snapshot-by-id-response.interface';
+import {
+    GetDailySummaryHistoryResponseDto,
+} from './dto/get-daily-summary-history.dto';
+import { IGetDailySummaryHistoryResponse } from '../../context/attendance-data-context/interfaces/response/get-daily-summary-history-response.interface';
 
 /**
  * 출입/근태 데이터 컨트롤러
@@ -150,6 +154,33 @@ export class AttendanceDataController {
         return result;
     }
 
+    
+    /**
+     * 일간 요약 수정이력 조회
+     *
+     * 일간 요약 ID를 기준으로 해당 일간 요약의 수정이력을 조회합니다.
+     */
+    @Get('daily-summaries/:id/history')
+    @ApiOperation({
+        summary: '일간 요약 수정이력 조회',
+        description: '일간 요약 ID를 기준으로 해당 일간 요약의 수정이력을 조회합니다. 변경 시간 내림차순으로 정렬되어 반환됩니다.',
+    })
+    @ApiParam({ name: 'id', description: '일간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '일간 요약 수정이력 조회 성공',
+        type: GetDailySummaryHistoryResponseDto,
+    })
+    async getDailySummaryHistory(
+        @Param('id', ParseUUIDPipe) id: string,
+    ): Promise<IGetDailySummaryHistoryResponse> {
+        const result = await this.attendanceDataBusinessService.일간요약수정이력을조회한다({
+            dailyEventSummaryId: id,
+        });
+
+        return result;
+    }
+
     /**
      * 근태 스냅샷 저장
      *
@@ -219,23 +250,17 @@ export class AttendanceDataController {
     /**
      * 스냅샷 목록 조회
      *
-     * 연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다.
+     * 연월을 기준으로 스냅샷 데이터를 조회합니다.
      * 기본적으로 가장 최신 스냅샷을 반환하며, 조건 변경에 유연하게 대응할 수 있도록 구성됩니다.
      */
     @Get('snapshots')
     @ApiOperation({
         summary: '스냅샷 목록 조회',
         description:
-            '연월과 부서별을 기준으로 스냅샷 데이터를 조회합니다. 기본적으로 가장 최신 스냅샷을 반환하며, 정렬 및 필터 조건을 통해 유연하게 조회할 수 있습니다.',
+            '연월을 기준으로 스냅샷 데이터를 조회합니다. 기본적으로 가장 최신 스냅샷을 반환하며, 정렬 및 필터 조건을 통해 유연하게 조회할 수 있습니다.',
     })
     @ApiQuery({ name: 'year', description: '연도', example: '2024', required: true })
     @ApiQuery({ name: 'month', description: '월', example: '01', required: true })
-    @ApiQuery({
-        name: 'departmentId',
-        description: '부서 ID',
-        example: '123e4567-e89b-12d3-a456-426614174000',
-        required: true,
-    })
     @ApiQuery({
         name: 'sortBy',
         description: '정렬 기준',
@@ -249,14 +274,13 @@ export class AttendanceDataController {
         type: GetSnapshotListResponseDto,
     })
     async getSnapshotList(@Query() dto: GetSnapshotListRequestDto): Promise<IGetSnapshotListResponse> {
-        if (!dto.year || !dto.month || !dto.departmentId) {
-            throw new BadRequestException('연도, 월, 부서ID는 필수입니다.');
+        if (!dto.year || !dto.month) {
+            throw new BadRequestException('연도와 월은 필수입니다.');
         }
 
         const result = await this.attendanceDataBusinessService.스냅샷목록을조회한다({
             year: dto.year,
             month: dto.month,
-            departmentId: dto.departmentId,
             sortBy: dto.sortBy || 'latest',
             filters: dto.filters,
         });
@@ -268,22 +292,39 @@ export class AttendanceDataController {
      * 스냅샷 상세 조회
      *
      * 스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.
+     * 부서 ID를 제공하면 해당 부서의 해당 연월에 소속되었던 직원들의 스냅샷 child 데이터만 반환합니다.
      */
     @Get('snapshots/:id')
     @ApiOperation({
         summary: '스냅샷 상세 조회',
-        description: '스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다.',
+        description:
+            '스냅샷 ID로 스냅샷과 하위 스냅샷을 조회합니다. 부서 ID를 제공하면 해당 부서의 해당 연월에 소속되었던 직원들의 스냅샷 child 데이터만 반환합니다.',
     })
     @ApiParam({ name: 'id', description: '스냅샷 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiQuery({
+        name: 'departmentId',
+        description: '부서 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        required: true,
+    })
     @ApiResponse({
         status: 200,
         description: '스냅샷 상세 조회 성공',
     })
-    async getSnapshotById(@Param('id', ParseUUIDPipe) id: string): Promise<IGetSnapshotByIdResponse> {
+    async getSnapshotById(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Query('departmentId', ParseUUIDPipe) departmentId: string,
+    ): Promise<IGetSnapshotByIdResponse> {
+        if (!departmentId) {
+            throw new BadRequestException('부서 ID는 필수입니다.');
+        }
+
         const result = await this.attendanceDataBusinessService.스냅샷을ID로조회한다({
             snapshotId: id,
+            departmentId,
         });
 
         return result;
     }
+
 }

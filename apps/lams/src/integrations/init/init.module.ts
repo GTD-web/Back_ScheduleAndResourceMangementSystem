@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InitService } from './init.service';
 import { DomainAttendanceTypeModule } from '../../domain/attendance-type/attendance-type.module';
 import { DomainHolidayInfoModule } from '../../domain/holiday-info/holiday-info.module';
+import { DomainProjectModule } from '../../domain/project/project.module';
 import { OrganizationMigrationModule } from '../migration/migration.module';
 import { PrvDbMgrModule } from '../prv-db-mgr/prv-db-mgr.module';
 
@@ -12,7 +13,13 @@ import { PrvDbMgrModule } from '../prv-db-mgr/prv-db-mgr.module';
  * 애플리케이션 시작 시 필수 기본 데이터를 자동으로 생성합니다.
  */
 @Module({
-    imports: [DomainAttendanceTypeModule, DomainHolidayInfoModule, OrganizationMigrationModule, PrvDbMgrModule],
+    imports: [
+        DomainAttendanceTypeModule,
+        DomainHolidayInfoModule,
+        DomainProjectModule,
+        OrganizationMigrationModule,
+        PrvDbMgrModule,
+    ],
     providers: [InitService],
 })
 export class InitModule {}

@@ -59,6 +59,22 @@ export class DomainHolidayInfoService {
     }
 
     /**
+     * 연도별 휴일 정보 목록을 조회한다
+     *
+     * @param year 연도 (예: '2024')
+     * @returns 해당 연도의 휴일 정보 목록
+     */
+    async 연도별목록조회한다(year: string): Promise<HolidayInfoDTO[]> {
+        const holidayInfos = await this.repository
+            .createQueryBuilder('holiday')
+            .where('holiday.deleted_at IS NULL')
+            .andWhere('holiday.holiday_date LIKE :year', { year: `${year}-%` })
+            .orderBy('holiday.holiday_date', 'ASC')
+            .getMany();
+        return holidayInfos.map((hi) => hi.DTO변환한다());
+    }
+
+    /**
      * 휴일 정보를 수정한다
      */
     async 수정한다(
