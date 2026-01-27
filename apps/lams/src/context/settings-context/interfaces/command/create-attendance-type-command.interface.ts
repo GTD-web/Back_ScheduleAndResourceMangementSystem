@@ -8,5 +8,7 @@ export interface ICreateAttendanceTypeCommand {
     startWorkTime?: string;
     endWorkTime?: string;
     deductedAnnualLeave?: number;
+    code?: string;
+    isActive?: boolean;
     performedBy: string;
 }

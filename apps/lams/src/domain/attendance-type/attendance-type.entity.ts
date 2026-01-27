@@ -23,6 +23,8 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
 
     @Column({
         name: 'is_recognized_work_time',
+        type: 'boolean',
+        default: true,
         comment: '인정 근무 시간 여부',
     })
     is_recognized_work_time: boolean;
@@ -48,6 +50,23 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         comment: '차감 연차',
     })
     deducted_annual_leave: number;
+
+    @Column({
+        name: 'code',
+        type: 'varchar',
+        length: 50,
+        nullable: true,
+        comment: '출석 타입 코드',
+    })
+    code: string | null;
+
+    @Column({
+        name: 'is_active',
+        type: 'boolean',
+        default: true,
+        comment: '활성화 여부',
+    })
+    is_active: boolean;
 
     /**
      * 출석 타입 불변성 검증
@@ -109,6 +128,8 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         start_work_time?: string,
         end_work_time?: string,
         deducted_annual_leave: number = 0,
+        code?: string,
+        is_active: boolean = true,
     ) {
         super();
         this.title = title;
@@ -117,6 +138,8 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         this.start_work_time = start_work_time || null;
         this.end_work_time = end_work_time || null;
         this.deducted_annual_leave = deducted_annual_leave;
+        this.code = code || null;
+        this.is_active = is_active;
         this.validateInvariants();
     }
 
@@ -130,6 +153,8 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         start_work_time?: string,
         end_work_time?: string,
         deducted_annual_leave?: number,
+        code?: string,
+        is_active?: boolean,
     ): void {
         if (title !== undefined) {
             this.title = title;
@@ -149,6 +174,12 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         if (deducted_annual_leave !== undefined) {
             this.deducted_annual_leave = deducted_annual_leave;
         }
+        if (code !== undefined) {
+            this.code = code;
+        }
+        if (is_active !== undefined) {
+            this.is_active = is_active;
+        }
         this.validateInvariants();
     }
 
@@ -164,6 +195,8 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
             startWorkTime: this.start_work_time,
             endWorkTime: this.end_work_time,
             deductedAnnualLeave: this.deducted_annual_leave,
+            code: this.code || '',
+            isActive: this.is_active,
             createdAt: this.created_at,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,

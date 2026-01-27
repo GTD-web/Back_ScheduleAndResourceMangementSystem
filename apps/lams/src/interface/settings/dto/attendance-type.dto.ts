@@ -26,6 +26,12 @@ export class AttendanceTypeResponseDto {
     @ApiProperty({ description: '차감 연차' })
     deductedAnnualLeave: number;
 
+    @ApiPropertyOptional({ description: '출석 타입 코드' })
+    code?: string | null;
+
+    @ApiProperty({ description: '활성화 여부' })
+    isActive: boolean;
+
     @ApiProperty({ description: '생성 일시' })
     createdAt: Date;
 
@@ -86,6 +92,15 @@ export class CreateAttendanceTypeRequestDto {
     @ApiPropertyOptional({ description: '차감 연차', example: 1.0 })
     @IsOptional()
     deductedAnnualLeave?: number;
+
+    @ApiPropertyOptional({ description: '출석 타입 코드', example: 'ANNUAL_LEAVE' })
+    @IsString()
+    @IsOptional()
+    code?: string;
+
+    @ApiPropertyOptional({ description: '활성화 여부', example: true })
+    @IsOptional()
+    isActive?: boolean;
 }
 
 /**
@@ -126,6 +141,15 @@ export class UpdateAttendanceTypeRequestDto {
     @ApiPropertyOptional({ description: '차감 연차', example: 1.0 })
     @IsOptional()
     deductedAnnualLeave?: number;
+
+    @ApiPropertyOptional({ description: '출석 타입 코드', example: 'ANNUAL_LEAVE' })
+    @IsString()
+    @IsOptional()
+    code?: string;
+
+    @ApiPropertyOptional({ description: '활성화 여부', example: true })
+    @IsOptional()
+    isActive?: boolean;
 }
 
 /**

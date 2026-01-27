@@ -9,6 +9,8 @@ export interface AttendanceTypeDTO {
     startWorkTime: string | null;
     endWorkTime: string | null;
     deductedAnnualLeave: number;
+    code: string | null;
+    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
@@ -31,6 +33,8 @@ export interface CreateAttendanceTypeData {
     startWorkTime?: string;
     endWorkTime?: string;
     deductedAnnualLeave?: number;
+    code?: string;
+    isActive?: boolean;
 }
 
 /**
@@ -43,4 +47,6 @@ export interface UpdateAttendanceTypeData {
     startWorkTime?: string;
     endWorkTime?: string;
     deductedAnnualLeave?: number;
+    code?: string;
+    isActive?: boolean;
 }

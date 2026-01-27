@@ -9,5 +9,7 @@ export interface IUpdateAttendanceTypeCommand {
     startWorkTime?: string;
     endWorkTime?: string;
     deductedAnnualLeave?: number;
+    code?: string;
+    isActive?: boolean;
     performedBy: string;
 }

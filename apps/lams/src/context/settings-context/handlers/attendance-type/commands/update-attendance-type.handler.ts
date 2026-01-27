@@ -20,7 +20,7 @@ export class UpdateAttendanceTypeHandler
     ) {}
 
     async execute(command: UpdateAttendanceTypeCommand): Promise<IUpdateAttendanceTypeResponse> {
-        const { id, title, workTime, isRecognizedWorkTime, startWorkTime, endWorkTime, deductedAnnualLeave, performedBy } =
+        const { id, title, workTime, isRecognizedWorkTime, startWorkTime, endWorkTime, deductedAnnualLeave, code, isActive, performedBy } =
             command.data;
 
         return await this.dataSource.transaction(async (manager) => {
@@ -36,6 +36,8 @@ export class UpdateAttendanceTypeHandler
                         startWorkTime,
                         endWorkTime,
                         deductedAnnualLeave,
+                        code,
+                        isActive,
                     },
                     performedBy,
                     manager,

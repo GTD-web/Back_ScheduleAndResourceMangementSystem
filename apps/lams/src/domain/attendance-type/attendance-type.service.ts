@@ -37,6 +37,8 @@ export class DomainAttendanceTypeService {
             data.startWorkTime,
             data.endWorkTime,
             data.deductedAnnualLeave !== undefined ? data.deductedAnnualLeave : 0,
+            data.code,
+            data.isActive !== undefined ? data.isActive : true,
         );
 
         const saved = await repository.save(attendanceType);
@@ -87,6 +89,8 @@ export class DomainAttendanceTypeService {
             data.startWorkTime,
             data.endWorkTime,
             data.deductedAnnualLeave,
+            data.code,
+            data.isActive,
         );
 
         // 수정자 정보 설정

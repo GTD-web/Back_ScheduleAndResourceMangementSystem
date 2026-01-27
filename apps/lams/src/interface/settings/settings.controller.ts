@@ -427,6 +427,8 @@ export class SettingsController {
             startWorkTime: dto.startWorkTime,
             endWorkTime: dto.endWorkTime,
             deductedAnnualLeave: dto.deductedAnnualLeave,
+            code: dto.code,
+            isActive: dto.isActive,
             performedBy: userId,
         });
     }
@@ -460,6 +462,8 @@ export class SettingsController {
             startWorkTime: dto.startWorkTime,
             endWorkTime: dto.endWorkTime,
             deductedAnnualLeave: dto.deductedAnnualLeave,
+            code: dto.code,
+            isActive: dto.isActive,
             performedBy: userId,
         });
     }

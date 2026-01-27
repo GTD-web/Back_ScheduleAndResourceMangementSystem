@@ -17,7 +17,7 @@ export class CreateAttendanceTypeHandler
     constructor(private readonly dataSource: DataSource) {}
 
     async execute(command: CreateAttendanceTypeCommand): Promise<ICreateAttendanceTypeResponse> {
-        const { title, workTime, isRecognizedWorkTime, startWorkTime, endWorkTime, deductedAnnualLeave, performedBy } =
+        const { title, workTime, isRecognizedWorkTime, startWorkTime, endWorkTime, deductedAnnualLeave, code, isActive, performedBy } =
             command.data;
 
         return await this.dataSource.transaction(async (manager) => {
@@ -31,6 +31,8 @@ export class CreateAttendanceTypeHandler
                     startWorkTime,
                     endWorkTime,
                     deductedAnnualLeave,
+                    code,
+                    isActive,
                 );
                 attendanceTypeEntity.생성자설정한다(performedBy);
                 attendanceTypeEntity.메타데이터업데이트한다(performedBy);
