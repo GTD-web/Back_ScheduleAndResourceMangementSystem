@@ -15,7 +15,8 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
 
     @Column({
         name: 'date',
-        type: 'date',
+        type: 'varchar',
+        length: 10,
         unique: true,
         comment: '적용 날짜 (yyyy-MM-dd)',
     })
