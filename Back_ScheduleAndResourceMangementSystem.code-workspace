@@ -10,5 +10,7 @@
 		"path": "../Back_EvaludationManagementSystem"
 	}
 ],
-  "settings": {}
+"settings": {
+	"cursor.cpp.enablePartialAccepts": true
+}
 }

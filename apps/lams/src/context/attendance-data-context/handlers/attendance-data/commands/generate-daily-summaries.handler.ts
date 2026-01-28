@@ -84,7 +84,7 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                     usedAttendances,
                     manager,
                 );
-
+                console.log(events.length, usedAttendances.length, employees.length , employeeNumberMap.size)
                 if (employees.length === 0) {
                     this.logger.warn('조회된 직원이 없습니다.');
                     return {
