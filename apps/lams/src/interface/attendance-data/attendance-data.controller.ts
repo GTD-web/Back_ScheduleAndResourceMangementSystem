@@ -17,6 +17,8 @@ import {
     GetDailySummaryHistoryResponseDto,
 } from './dto/get-daily-summary-history.dto';
 import { IGetDailySummaryHistoryResponse } from '../../context/attendance-data-context/interfaces/response/get-daily-summary-history-response.interface';
+import { GetDailySummaryDetailResponseDto } from './dto/get-daily-summary-detail.dto';
+import { IGetDailySummaryDetailResponse } from '../../context/attendance-data-context/interfaces/response/get-daily-summary-detail-response.interface';
 
 /**
  * 출입/근태 데이터 컨트롤러
@@ -176,6 +178,32 @@ export class AttendanceDataController {
     ): Promise<IGetDailySummaryHistoryResponse> {
         const result = await this.attendanceDataBusinessService.일간요약수정이력을조회한다({
             dailyEventSummaryId: id,
+        });
+
+        return result;
+    }
+
+    /**
+     * 일간 요약 상세 조회
+     *
+     * 일간 요약 ID를 기준으로 해당 일간 요약의 상세 정보, 수정이력, 근태 이슈를 조회합니다.
+     */
+    @Get('daily-summaries/:id')
+    @ApiOperation({
+        summary: '일간 요약 상세 조회',
+        description: '일간 요약 ID를 기준으로 해당 일간 요약의 상세 정보, 수정이력, 근태 이슈를 조회합니다.',
+    })
+    @ApiParam({ name: 'id', description: '일간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '일간 요약 상세 조회 성공',
+        type: GetDailySummaryDetailResponseDto,
+    })
+    async getDailySummaryDetail(
+        @Param('id', ParseUUIDPipe) id: string,
+    ): Promise<IGetDailySummaryDetailResponse> {
+        const result = await this.attendanceDataBusinessService.일간요약상세를조회한다({
+            dailySummaryId: id,
         });
 
         return result;

@@ -94,8 +94,8 @@ export class GetDepartmentMonthlyEmployeeAttendanceHandler
         employeeHistories.forEach((history) => {
             employeeAttendanceMap.set(history.employeeId, {
                 employeeId: history.employeeId,
-                employeeName: history.employeeName || '',
-                employeeNumber: history.employeeNumber || '',
+                employeeName: history.employee.name || '',
+                employeeNumber: history.employee.employeeNumber || '',
                 attendanceUsage: {
                     businessTrip: 0,
                     annualLeave: 0,
