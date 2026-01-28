@@ -116,7 +116,7 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
     ) {
         super();
         this.file_id = file_id;
-        this.reflected_at = null;
+        this.reflected_at = new Date(); // 반영일자는 생성 시점으로 설정
         this.data_snapshot_info_id = data_snapshot_info_id || null;
         this.info = info || null;
         this.validateInvariants();

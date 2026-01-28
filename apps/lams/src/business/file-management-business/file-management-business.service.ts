@@ -197,6 +197,7 @@ export class FileManagementBusinessService {
         // 2. 스냅샷 데이터로 파일 데이터 복원 (EventInfo, UsedAttendance 복원)
         const restoreResult = await this.fileManagementContextService.스냅샷데이터로파일데이터를복원한다(
             snapshotData,
+            performedBy,
         );
 
         this.logger.log(`이력으로 되돌리기 완료: year=${year}, month=${month}`);

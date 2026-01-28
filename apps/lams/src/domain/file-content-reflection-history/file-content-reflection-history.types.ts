@@ -35,5 +35,6 @@ export interface FileContentReflectionHistoryDTO {
     createdBy?: string;
     updatedBy?: string;
     version: number;
+    isLatest?: boolean; // 같은 연월, 같은 유형의 파일 중 최신 반영 여부
 }
 

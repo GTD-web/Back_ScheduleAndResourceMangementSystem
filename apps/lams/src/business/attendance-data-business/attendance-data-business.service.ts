@@ -121,6 +121,7 @@ export class AttendanceDataBusinessService {
                 usedAttendances: allUsedAttendances,
                 snapshot: snapshotData.snapshot,
             },
+            command.performedBy,
          
         );
 

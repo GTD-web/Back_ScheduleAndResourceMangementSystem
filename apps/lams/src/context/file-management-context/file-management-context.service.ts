@@ -33,6 +33,7 @@ import {
 } from './interfaces';
 import { DomainFileContentReflectionHistoryService } from '../../domain/file-content-reflection-history/file-content-reflection-history.service';
 import { DomainFileService } from '../../domain/file/file.service';
+import { DomainDataSnapshotInfoService } from '../../domain/data-snapshot-info/data-snapshot-info.service';
 import { IStorageService } from '../../integrations/storage';
 
 /**
@@ -47,6 +48,7 @@ export class FileManagementContextService {
         private readonly queryBus: QueryBus,
         private readonly fileContentReflectionHistoryService: DomainFileContentReflectionHistoryService,
         private readonly fileService: DomainFileService,
+        private readonly dataSnapshotInfoService: DomainDataSnapshotInfoService,
         @Inject('IStorageService')
         private readonly storageService: IStorageService,
     ) {}
@@ -203,13 +205,16 @@ export class FileManagementContextService {
      * 오케스트레이션 로직:
      * 1. 기존 데이터 전체 삭제 (DeleteExistingDataForReflectionCommand - deleteAll=true)
      * 2. 조회된 데이터 저장 (SaveReflectedDataCommand)
-     * 3. 결과 반환
+     * 3. 스냅샷의 is_current 상태 업데이트 (현재 스냅샷으로 설정, 동일 연월의 다른 스냅샷들은 비현재로 설정)
+     * 4. 결과 반환
      *
      * @param snapshotData 스냅샷 데이터 조회 결과
+     * @param performedBy 수행자 ID
      * @returns 복원 결과
      */
     async 스냅샷데이터로파일데이터를복원한다(
         snapshotData: IGetSnapshotDataFromHistoryResponse,
+        performedBy: string,
     ): Promise<IRestoreFromHistoryResponse> {
         // 1. 기존 데이터 전체 삭제 (deleteAll=true로 전체 삭제)
         await this.commandBus.execute(
@@ -232,7 +237,15 @@ export class FileManagementContextService {
             }),
         );
 
-        // 3. 결과 반환
+        // 3. 스냅샷의 is_current 상태 업데이트 (현재 스냅샷으로 설정, 동일 연월의 다른 스냅샷들은 비현재로 설정)
+        if (snapshotData.snapshot?.id) {
+            await this.dataSnapshotInfoService.현재스냅샷으로설정한다(
+                snapshotData.snapshot.id,
+                performedBy,
+            );
+        }
+
+        // 4. 결과 반환
         return {
             year: snapshotData.year,
             month: snapshotData.month,

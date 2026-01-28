@@ -14,6 +14,7 @@ import { DomainAttendanceIssueService } from '../../../../../domain/attendance-i
 import { IMonthlyEventSummaryWithDailySummaries } from '../../../../attendance-data-context/interfaces/response/get-monthly-summaries-response.interface';
 import { EventInfo } from '../../../../../domain/event-info/event-info.entity';
 import { UsedAttendance } from '../../../../../domain/used-attendance/used-attendance.entity';
+import { DomainDataSnapshotInfoService } from '../../../../../domain/data-snapshot-info/data-snapshot-info.service';
 
 /**
  * 회사 전체 월간 요약 스냅샷 저장 Handler
@@ -32,6 +33,7 @@ export class SaveCompanyMonthlySnapshotHandler implements ICommandHandler<
         private readonly employeeDepartmentPositionHistoryService: DomainEmployeeDepartmentPositionHistoryService,
         private readonly dailySummaryChangeHistoryService: DomainDailySummaryChangeHistoryService,
         private readonly attendanceIssueService: DomainAttendanceIssueService,
+        private readonly dataSnapshotInfoService: DomainDataSnapshotInfoService,
     ) {}
 
     async execute(command: SaveCompanyMonthlySnapshotCommand): Promise<ISaveAttendanceSnapshotResponse> {
@@ -123,7 +125,7 @@ export class SaveCompanyMonthlySnapshotHandler implements ICommandHandler<
                     null,
                     null,
                     null,
-                    false,
+                    true, // 새로 저장하는 스냅샷은 현재 스냅샷으로 설정
                 );
 
                 const snapshotChildren = this.월간요약을스냅샷자식으로변환한다(
@@ -140,6 +142,15 @@ export class SaveCompanyMonthlySnapshotHandler implements ICommandHandler<
 
                 const savedSnapshot = await manager.save(snapshotInfoEntity);
                 const snapshotInfo = savedSnapshot.DTO변환한다();
+
+                // 동일 연월의 다른 스냅샷들을 비현재로 설정
+                await this.dataSnapshotInfoService.동일연월다른스냅샷들을비현재로설정한다(
+                    year,
+                    month,
+                    snapshotInfo.id,
+                    performedBy,
+                    manager,
+                );
 
                 this.logger.log(
                     `회사 전체 스냅샷 저장 완료: snapshotId=${snapshotInfo.id}, 자식 수=${snapshotChildren.length}`,

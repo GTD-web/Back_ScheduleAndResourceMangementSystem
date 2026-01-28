@@ -223,6 +223,7 @@ export class DomainDataSnapshotInfoService {
             data.submittedAt !== undefined ? data.submittedAt : undefined,
             data.approverName !== undefined ? data.approverName : undefined,
             data.approvalStatus !== undefined ? data.approvalStatus : undefined,
+            data.isCurrent !== undefined ? data.isCurrent : undefined,
         );
 
         // 수정자 정보 설정
@@ -265,5 +266,83 @@ export class DomainDataSnapshotInfoService {
         }
         // Hard Delete: 데이터베이스에서 완전히 삭제
         await repository.remove(snapshot);
+    }
+
+    /**
+     * 동일 연월의 다른 스냅샷들의 is_current를 false로 설정한다
+     *
+     * @param yyyy 연도
+     * @param mm 월
+     * @param excludeSnapshotId 제외할 스냅샷 ID (이 스냅샷은 제외하고 나머지만 false로 설정)
+     * @param userId 수정자 ID
+     * @param manager 트랜잭션 매니저 (선택)
+     */
+    async 동일연월다른스냅샷들을비현재로설정한다(
+        yyyy: string,
+        mm: string,
+        excludeSnapshotId: string,
+        userId: string,
+        manager?: EntityManager,
+    ): Promise<void> {
+        const repository = this.getRepository(manager);
+
+        // 동일 연월의 다른 스냅샷들 조회 (현재 스냅샷 제외)
+        const otherSnapshots = await repository.find({
+            where: {
+                yyyy,
+                mm,
+                deleted_at: IsNull(),
+            },
+        });
+
+        // 현재 스냅샷을 제외하고 is_current가 true인 스냅샷들을 false로 설정
+        const snapshotsToUpdate = otherSnapshots.filter(
+            (snapshot) => snapshot.id !== excludeSnapshotId && snapshot.is_current === true,
+        );
+
+        if (snapshotsToUpdate.length > 0) {
+            for (const snapshot of snapshotsToUpdate) {
+                snapshot.업데이트한다(undefined, undefined, undefined, undefined, undefined, undefined, undefined, false);
+                snapshot.수정자설정한다(userId);
+                snapshot.메타데이터업데이트한다(userId);
+            }
+            await repository.save(snapshotsToUpdate);
+        }
+    }
+
+    /**
+     * 특정 스냅샷을 현재 스냅샷으로 설정하고 동일 연월의 다른 스냅샷들은 비현재로 설정한다
+     *
+     * @param snapshotId 현재로 설정할 스냅샷 ID
+     * @param userId 수정자 ID
+     * @param manager 트랜잭션 매니저 (선택)
+     */
+    async 현재스냅샷으로설정한다(
+        snapshotId: string,
+        userId: string,
+        manager?: EntityManager,
+    ): Promise<DataSnapshotInfoDTO> {
+        const repository = this.getRepository(manager);
+        const snapshot = await repository.findOne({ where: { id: snapshotId } });
+        if (!snapshot) {
+            throw new NotFoundException(`데이터 스냅샷 정보를 찾을 수 없습니다. (id: ${snapshotId})`);
+        }
+
+        // 1. 동일 연월의 다른 스냅샷들을 비현재로 설정
+        await this.동일연월다른스냅샷들을비현재로설정한다(
+            snapshot.yyyy,
+            snapshot.mm,
+            snapshotId,
+            userId,
+            manager,
+        );
+
+        // 2. 현재 스냅샷을 is_current = true로 설정
+        snapshot.업데이트한다(undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+        snapshot.수정자설정한다(userId);
+        snapshot.메타데이터업데이트한다(userId);
+
+        const saved = await repository.save(snapshot);
+        return saved.DTO변환한다();
     }
 }

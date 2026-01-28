@@ -67,9 +67,41 @@ export class DomainFileContentReflectionHistoryService {
     async 파일ID로목록조회한다(fileId: string): Promise<FileContentReflectionHistoryDTO[]> {
         const histories = await this.repository.find({
             where: { file_id: fileId, deleted_at: IsNull() },
+            relations: ['file'],
             order: { created_at: 'DESC' },
         });
         return histories.map((history) => history.DTO변환한다());
+    }
+
+    /**
+     * 같은 연월, 같은 유형의 파일들의 반영이력 중 최신 reflect_at 조회
+     */
+    async 같은연월유형최신반영일시조회한다(
+        fileType: string | null,
+        year: string | null,
+        month: string | null,
+        manager?: EntityManager,
+    ): Promise<Date | null> {
+        if (!fileType || !year || !month) {
+            return null;
+        }
+
+        const repository = this.getRepository(manager);
+
+        // 파일 반영이력과 파일을 JOIN하여 같은 연월, 같은 유형의 파일들의 반영이력 중 최신 reflect_at 조회
+        const latestHistory = await repository
+            .createQueryBuilder('history')
+            .innerJoin('history.file', 'file')
+            .where('file.file_type = :fileType', { fileType: fileType as any })
+            .andWhere('file.year = :year', { year })
+            .andWhere('file.month = :month', { month: month.padStart(2, '0') })
+            .andWhere('file.deleted_at IS NULL')
+            .andWhere('history.deleted_at IS NULL')
+            .andWhere('history.reflected_at IS NOT NULL')
+            .orderBy('history.reflected_at', 'DESC')
+            .getOne();
+
+        return latestHistory?.reflected_at || null;
     }
 
     /**
