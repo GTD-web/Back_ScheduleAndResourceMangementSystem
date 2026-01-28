@@ -133,14 +133,11 @@ export class DomainEventInfoService {
      */
     async 날짜범위로조회한다(startDate: string, endDate: string, manager?: EntityManager): Promise<EventInfo[]> {
         const repository = this.getRepository(manager);
-        // 날짜를 YYYYMMDD 형식으로 변환
-        const startDateNum = parseInt(startDate.replace(/-/g, ''));
-        const endDateNum = parseInt(endDate.replace(/-/g, ''));
 
         return await repository
             .createQueryBuilder('ei')
-            .where('ei.yyyymmdd >= :startDateNum', { startDateNum })
-            .andWhere('ei.yyyymmdd <= :endDateNum', { endDateNum })
+            .where('ei.yyyymmdd >= :startDate', { startDate })
+            .andWhere('ei.yyyymmdd <= :endDate', { endDate })
             .andWhere('ei.deleted_at IS NULL')
             .getMany();
     }
