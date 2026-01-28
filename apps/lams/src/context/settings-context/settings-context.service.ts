@@ -7,12 +7,16 @@ import {
     IGetHolidayListQuery,
     IGetWorkTimeOverrideListQuery,
     IGetAttendanceTypeListQuery,
+    IGetWageCalculationTypeListQuery,
     IGetDepartmentListForPermissionResponse,
-    IGetDepartmentPermissionsQuery,
-    IGetDepartmentPermissionsResponse,
+    IGetPermissionRelatedEmployeeListQuery,
+    IGetPermissionRelatedEmployeeListResponse,
+    IGetEmployeePermissionListQuery,
+    IGetEmployeePermissionListResponse,
     IGetHolidayListResponse,
     IGetWorkTimeOverrideListResponse,
     IGetAttendanceTypeListResponse,
+    IGetWageCalculationTypeListResponse,
     IUpdateEmployeeDepartmentPermissionResponse,
     IUpdateEmployeeExtraInfoResponse,
     ICreateHolidayInfoCommand,
@@ -22,6 +26,7 @@ import {
     IUpdateWorkTimeOverrideCommand,
     IDeleteWorkTimeOverrideCommand,
     ICreateAttendanceTypeCommand,
+    ICreateWageCalculationTypeCommand,
     IUpdateAttendanceTypeCommand,
     IDeleteAttendanceTypeCommand,
     ICreateHolidayInfoResponse,
@@ -31,14 +36,17 @@ import {
     IUpdateWorkTimeOverrideResponse,
     IDeleteWorkTimeOverrideResponse,
     ICreateAttendanceTypeResponse,
+    ICreateWageCalculationTypeResponse,
     IUpdateAttendanceTypeResponse,
     IDeleteAttendanceTypeResponse,
 } from './interfaces';
 import { GetDepartmentListForPermissionQuery } from './handlers/department/queries/get-department-list-for-permission.query';
-import { GetDepartmentPermissionsQuery } from './handlers/permission/queries/get-department-permissions.query';
+import { GetPermissionRelatedEmployeeListQuery } from './handlers/permission/queries/get-permission-related-employee-list.query';
+import { GetEmployeePermissionListQuery } from './handlers/permission/queries/get-employee-permission-list.query';
 import { GetHolidayListQuery } from './handlers/holiday-info/queries/get-holiday-list.query';
 import { GetWorkTimeOverrideListQuery } from './handlers/work-time-override/queries/get-work-time-override-list.query';
 import { GetAttendanceTypeListQuery } from './handlers/attendance-type/queries/get-attendance-type-list.query';
+import { GetWageCalculationTypeListQuery } from './handlers/wage-calculation-type/queries/get-wage-calculation-type-list.query';
 import { UpdateEmployeeDepartmentPermissionCommand } from './handlers/permission/commands/update-employee-department-permission.command';
 import { UpdateEmployeeExtraInfoCommand } from './handlers/employee-extra-info/commands/update-employee-extra-info.command';
 import { CreateHolidayInfoCommand } from './handlers/holiday-info/commands/create-holiday-info.command';
@@ -48,6 +56,7 @@ import { CreateWorkTimeOverrideCommand } from './handlers/work-time-override/com
 import { UpdateWorkTimeOverrideCommand } from './handlers/work-time-override/commands/update-work-time-override.command';
 import { DeleteWorkTimeOverrideCommand } from './handlers/work-time-override/commands/delete-work-time-override.command';
 import { CreateAttendanceTypeCommand } from './handlers/attendance-type/commands/create-attendance-type.command';
+import { CreateWageCalculationTypeCommand } from './handlers/wage-calculation-type/commands/create-wage-calculation-type.command';
 import { UpdateAttendanceTypeCommand } from './handlers/attendance-type/commands/update-attendance-type.command';
 import { DeleteAttendanceTypeCommand } from './handlers/attendance-type/commands/delete-attendance-type.command';
 
@@ -64,19 +73,24 @@ export class SettingsContextService {
     ) {}
 
     /**
-     * 권한 관리용 부서 목록을 조회한다
+     * 권한 관련 부서 목록을 조회한다
      */
-    async 권한관리용부서목록을조회한다(
-        query: IGetDepartmentListForPermissionQuery,
-    ): Promise<IGetDepartmentListForPermissionResponse> {
+    async 권한관련부서목록을조회한다(query: IGetDepartmentListForPermissionQuery): Promise<IGetDepartmentListForPermissionResponse> {
         return await this.queryBus.execute(new GetDepartmentListForPermissionQuery(query));
     }
 
     /**
-     * 부서별 권한을 조회한다
+     * 권한 관련 직원 목록을 조회한다
      */
-    async 부서별권한을조회한다(query: IGetDepartmentPermissionsQuery): Promise<IGetDepartmentPermissionsResponse> {
-        return await this.queryBus.execute(new GetDepartmentPermissionsQuery(query));
+    async 권한관련직원목록을조회한다(query: IGetPermissionRelatedEmployeeListQuery): Promise<IGetPermissionRelatedEmployeeListResponse> {
+        return await this.queryBus.execute(new GetPermissionRelatedEmployeeListQuery(query));
+    }
+
+    /**
+     * 직원의 권한 목록을 조회한다
+     */
+    async 직원의권한목록을조회한다(query: IGetEmployeePermissionListQuery): Promise<IGetEmployeePermissionListResponse> {
+        return await this.queryBus.execute(new GetEmployeePermissionListQuery(query));
     }
 
     /**
@@ -156,6 +170,24 @@ export class SettingsContextService {
      */
     async 근태유형목록을조회한다(query: IGetAttendanceTypeListQuery): Promise<IGetAttendanceTypeListResponse> {
         return await this.queryBus.execute(new GetAttendanceTypeListQuery(query));
+    }
+
+    /**
+     * 임금 계산 유형 목록을 조회한다
+     */
+    async 임금계산유형목록을조회한다(
+        query: IGetWageCalculationTypeListQuery,
+    ): Promise<IGetWageCalculationTypeListResponse> {
+        return await this.queryBus.execute(new GetWageCalculationTypeListQuery(query));
+    }
+
+    /**
+     * 임금 계산 유형을 생성한다
+     */
+    async 임금계산유형을생성한다(
+        command: ICreateWageCalculationTypeCommand,
+    ): Promise<ICreateWageCalculationTypeResponse> {
+        return await this.commandBus.execute(new CreateWageCalculationTypeCommand(command));
     }
 
     /**

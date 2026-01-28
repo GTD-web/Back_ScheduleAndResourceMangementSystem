@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { WorkHoursContextService } from './work-hours-context.service';
 import { QUERY_HANDLERS, COMMAND_HANDLERS } from './handlers';
-import { WorkScheduleTypeModule } from '../../domain/work-schedule-type/work-schedule-type.module';
 import { DomainAssignedProjectModule } from '../../domain/assigned-project/assigned-project.module';
 import { DomainWorkHoursModule } from '../../domain/work-hours/work-hours.module';
 import { DomainProjectModule } from '../../domain/project/project.module';
@@ -13,7 +12,7 @@ import { DomainProjectModule } from '../../domain/project/project.module';
 @Module({
     imports: [
         CqrsModule,
-        WorkScheduleTypeModule,
+        
         DomainAssignedProjectModule,
         DomainWorkHoursModule,
         DomainProjectModule,

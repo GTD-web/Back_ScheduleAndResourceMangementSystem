@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WorkHoursContextService } from '../../context/work-hours-context/work-hours-context.service';
+import { SettingsContextService } from '../../context/settings-context/settings-context.service';
 import {
-    IGetWorkScheduleTypeQuery,
     IGetMonthlyWorkHoursQuery,
     IGetProjectListQuery,
     IAssignProjectCommand,
@@ -9,7 +9,12 @@ import {
     ICreateWorkHoursCommand,
     IDeleteWorkHoursByDateCommand,
 } from '../../context/work-hours-context/interfaces';
-import { WorkScheduleTypeDTO } from '../../domain/work-schedule-type/work-schedule-type.types';
+import {
+    IGetWageCalculationTypeListQuery,
+    ICreateWageCalculationTypeCommand,
+    IGetWageCalculationTypeListResponse,
+    ICreateWageCalculationTypeResponse,
+} from '../../context/settings-context/interfaces';
 import { AssignedProjectDTO } from '../../domain/assigned-project/assigned-project.types';
 import { WorkHoursDTO } from '../../domain/work-hours/work-hours.types';
 
@@ -22,18 +27,10 @@ import { WorkHoursDTO } from '../../domain/work-hours/work-hours.types';
 export class WorkHoursBusinessService {
     private readonly logger = new Logger(WorkHoursBusinessService.name);
 
-    constructor(private readonly workHoursContextService: WorkHoursContextService) {}
-
-    /**
-     * 현재 적용 중인 근무 유형을 조회한다
-     * 요청 시간을 통해 현재 어떤 유형을 응답해야하는지 판별
-     */
-    async 현재근무유형조회한다(date?: string): Promise<WorkScheduleTypeDTO | null> {
-        this.logger.log(`현재 근무 유형 조회: date=${date || '오늘'}`);
-        const query: IGetWorkScheduleTypeQuery = { date };
-        const result = await this.workHoursContextService.현재근무유형조회한다(query);
-        return result.scheduleType;
-    }
+    constructor(
+        private readonly workHoursContextService: WorkHoursContextService,
+        private readonly settingsContextService: SettingsContextService,
+    ) {}
 
     /**
      * 직원에 프로젝트를 할당한다
@@ -151,5 +148,23 @@ export class WorkHoursBusinessService {
         this.logger.log('프로젝트 목록 조회');
         const query: IGetProjectListQuery = {};
         return await this.workHoursContextService.프로젝트목록조회한다(query);
+    }
+
+    /**
+     * 임금 계산 유형 목록을 조회한다
+     */
+    async 임금계산유형목록을조회한다(
+        query: IGetWageCalculationTypeListQuery,
+    ): Promise<IGetWageCalculationTypeListResponse> {
+        return await this.settingsContextService.임금계산유형목록을조회한다(query);
+    }
+
+    /**
+     * 임금 계산 유형을 생성한다
+     */
+    async 임금계산유형을생성한다(
+        command: ICreateWageCalculationTypeCommand,
+    ): Promise<ICreateWageCalculationTypeResponse> {
+        return await this.settingsContextService.임금계산유형을생성한다(command);
     }
 }

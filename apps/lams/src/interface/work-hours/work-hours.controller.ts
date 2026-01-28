@@ -12,11 +12,17 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { User } from '../../../libs/decorators/user.decorator';
 import { WorkHoursBusinessService } from '../../business/work-hours-business/work-hours-business.service';
-import { GetWorkScheduleTypeResponseDto } from './dto/work-schedule-type.dto';
 import { AssignProjectRequestDto, AssignProjectResponseDto } from './dto/assigned-project.dto';
 import { CreateWorkHoursRequestDto, CreateWorkHoursResponseDto } from './dto/work-hours.dto';
 import { GetMonthlyWorkHoursRequestDto, GetMonthlyWorkHoursResponseDto } from './dto/monthly-work-hours.dto';
 import { GetProjectListResponseDto } from './dto/project.dto';
+import {
+    CreateWageCalculationTypeRequestDto,
+    CreateWageCalculationTypeResponseDto,
+    GetWageCalculationTypeListResponseDto,
+} from '../settings/dto/wage-calculation-type.dto';
+import { IGetWageCalculationTypeListResponse } from '../../context/settings-context/interfaces';
+import { ICreateWageCalculationTypeResponse } from '../../context/settings-context/interfaces';
 
 /**
  * 시수 관리 컨트롤러
@@ -28,38 +34,6 @@ import { GetProjectListResponseDto } from './dto/project.dto';
 @Controller('work-hours')
 export class WorkHoursController {
     constructor(private readonly workHoursBusinessService: WorkHoursBusinessService) {}
-
-    /**
-     * 현재 적용 중인 근무 유형 조회
-     */
-    @Get('schedule-type')
-    @ApiOperation({
-        summary: '현재 적용 중인 근무 유형 조회',
-        description: '요청 시간을 통해 현재 어떤 근무 유형이 적용 중인지 조회합니다.',
-    })
-    @ApiQuery({
-        name: 'date',
-        description: '조회할 날짜 (yyyy-MM-dd 형식, 생략 시 오늘 날짜)',
-        example: '2024-01-15',
-        required: false,
-    })
-    @ApiResponse({
-        status: 200,
-        description: '근무 유형 조회 성공',
-        type: GetWorkScheduleTypeResponseDto,
-    })
-    async getCurrentScheduleType(@Query('date') date?: string): Promise<GetWorkScheduleTypeResponseDto | null> {
-        const scheduleType = await this.workHoursBusinessService.현재근무유형조회한다(date);
-        if (!scheduleType) {
-            return null;
-        }
-        return {
-            scheduleType: scheduleType.scheduleType,
-            startDate: scheduleType.startDate,
-            endDate: scheduleType.endDate,
-            reason: scheduleType.reason,
-        };
-    }
 
     /**
      * 프로젝트 할당
@@ -230,5 +204,52 @@ export class WorkHoursController {
             projects: result.projects,
             totalCount: result.totalCount,
         };
+    }
+
+    /**
+     * 임금 계산 유형 목록 조회
+     *
+     * 전체 임금 계산 유형 목록을 조회합니다.
+     */
+    @Get('wage-calculation-types')
+    @ApiOperation({
+        summary: '임금 계산 유형 목록 조회',
+        description: '전체 임금 계산 유형 목록을 조회합니다.',
+    })
+    @ApiResponse({
+        status: 200,
+        description: '임금 계산 유형 목록 조회 성공',
+        type: GetWageCalculationTypeListResponseDto,
+    })
+    async getWageCalculationTypeList(): Promise<IGetWageCalculationTypeListResponse> {
+        return await this.workHoursBusinessService.임금계산유형목록을조회한다({});
+    }
+
+    /**
+     * 임금 계산 유형 생성
+     *
+     * 새로운 임금 계산 유형을 생성합니다.
+     */
+    @Post('wage-calculation-types')
+    @ApiOperation({
+        summary: '임금 계산 유형 생성',
+        description: '새로운 임금 계산 유형을 생성합니다.',
+    })
+    @ApiResponse({
+        status: 201,
+        description: '임금 계산 유형 생성 성공',
+        type: CreateWageCalculationTypeResponseDto,
+    })
+    async createWageCalculationType(
+        @Body() dto: CreateWageCalculationTypeRequestDto,
+        @User('id') userId: string,
+    ): Promise<ICreateWageCalculationTypeResponse> {
+        return await this.workHoursBusinessService.임금계산유형을생성한다({
+            calculationType: dto.calculationType,
+            startDate: dto.startDate,
+            changedAt: dto.changedAt,
+            isCurrentlyApplied: dto.isCurrentlyApplied,
+            performedBy: userId,
+        });
     }
 }

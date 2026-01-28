@@ -6,8 +6,10 @@ import {
     IGetWorkTimeOverrideListQuery,
     IGetAttendanceTypeListQuery,
     IGetDepartmentListForPermissionResponse,
-    IGetDepartmentPermissionsQuery,
-    IGetDepartmentPermissionsResponse,
+    IGetPermissionRelatedEmployeeListQuery,
+    IGetPermissionRelatedEmployeeListResponse,
+    IGetEmployeePermissionListQuery,
+    IGetEmployeePermissionListResponse,
     IGetHolidayListResponse,
     IGetWorkTimeOverrideListResponse,
     IGetAttendanceTypeListResponse,
@@ -45,19 +47,33 @@ export class SettingsBusinessService {
     constructor(private readonly settingsContextService: SettingsContextService) {}
 
     /**
-     * 권한 관리용 부서 목록을 조회한다
+     * 권한 관련 부서 목록을 조회한다
      */
-    async 권한관리용부서목록을조회한다(
-        query: IGetDepartmentListForPermissionQuery,
-    ): Promise<IGetDepartmentListForPermissionResponse> {
-        return await this.settingsContextService.권한관리용부서목록을조회한다(query);
+    async 권한관련부서목록을조회한다(query: IGetDepartmentListForPermissionQuery): Promise<IGetDepartmentListForPermissionResponse> {
+        return await this.settingsContextService.권한관련부서목록을조회한다(query);
     }
 
     /**
-     * 부서별 권한을 조회한다
+     * 권한 관련 직원 목록을 조회한다
      */
-    async 부서별권한을조회한다(query: IGetDepartmentPermissionsQuery): Promise<IGetDepartmentPermissionsResponse> {
-        return await this.settingsContextService.부서별권한을조회한다(query);
+    async 권한관련직원목록을조회한다(query: IGetPermissionRelatedEmployeeListQuery): Promise<IGetPermissionRelatedEmployeeListResponse> {
+        return await this.settingsContextService.권한관련직원목록을조회한다(query);
+    }
+
+    /**
+     * 직원의 권한 목록을 조회한다
+     */
+    async 직원의권한목록을조회한다(query: IGetEmployeePermissionListQuery): Promise<IGetEmployeePermissionListResponse> {
+        return await this.settingsContextService.직원의권한목록을조회한다(query);
+    }
+
+    /**
+     * 직원-부서 권한을 변경한다
+     */
+    async 직원부서권한을변경한다(
+        command: IUpdateEmployeeDepartmentPermissionCommand,
+    ): Promise<IUpdateEmployeeDepartmentPermissionResponse> {
+        return await this.settingsContextService.직원부서권한을변경한다(command);
     }
 
     /**
@@ -74,15 +90,6 @@ export class SettingsBusinessService {
         query: IGetWorkTimeOverrideListQuery,
     ): Promise<IGetWorkTimeOverrideListResponse> {
         return await this.settingsContextService.특별근태시간목록을조회한다(query);
-    }
-
-    /**
-     * 직원-부서 권한을 변경한다
-     */
-    async 직원부서권한을변경한다(
-        command: IUpdateEmployeeDepartmentPermissionCommand,
-    ): Promise<IUpdateEmployeeDepartmentPermissionResponse> {
-        return await this.settingsContextService.직원부서권한을변경한다(command);
     }
 
     /**

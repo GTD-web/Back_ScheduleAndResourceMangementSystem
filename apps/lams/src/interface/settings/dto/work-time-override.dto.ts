@@ -81,6 +81,11 @@ export class UpdateWorkTimeOverrideRequestDto {
     @IsNotEmpty()
     id: string;
 
+    @ApiPropertyOptional({ description: '적용 날짜', example: '2024-01-01' })
+    @IsString()
+    @IsOptional()
+    date?: string;
+
     @ApiPropertyOptional({ description: '시작 시간', example: '09:00:00' })
     @IsString()
     @IsOptional()
@@ -121,6 +126,16 @@ export class DeleteWorkTimeOverrideRequestDto {
 export class DeleteWorkTimeOverrideResponseDto {
     @ApiProperty({ description: '삭제 성공 여부' })
     success: boolean;
+}
+
+/**
+ * 특별근태시간 목록 조회 요청 DTO
+ */
+export class GetWorkTimeOverrideListRequestDto {
+    @ApiPropertyOptional({ description: '연도 필터', example: '2024' })
+    @IsString()
+    @IsOptional()
+    year?: string;
 }
 
 /**

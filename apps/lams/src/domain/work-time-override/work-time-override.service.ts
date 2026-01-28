@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, IsNull, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Like, Repository } from 'typeorm';
 import { WorkTimeOverride } from './work-time-override.entity';
 import {
     CreateWorkTimeOverrideData,
@@ -94,10 +94,17 @@ export class DomainWorkTimeOverrideService {
     /**
      * 근무시간 커스터마이징 목록을 조회한다
      */
-    async 목록조회한다(manager?: EntityManager): Promise<WorkTimeOverrideDTO[]> {
+    async 목록조회한다(year?: string, manager?: EntityManager): Promise<WorkTimeOverrideDTO[]> {
         const repository = this.getRepository(manager);
+        const whereCondition: any = { deleted_at: IsNull() };
+        
+        // 연도 필터링
+        if (year) {
+            whereCondition.date = Like(`${year}-%`);
+        }
+        
         const workTimeOverrides = await repository.find({
-            where: { deleted_at: IsNull() },
+            where: whereCondition,
             order: { date: 'ASC' },
         });
         return workTimeOverrides.map((wto) => wto.DTO변환한다());
@@ -118,7 +125,17 @@ export class DomainWorkTimeOverrideService {
             throw new NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (id: ${id})`);
         }
 
-        workTimeOverride.업데이트한다(data.startWorkTime, data.endWorkTime, data.reason);
+        // 날짜가 변경되는 경우, 새로운 날짜에 이미 데이터가 있는지 확인
+        if (data.date && data.date !== workTimeOverride.date) {
+            const existingOverride = await repository.findOne({
+                where: { date: data.date, deleted_at: IsNull() },
+            });
+            if (existingOverride && existingOverride.id !== id) {
+                throw new NotFoundException(`해당 날짜(${data.date})에 이미 특별근태시간이 존재합니다.`);
+            }
+        }
+
+        workTimeOverride.업데이트한다(data.date, data.startWorkTime, data.endWorkTime, data.reason);
 
         // 수정자 정보 설정
         workTimeOverride.수정자설정한다(userId);
@@ -145,7 +162,7 @@ export class DomainWorkTimeOverrideService {
             throw new NotFoundException(`근무시간 커스터마이징을 찾을 수 없습니다. (date: ${date})`);
         }
 
-        workTimeOverride.업데이트한다(data.startWorkTime, data.endWorkTime, data.reason);
+        workTimeOverride.업데이트한다(undefined, data.startWorkTime, data.endWorkTime, data.reason);
 
         // 수정자 정보 설정
         workTimeOverride.수정자설정한다(userId);

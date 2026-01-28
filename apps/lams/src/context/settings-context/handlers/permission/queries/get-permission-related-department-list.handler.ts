@@ -1,30 +1,32 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { GetDepartmentPermissionsQuery } from './get-department-permissions.query';
-import { IGetDepartmentPermissionsResponse, IEmployeeWithPermissions, IEmployeeDepartmentPermissionInfo } from '../../../interfaces/response/get-department-permissions-response.interface';
+import { GetPermissionRelatedDepartmentListQuery } from './get-permission-related-department-list.query';
+import { IGetPermissionRelatedDepartmentListResponse } from '../../../interfaces/response/get-permission-related-department-list-response.interface';
 import { Employee, EmployeeStatus } from '@libs/modules/employee/employee.entity';
 import { EmployeeDepartmentPermission } from '../../../../../domain/employee-department-permission/employee-department-permission.entity';
 import { EmployeeDepartmentPosition } from '@libs/modules/employee-department-position/employee-department-position.entity';
+import { IEmployeeDepartmentPermissionInfo } from '../../../interfaces/response/employee-department-permission-info.interface';
+import { IEmployeeWithPermissions } from '../../../interfaces/response/employee-department-permission-info.interface';
 
 /**
- * 부서별 권한 조회 Query Handler
+ * 권한 관련 부서 목록 조회 Query Handler
  *
  * 현재 조직도(employee-department-position)에 재직 중인 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다.
  * 직원명과 부서명으로 검색이 가능합니다.
  */
-@QueryHandler(GetDepartmentPermissionsQuery)
-export class GetDepartmentPermissionsHandler implements IQueryHandler<GetDepartmentPermissionsQuery, IGetDepartmentPermissionsResponse> {
-    private readonly logger = new Logger(GetDepartmentPermissionsHandler.name);
+@QueryHandler(GetPermissionRelatedDepartmentListQuery)
+export class GetPermissionRelatedDepartmentListHandler implements IQueryHandler<GetPermissionRelatedDepartmentListQuery, IGetPermissionRelatedDepartmentListResponse> {
+    private readonly logger = new Logger(GetPermissionRelatedDepartmentListHandler.name);
 
     constructor(
         private readonly dataSource: DataSource,
     ) {}
 
-    async execute(query: GetDepartmentPermissionsQuery): Promise<IGetDepartmentPermissionsResponse> {
+    async execute(query: GetPermissionRelatedDepartmentListQuery): Promise<IGetPermissionRelatedDepartmentListResponse> {
         const { employeeName, departmentName } = query.data;
 
-        this.logger.log(`부서별 권한 조회 시작: employeeName=${employeeName}, departmentName=${departmentName}`);
+        this.logger.log(`권한 관련 부서 목록 조회 시작: employeeName=${employeeName}, departmentName=${departmentName}`);
 
         // 1. 현재 조직도에 재직 중인 직원 조회 (employee-department-position 기반, 퇴사자 제외, 검색 조건 적용)
         const employeeQueryBuilder = this.dataSource.manager
@@ -98,7 +100,7 @@ export class GetDepartmentPermissionsHandler implements IQueryHandler<GetDepartm
             })
             .filter((emp): emp is IEmployeeWithPermissions => emp !== null);
 
-        this.logger.log(`부서별 권한 조회 완료: totalCount=${employeesWithPermissions.length}`);
+        this.logger.log(`권한 관련 부서 목록 조회 완료: totalCount=${employeesWithPermissions.length}`);
 
         return {
             employees: employeesWithPermissions,

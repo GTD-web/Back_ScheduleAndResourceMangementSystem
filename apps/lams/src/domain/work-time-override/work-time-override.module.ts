@@ -11,4 +11,4 @@ import { DomainWorkTimeOverrideService } from './work-time-override.service';
     providers: [DomainWorkTimeOverrideService],
     exports: [DomainWorkTimeOverrideService, TypeOrmModule],
 })
-export class WorkTimeOverrideModule {}
+export class DomainWorkTimeOverrideModule {}

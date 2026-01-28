@@ -131,10 +131,14 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
      * 근무시간 커스터마이징을 업데이트한다
      */
     업데이트한다(
+        date?: string,
         start_work_time?: string,
         end_work_time?: string,
         reason?: string,
     ): void {
+        if (date !== undefined) {
+            this.date = date;
+        }
         if (start_work_time !== undefined) {
             this.start_work_time = start_work_time;
         }

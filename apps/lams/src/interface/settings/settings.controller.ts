@@ -4,8 +4,10 @@ import { SettingsBusinessService } from '../../business/settings-business/settin
 import {
     UpdateEmployeeDepartmentPermissionRequestDto,
     UpdateEmployeeDepartmentPermissionResponseDto,
-    GetDepartmentPermissionsRequestDto,
-    GetDepartmentPermissionsResponseDto,
+    GetPermissionRelatedEmployeeListRequestDto,
+    GetPermissionRelatedEmployeeListResponseDto,
+    GetEmployeePermissionListRequestDto,
+    GetEmployeePermissionListResponseDto,
 } from './dto/employee-permission.dto';
 import { GetDepartmentListForPermissionResponseDto } from './dto/department-permission.dto';
 import {
@@ -23,6 +25,7 @@ import {
     DeleteHolidayInfoResponseDto,
 } from './dto/holiday-info.dto';
 import {
+    GetWorkTimeOverrideListRequestDto,
     GetWorkTimeOverrideListResponseDto,
     CreateWorkTimeOverrideRequestDto,
     CreateWorkTimeOverrideResponseDto,
@@ -40,7 +43,7 @@ import {
     DeleteAttendanceTypeResponseDto,
 } from './dto/attendance-type.dto';
 import { IGetDepartmentListForPermissionResponse } from '../../context/settings-context/interfaces';
-import { IGetDepartmentPermissionsResponse } from '../../context/settings-context/interfaces';
+import { IGetPermissionRelatedEmployeeListResponse, IGetEmployeePermissionListResponse } from '../../context/settings-context/interfaces';
 import { IGetHolidayListResponse } from '../../context/settings-context/interfaces';
 import { IGetWorkTimeOverrideListResponse } from '../../context/settings-context/interfaces';
 import { IGetAttendanceTypeListResponse } from '../../context/settings-context/interfaces';
@@ -73,7 +76,7 @@ export class SettingsController {
      *
      * 퇴사자 부서를 제외한 전체 부서 목록을 조회합니다.
      */
-    @Get('departments')
+    @Get('permissions/departments')
     @ApiOperation({
         summary: '권한 관리용 부서 목록 조회',
         description: '퇴사자 부서를 제외한 전체 부서 목록을 조회합니다.',
@@ -84,7 +87,76 @@ export class SettingsController {
         type: GetDepartmentListForPermissionResponseDto,
     })
     async getDepartmentListForPermission(): Promise<IGetDepartmentListForPermissionResponse> {
-        return await this.settingsBusinessService.권한관리용부서목록을조회한다({});
+        return await this.settingsBusinessService.권한관련부서목록을조회한다({});
+    }
+
+    /**
+     * 권한 관련 직원 목록 조회
+     *
+     * 모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다.
+     * 직원명과 부서명으로 검색이 가능합니다.
+     */
+    @Get('permissions/employees')
+    @ApiOperation({
+        summary: '권한 관련 직원 목록 조회',  
+        description: '모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다. 직원명과 부서명으로 검색이 가능합니다.',
+    })
+    @ApiQuery({
+        name: 'employeeName',
+        description: '직원명 검색 (선택사항)',
+        example: '홍길동',
+        required: false,
+    })
+    @ApiQuery({
+        name: 'departmentName',
+        description: '부서명 검색 (선택사항)',
+        example: '개발팀',
+        required: false,    
+    })
+    @ApiResponse({
+        status: 200,
+        description: '권한 관련 직원 목록 조회 성공',
+        type: GetPermissionRelatedEmployeeListResponseDto,
+    })
+    async getPermissionRelatedEmployeeList(
+        @Query() dto: GetPermissionRelatedEmployeeListRequestDto,
+    ): Promise<IGetPermissionRelatedEmployeeListResponse> {
+        return await this.settingsBusinessService.권한관련직원목록을조회한다({
+            employeeName: dto.employeeName,
+            departmentName: dto.departmentName,
+        });
+    }
+
+    /**
+     * 직원의 권한 목록 조회
+     *
+     * 특정 직원의 부서별 권한 정보를 조회합니다.
+     */
+    @Get('permissions/employees/:employeeId')
+    @ApiOperation({
+        summary: '직원의 권한 목록 조회',
+        description: '특정 직원의 부서별 권한 정보를 조회합니다.',
+    })
+    @ApiParam({
+        name: 'employeeId',
+        description: '직원 ID',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+    })
+    @ApiResponse({
+        status: 200,
+        description: '직원의 권한 목록 조회 성공',
+        type: GetEmployeePermissionListResponseDto,
+    })
+    @ApiResponse({
+        status: 404,
+        description: '직원을 찾을 수 없음',
+    })
+    async getEmployeePermissionList(
+        @Param('employeeId', ParseUUIDPipe) employeeId: string,
+    ): Promise<IGetEmployeePermissionListResponse> {
+        return await this.settingsBusinessService.직원의권한목록을조회한다({
+            employeeId,
+        });
     }
 
     /**
@@ -115,43 +187,6 @@ export class SettingsController {
                 hasReviewPermission: dept.hasReviewPermission,
             })),
             performedBy: userId,
-        });
-    }
-
-    /**
-     * 직원별 부서 권한 조회
-     *
-     * 모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다.
-     * 직원명과 부서명으로 검색이 가능합니다.
-     */
-    @Get('permissions/employees')
-    @ApiOperation({
-        summary: '직원별 부서 권한 조회',
-        description: '모든 직원 목록을 조회하고, 각 직원별로 어느 부서에 권한을 가지고 있는지 정보를 반환합니다. 직원명과 부서명으로 검색이 가능합니다.',
-    })
-    @ApiQuery({
-        name: 'employeeName',
-        description: '직원명 검색 (선택사항)',
-        example: '홍길동',
-        required: false,
-    })
-    @ApiQuery({
-        name: 'departmentName',
-        description: '부서명 검색 (선택사항)',
-        example: '개발팀',
-        required: false,
-    })
-    @ApiResponse({
-        status: 200,
-        description: '직원별 부서 권한 조회 성공',
-        type: GetDepartmentPermissionsResponseDto,
-    })
-    async getDepartmentPermissions(
-        @Query() dto: GetDepartmentPermissionsRequestDto,
-    ): Promise<IGetDepartmentPermissionsResponse> {
-        return await this.settingsBusinessService.부서별권한을조회한다({
-            employeeName: dto.employeeName,
-            departmentName: dto.departmentName,
         });
     }
 
@@ -287,20 +322,26 @@ export class SettingsController {
     /**
      * 특별근태시간 목록 조회
      *
-     * 전체 특별근태시간 목록을 조회합니다.
+     * 전체 특별근태시간 목록을 조회합니다. 연도별로 필터링할 수 있습니다.
      */
     @Get('work-time-overrides')
     @ApiOperation({
         summary: '특별근태시간 목록 조회',
-        description: '전체 특별근태시간 목록을 조회합니다.',
+        description: '전체 특별근태시간 목록을 조회합니다. 연도별로 필터링할 수 있습니다.',
+    })
+    @ApiQuery({
+        name: 'year',
+        description: '연도 필터 (yyyy 형식, 생략 시 전체 조회)',
+        example: '2024',
+        required: false,
     })
     @ApiResponse({
         status: 200,
         description: '특별근태시간 목록 조회 성공',
         type: GetWorkTimeOverrideListResponseDto,
     })
-    async getWorkTimeOverrideList(): Promise<IGetWorkTimeOverrideListResponse> {
-        return await this.settingsBusinessService.특별근태시간목록을조회한다({});
+    async getWorkTimeOverrideList(@Query() dto: GetWorkTimeOverrideListRequestDto): Promise<IGetWorkTimeOverrideListResponse> {
+        return await this.settingsBusinessService.특별근태시간목록을조회한다({ year: dto.year });
     }
 
     /**
@@ -352,6 +393,7 @@ export class SettingsController {
     ): Promise<IUpdateWorkTimeOverrideResponse> {
         return await this.settingsBusinessService.특별근태시간을수정한다({
             id: dto.id,
+            date: dto.date,
             startWorkTime: dto.startWorkTime,
             endWorkTime: dto.endWorkTime,
             reason: dto.reason,

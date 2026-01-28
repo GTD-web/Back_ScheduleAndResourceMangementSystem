@@ -36,7 +36,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         }
 
         const authHeader = request.headers.authorization;
-        console.log('authHeader :', request.headers);
         this.logger.debug(
             `인증 시도: ${request.method} ${request.url}, Authorization: ${authHeader ? '있음' : '없음'}`,
         );

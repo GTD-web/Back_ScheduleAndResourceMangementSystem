@@ -96,9 +96,24 @@ export class UpdateEmployeeDepartmentPermissionResponseDto {
 }
 
 /**
- * 부서별 권한 조회 요청 DTO
+ * 권한 관련 부서 목록 조회 요청 DTO
  */
-export class GetDepartmentPermissionsRequestDto {
+export class GetPermissionRelatedDepartmentListRequestDto {
+    @ApiPropertyOptional({ description: '직원명 검색', example: '홍길동' })
+    @IsOptional()
+    @IsString()
+    employeeName?: string;
+
+    @ApiPropertyOptional({ description: '부서명 검색', example: '개발팀' })
+    @IsOptional()
+    @IsString()
+    departmentName?: string;
+}
+
+/**
+ * 권한 관련 직원 목록 조회 요청 DTO
+ */
+export class GetPermissionRelatedEmployeeListRequestDto {
     @ApiPropertyOptional({ description: '직원명 검색', example: '홍길동' })
     @IsOptional()
     @IsString()
@@ -145,12 +160,50 @@ export class EmployeeWithPermissionsDto {
 }
 
 /**
- * 부서별 권한 조회 응답 DTO
+ * 권한 관련 부서 목록 조회 응답 DTO
  */
-export class GetDepartmentPermissionsResponseDto {
+export class GetPermissionRelatedDepartmentListResponseDto {
     @ApiProperty({ description: '직원 목록', type: [EmployeeWithPermissionsDto] })
     employees: EmployeeWithPermissionsDto[];
 
     @ApiProperty({ description: '전체 직원 수' })
     totalCount: number;
+}
+
+/**
+ * 권한 관련 직원 목록 조회 응답 DTO
+ */
+export class GetPermissionRelatedEmployeeListResponseDto {
+    @ApiProperty({ description: '직원 목록', type: [EmployeeWithPermissionsDto] })
+    employees: EmployeeWithPermissionsDto[];
+
+    @ApiProperty({ description: '전체 직원 수' })
+    totalCount: number;
+}
+
+/**
+ * 직원의 권한 목록 조회 요청 DTO
+ */
+export class GetEmployeePermissionListRequestDto {
+    @ApiProperty({ description: '직원 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @IsUUID()
+    @IsNotEmpty()
+    employeeId: string;
+}
+
+/**
+ * 직원의 권한 목록 조회 응답 DTO
+ */
+export class GetEmployeePermissionListResponseDto {
+    @ApiProperty({ description: '직원 ID' })
+    id: string;
+
+    @ApiProperty({ description: '직원번호' })
+    employeeNumber: string;
+
+    @ApiProperty({ description: '직원명' })
+    employeeName: string;
+
+    @ApiProperty({ description: '부서별 권한 목록', type: [EmployeeDepartmentPermissionInfoDto] })
+    permissions: EmployeeDepartmentPermissionInfoDto[];
 }

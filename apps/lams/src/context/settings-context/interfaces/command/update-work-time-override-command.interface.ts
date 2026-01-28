@@ -3,6 +3,7 @@
  */
 export interface IUpdateWorkTimeOverrideCommand {
     id: string;
+    date?: string;
     startWorkTime?: string;
     endWorkTime?: string;
     reason?: string;

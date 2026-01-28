@@ -13,4 +13,4 @@ import { DomainWageCalculationTypeService } from './wage-calculation-type.servic
     providers: [DomainWageCalculationTypeService],
     exports: [DomainWageCalculationTypeService, TypeOrmModule],
 })
-export class WageCalculationTypeModule {}
+export class DomainWageCalculationTypeModule {}

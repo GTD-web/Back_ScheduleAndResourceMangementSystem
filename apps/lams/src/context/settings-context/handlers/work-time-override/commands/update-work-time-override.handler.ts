@@ -20,7 +20,7 @@ export class UpdateWorkTimeOverrideHandler
     ) {}
 
     async execute(command: UpdateWorkTimeOverrideCommand): Promise<IUpdateWorkTimeOverrideResponse> {
-        const { id, startWorkTime, endWorkTime, reason, performedBy } = command.data;
+        const { id, date, startWorkTime, endWorkTime, reason, performedBy } = command.data;
 
         return await this.dataSource.transaction(async (manager) => {
             try {
@@ -29,6 +29,7 @@ export class UpdateWorkTimeOverrideHandler
                 const workTimeOverride = await this.workTimeOverrideService.수정한다(
                     id,
                     {
+                        date,
                         startWorkTime,
                         endWorkTime,
                         reason,

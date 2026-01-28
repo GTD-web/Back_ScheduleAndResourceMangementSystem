@@ -20,9 +20,10 @@ export class GetWorkTimeOverrideListHandler
     ) {}
 
     async execute(query: GetWorkTimeOverrideListQuery): Promise<IGetWorkTimeOverrideListResponse> {
-        this.logger.log('특별근태시간 목록 조회 시작');
+        const { year } = query.data;
+        this.logger.log(`특별근태시간 목록 조회 시작: year=${year || '전체'}`);
 
-        const workTimeOverrides = await this.workTimeOverrideService.목록조회한다();
+        const workTimeOverrides = await this.workTimeOverrideService.목록조회한다(year);
 
         this.logger.log(`특별근태시간 목록 조회 완료: totalCount=${workTimeOverrides.length}`);
 

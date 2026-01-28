@@ -16,6 +16,7 @@ export interface CreateWorkTimeOverrideData {
  * 근무시간 커스터마이징 업데이트 데이터
  */
 export interface UpdateWorkTimeOverrideData {
+    date?: string;
     startWorkTime?: string;
     endWorkTime?: string;
     reason?: string;

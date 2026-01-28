@@ -72,7 +72,6 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
 
                 // 1. event-info와 used-attendance 가져오기 (도메인 서비스 사용)
                 const events = await this.eventInfoService.날짜범위로조회한다(startDateStr, endDateStr, manager);
-                console.log(events)
                 const usedAttendances = await this.usedAttendanceService.날짜범위로조회한다(
                     startDateStr,
                     endDateStr,
