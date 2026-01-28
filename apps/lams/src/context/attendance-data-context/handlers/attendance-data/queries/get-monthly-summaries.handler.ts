@@ -45,9 +45,9 @@ export class GetMonthlySummariesHandler implements IQueryHandler<
         const endDate = endOfMonth(new Date(yearNum, monthNum - 1, 1));
         const yyyymm = `${year}-${month.padStart(2, '0')}`;
 
-        // 1. 부서에 속한 직원 ID 목록 조회 (해당 연월 기준)
+        // 1. 부서 및 모든 하위 부서에 속한 직원 ID 목록 조회 (해당 연월 기준, 재귀적)
         const monthEndDate = format(endDate, 'yyyy-MM-dd');
-        const employeeHistories = await this.employeeDepartmentPositionHistoryService.findByDepartmentAtDate(
+        const employeeHistories = await this.employeeDepartmentPositionHistoryService.findByDepartmentWithChildrenAtDate(
             departmentId,
             monthEndDate,
         );

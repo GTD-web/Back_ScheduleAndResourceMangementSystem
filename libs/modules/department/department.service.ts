@@ -49,4 +49,38 @@ export class DomainDepartmentService {
         const repository = this.getRepository(manager);
         return await repository.findOne({ where: { id } });
     }
+
+    /**
+     * 특정 부서의 모든 하위 부서 ID를 재귀적으로 조회한다
+     *
+     * @param parentDepartmentId 상위 부서 ID
+     * @param manager 트랜잭션 EntityManager (선택)
+     * @returns 하위 부서 ID 목록 (자기 자신 포함)
+     */
+    async 하위부서ID목록을재귀적으로조회한다(
+        parentDepartmentId: string,
+        manager?: EntityManager,
+    ): Promise<string[]> {
+        const repository = this.getRepository(manager);
+        const departmentIds: string[] = [parentDepartmentId];
+
+        // 재귀적으로 하위 부서 조회
+        const findChildDepartments = async (parentId: string): Promise<void> => {
+            const childDepartments = await repository.find({
+                where: { parentDepartmentId: parentId },
+            });
+
+            for (const child of childDepartments) {
+                if (!departmentIds.includes(child.id)) {
+                    departmentIds.push(child.id);
+                    // 재귀적으로 하위 부서의 하위 부서도 조회
+                    await findChildDepartments(child.id);
+                }
+            }
+        };
+
+        await findChildDepartments(parentDepartmentId);
+
+        return departmentIds;
+    }
 }

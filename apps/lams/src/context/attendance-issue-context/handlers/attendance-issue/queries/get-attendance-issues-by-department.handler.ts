@@ -39,8 +39,8 @@ export class GetAttendanceIssuesByDepartmentHandler
 
         this.logger.log(`날짜 범위: ${startDate} ~ ${endDate}`);
 
-        // 2. 해당 부서의 해당 연월에 소속되었던 직원 리스트 조회
-        const departmentEmployees = await this.employeeDepartmentPositionHistoryService.특정연월부서의배치이력목록을조회한다(
+        // 2. 해당 부서 및 모든 하위 부서의 해당 연월에 소속되었던 직원 리스트 조회 (재귀적)
+        const departmentEmployees = await this.employeeDepartmentPositionHistoryService.특정연월부서와하위부서의배치이력목록을조회한다(
             year,
             month,
             departmentId,
@@ -71,7 +71,7 @@ export class GetAttendanceIssuesByDepartmentHandler
         const employeeIssueMap = new Map<string, typeof departmentIssues>();
         const employeeInfoMap = new Map<
             string,
-            { employeeName: string; employeeNumber: string }
+            { employeeName: string; employeeNumber: string; departmentName: string }
         >();
 
         // 직원 정보 맵 생성
@@ -79,6 +79,7 @@ export class GetAttendanceIssuesByDepartmentHandler
             employeeInfoMap.set(history.employeeId, {
                 employeeName: history.employee?.name || '이름 없음',
                 employeeNumber: history.employee?.employeeNumber || '',
+                departmentName: history.department?.departmentName || '',
             });
         });
 
@@ -95,12 +96,14 @@ export class GetAttendanceIssuesByDepartmentHandler
             const employeeInfo = employeeInfoMap.get(employeeId) || {
                 employeeName: '이름 없음',
                 employeeNumber: '',
+                departmentName: '',
             };
 
             return {
                 employeeId,
                 employeeName: employeeInfo.employeeName,
                 employeeNumber: employeeInfo.employeeNumber,
+                departmentName: employeeInfo.departmentName,
                 issues: issues.sort((a, b) => {
                     // 날짜 내림차순, 생성일시 내림차순 정렬
                     const dateCompare = b.date.localeCompare(a.date);
@@ -112,9 +115,9 @@ export class GetAttendanceIssuesByDepartmentHandler
 
         // 직원 ID 순서대로 정렬 (부서 직원 목록 순서 유지)
         employeeIssueGroups.sort((a, b) => {
-            const indexA = employeeIds.indexOf(a.employeeId);
-            const indexB = employeeIds.indexOf(b.employeeId);
-            return indexA - indexB;
+            const indexA = a.employeeName.localeCompare(b.employeeName);
+            if (indexA !== 0) return indexA;
+            return a.employeeNumber.localeCompare(b.employeeNumber);
         });
 
         this.logger.log(

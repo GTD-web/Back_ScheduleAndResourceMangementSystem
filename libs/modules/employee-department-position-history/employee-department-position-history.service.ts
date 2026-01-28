@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, QueryRunner, Repository, DataSource } from 'typeorm';
+import { EntityManager, QueryRunner, Repository, DataSource, In } from 'typeorm';
 import { EmployeeDepartmentPositionHistory } from './employee-department-position-history.entity';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { DomainDepartmentService } from '../department/department.service';
 
 /**
  * 직원-부서-직책 이력 서비스
@@ -16,6 +17,7 @@ export class DomainEmployeeDepartmentPositionHistoryService {
         @InjectRepository(EmployeeDepartmentPositionHistory)
         private readonly repository: Repository<EmployeeDepartmentPositionHistory>,
         private readonly dataSource: DataSource,
+        private readonly departmentService: DomainDepartmentService,
     ) {}
 
     /**
@@ -165,6 +167,32 @@ export class DomainEmployeeDepartmentPositionHistoryService {
     }
 
     /**
+     * 특정 부서 및 모든 하위 부서의 특정 시점 배치 목록을 재귀적으로 조회한다
+     *
+     * @param departmentId 부서 ID
+     * @param targetDate 대상 날짜
+     * @returns 배치 이력 목록 (하위 부서 포함)
+     */
+    async findByDepartmentWithChildrenAtDate(
+        departmentId: string,
+        targetDate: string,
+    ): Promise<EmployeeDepartmentPositionHistory[]> {
+        // 1. 하위 부서 ID 목록을 재귀적으로 조회 (자기 자신 포함)
+        const departmentIds = await this.departmentService.하위부서ID목록을재귀적으로조회한다(departmentId);
+
+        // 2. 모든 부서(본부서 + 하위 부서)의 배치 이력 조회
+        return this.repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.employee', 'emp')
+            .leftJoinAndSelect('eh.position', 'pos')
+            .leftJoinAndSelect('eh.rank', 'rank')
+            .where('eh.departmentId IN (:...departmentIds)', { departmentIds })
+            .andWhere('eh.effectiveStartDate <= :targetDate', { targetDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :targetDate)', { targetDate })
+            .getMany();
+    }
+
+    /**
      * 현재 유효한 모든 직원 배치를 조회한다
      */
     async findAllCurrent(): Promise<EmployeeDepartmentPositionHistory[]> {
@@ -284,6 +312,49 @@ export class DomainEmployeeDepartmentPositionHistoryService {
             .leftJoinAndSelect('eh.position', 'pos')
             .leftJoinAndSelect('eh.rank', 'rank')
             .where('eh.departmentId = :departmentId', { departmentId })
+            .andWhere('eh.effectiveStartDate <= :endDate', { endDate })
+            .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
+            .getMany();
+    }
+
+    /**
+     * 특정 연월 및 부서와 모든 하위 부서에 유효한 배치이력 목록을 재귀적으로 조회한다
+     *
+     * 해당 월의 범위(첫 날짜 ~ 마지막 날짜) 내에 유효한 배치 정보를 조회하여 배치이력 엔티티를 반환합니다.
+     * 특정 부서 및 모든 하위 부서에 속한 직원의 배치이력을 재귀적으로 조회합니다.
+     *
+     * @param year 연도
+     * @param month 월
+     * @param departmentId 부서 ID
+     *
+     * @returns 배치이력 엔티티 목록 (department 관계 포함, 하위 부서 포함)
+     */
+    async 특정연월부서와하위부서의배치이력목록을조회한다(
+        year: string,
+        month: string,
+        departmentId: string,
+    ): Promise<EmployeeDepartmentPositionHistory[]> {
+        const repository = this.repository;
+
+        // 해당 월의 시작일과 종료일 계산
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        const monthStart = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const monthEnd = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+        const startDate = format(monthStart, 'yyyy-MM-dd');
+        const endDate = format(monthEnd, 'yyyy-MM-dd');
+
+        // 1. 하위 부서 ID 목록을 재귀적으로 조회 (자기 자신 포함)
+        const departmentIds = await this.departmentService.하위부서ID목록을재귀적으로조회한다(departmentId);
+
+        // 2. 모든 부서(본부서 + 하위 부서)의 배치 이력 조회
+        return await repository
+            .createQueryBuilder('eh')
+            .leftJoinAndSelect('eh.department', 'dept')
+            .leftJoinAndSelect('eh.employee', 'emp')
+            .leftJoinAndSelect('eh.position', 'pos')
+            .leftJoinAndSelect('eh.rank', 'rank')
+            .where('eh.departmentId IN (:...departmentIds)', { departmentIds })
             .andWhere('eh.effectiveStartDate <= :endDate', { endDate })
             .andWhere('(eh.effectiveEndDate IS NULL OR eh.effectiveEndDate >= :startDate)', { startDate })
             .getMany();
