@@ -1,4 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany, AfterLoad, BeforeInsert } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { DataSnapshotChild } from '../data-snapshot-child/data-snapshot-child.entity';
 import { Department } from '@libs/modules/department/department.entity';
@@ -125,15 +126,15 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         }
 
         if (this.snapshot_name.trim().length === 0) {
-            throw new Error('스냅샷명은 필수입니다.');
+            throw new BadRequestException('스냅샷명은 필수입니다.');
         }
 
         if (this.yyyy.trim().length === 0) {
-            throw new Error('연도는 필수입니다.');
+            throw new BadRequestException('연도는 필수입니다.');
         }
 
         if (this.mm.trim().length === 0) {
-            throw new Error('월은 필수입니다.');
+            throw new BadRequestException('월은 필수입니다.');
         }
 
         this.validateUuidFormat(this.department_id, 'department_id');
@@ -146,7 +147,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         // 스냅샷 버전 검증 (A-Z만 허용)
         if (this.snapshot_version !== null && this.snapshot_version !== undefined) {
             if (!/^[A-Z]$/.test(this.snapshot_version)) {
-                throw new Error('스냅샷 버전은 A-Z 사이의 단일 문자만 허용됩니다.');
+                throw new BadRequestException('스냅샷 버전은 A-Z 사이의 단일 문자만 허용됩니다.');
             }
         }
 
@@ -158,7 +159,7 @@ export class DataSnapshotInfo extends BaseEntity<DataSnapshotInfoDTO> {
         // 결재자 이름 검증
         if (this.approver_name !== null && this.approver_name !== undefined) {
             if (this.approver_name.trim().length === 0) {
-                throw new Error('결재자 이름은 빈 문자열일 수 없습니다.');
+                throw new BadRequestException('결재자 이름은 빈 문자열일 수 없습니다.');
             }
         }
     }

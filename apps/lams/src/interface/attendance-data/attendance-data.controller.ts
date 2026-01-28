@@ -19,6 +19,13 @@ import {
 import { IGetDailySummaryHistoryResponse } from '../../context/attendance-data-context/interfaces/response/get-daily-summary-history-response.interface';
 import { GetDailySummaryDetailResponseDto } from './dto/get-daily-summary-detail.dto';
 import { IGetDailySummaryDetailResponse } from '../../context/attendance-data-context/interfaces/response/get-daily-summary-detail-response.interface';
+import { GetMonthlySummaryNoteResponseDto } from './dto/get-monthly-summary-note.dto';
+import { IGetMonthlySummaryNoteResponse } from '../../context/attendance-data-context/interfaces/response/get-monthly-summary-note-response.interface';
+import {
+    UpdateMonthlySummaryNoteRequestDto,
+    UpdateMonthlySummaryNoteResponseDto,
+} from './dto/update-monthly-summary-note.dto';
+import { IUpdateMonthlySummaryNoteResponse } from '../../context/attendance-data-context/interfaces/response/update-monthly-summary-note-response.interface';
 
 /**
  * 출입/근태 데이터 컨트롤러
@@ -149,7 +156,7 @@ export class AttendanceDataController {
             enter: dto.enter,
             leave: dto.leave,
             attendanceTypeIds: dto.attendanceTypeIds,
-            reason: dto.reason,
+            note: dto.note,
             performedBy,
         });
 
@@ -350,6 +357,66 @@ export class AttendanceDataController {
         const result = await this.attendanceDataBusinessService.스냅샷을ID로조회한다({
             snapshotId: id,
             departmentId,
+        });
+
+        return result;
+    }
+
+    /**
+     * 월간 요약 노트 조회
+     *
+     * 월간 요약 ID를 기준으로 해당 월간 요약의 노트를 조회합니다.
+     */
+    @Get('monthly-summaries/:id/note')
+    @ApiOperation({
+        summary: '월간 요약 노트 조회',
+        description: '월간 요약 ID를 기준으로 해당 월간 요약의 노트를 조회합니다.',
+    })
+    @ApiParam({ name: 'id', description: '월간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '월간 요약 노트 조회 성공',
+        type: GetMonthlySummaryNoteResponseDto,
+    })
+    async getMonthlySummaryNote(
+        @Param('id', ParseUUIDPipe) id: string,
+    ): Promise<IGetMonthlySummaryNoteResponse> {
+        const result = await this.attendanceDataBusinessService.월간요약노트를조회한다({
+            monthlySummaryId: id,
+        });
+
+        return result;
+    }
+
+    /**
+     * 월간 요약 노트 수정
+     *
+     * 월간 요약의 노트를 수정합니다.
+     */
+    @Patch('monthly-summaries/:id/note')
+    @ApiOperation({
+        summary: '월간 요약 노트 수정',
+        description: '월간 요약의 노트를 수정합니다.',
+    })
+    @ApiParam({ name: 'id', description: '월간 요약 ID', example: '123e4567-e89b-12d3-a456-426614174000' })
+    @ApiResponse({
+        status: 200,
+        description: '월간 요약 노트 수정 성공',
+        type: UpdateMonthlySummaryNoteResponseDto,
+    })
+    async updateMonthlySummaryNote(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateMonthlySummaryNoteRequestDto,
+        @User('id') performedBy: string,
+    ): Promise<IUpdateMonthlySummaryNoteResponse> {
+        if (!performedBy) {
+            throw new BadRequestException('사용자 정보를 찾을 수 없습니다.');
+        }
+
+        const result = await this.attendanceDataBusinessService.월간요약노트를수정한다({
+            monthlySummaryId: id,
+            note: dto.note,
+            performedBy,
         });
 
         return result;

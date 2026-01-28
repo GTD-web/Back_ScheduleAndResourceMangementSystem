@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, IsNull, Repository } from 'typeorm';
 import { WorkHours } from './work-hours.entity';
@@ -39,7 +39,7 @@ export class DomainWorkHoursService {
             },
         });
         if (existing) {
-            throw new Error('이미 해당 날짜의 시수가 존재합니다.');
+            throw new ConflictException('이미 해당 날짜의 시수가 존재합니다.');
         }
 
         // work_minutes가 없으면 start_time과 end_time으로 계산

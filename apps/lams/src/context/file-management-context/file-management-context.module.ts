@@ -54,7 +54,7 @@ export class FileManagementContextModule {
                 ...FILE_LIST_QUERY_HANDLERS,
                 ...FILE_DELETE_HANDLERS,
             ],
-            exports: [FileManagementContextService],
+            exports: [FileManagementContextService, ...FILE_UPLOAD_HANDLERS],
         };
     }
 }

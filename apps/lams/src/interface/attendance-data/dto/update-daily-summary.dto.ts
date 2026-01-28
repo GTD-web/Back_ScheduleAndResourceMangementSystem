@@ -83,13 +83,13 @@ export class UpdateDailySummaryRequestDto {
     attendanceTypeIds?: string[];
 
     @ApiProperty({
-        description: '변경 사유',
+        description: '메모 (일간 요약 note 필드에 저장되며, 수정이력의 reason에도 기록됨)',
         example: '출입기록 오류로 인한 수정',
-        required: true,
+        required: false,
     })
     @IsString()
     @IsOptional()
-    reason?: string;
+    note?: string;
 }
 
 /**

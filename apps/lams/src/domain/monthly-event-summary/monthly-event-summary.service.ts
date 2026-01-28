@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, IsNull, Repository, DataSource } from 'typeorm';
 import { MonthlyEventSummary } from './monthly-event-summary.entity';
@@ -51,7 +51,7 @@ export class DomainMonthlyEventSummaryService {
             },
         });
         if (existing) {
-            throw new Error('이미 해당 연월의 월간 요약이 존재합니다.');
+            throw new ConflictException('이미 해당 연월의 월간 요약이 존재합니다.');
         }
 
         const summary = new MonthlyEventSummary(
@@ -155,7 +155,7 @@ export class DomainMonthlyEventSummaryService {
             const [year, month] = yyyymm.split('-');
 
             if (dailySummaries.length === 0) {
-                throw new Error(`${yyyymm}의 일일 요약 데이터가 없습니다.`);
+                throw new BadRequestException(`${yyyymm}의 일일 요약 데이터가 없습니다.`);
             }
 
             // queryRunner 또는 { manager } 형태 모두 지원

@@ -1,4 +1,5 @@
 import { Entity, Column, Index } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { EventInfoDTO } from './event-info.types';
 
@@ -63,19 +64,19 @@ export class EventInfo extends BaseEntity<EventInfoDTO> {
         }
 
         if (this.employee_name.trim().length === 0) {
-            throw new Error('직원명은 필수입니다.');
+            throw new BadRequestException('직원명은 필수입니다.');
         }
 
         if (this.event_time.trim().length === 0) {
-            throw new Error('이벤트 시간은 필수입니다.');
+            throw new BadRequestException('이벤트 시간은 필수입니다.');
         }
 
         if (this.yyyymmdd.trim().length === 0) {
-            throw new Error('날짜는 필수입니다.');
+            throw new BadRequestException('날짜는 필수입니다.');
         }
 
         if (this.hhmmss.trim().length === 0) {
-            throw new Error('시간은 필수입니다.');
+            throw new BadRequestException('시간은 필수입니다.');
         }
     }
 

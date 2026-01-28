@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { AttendanceType } from '../attendance-type/attendance-type.entity';
@@ -59,7 +60,7 @@ export class UsedAttendance extends BaseEntity<UsedAttendanceDTO> {
         }
 
         if (this.used_at.trim().length === 0) {
-            throw new Error('사용 날짜는 필수입니다.');
+            throw new BadRequestException('사용 날짜는 필수입니다.');
         }
 
         this.validateUuidFormat(this.employee_id, 'employee_id');

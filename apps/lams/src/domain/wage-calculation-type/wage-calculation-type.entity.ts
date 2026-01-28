@@ -1,4 +1,5 @@
 import { Entity, Column, Index } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { WageCalculationTypeDTO, CalculationType } from './wage-calculation-type.types';
 
@@ -65,7 +66,7 @@ export class WageCalculationType extends BaseEntity<WageCalculationTypeDTO> {
         }
 
         if (this.start_date.trim().length === 0) {
-            throw new Error('시작일은 필수입니다.');
+            throw new BadRequestException('시작일은 필수입니다.');
         }
     }
 
@@ -77,7 +78,7 @@ export class WageCalculationType extends BaseEntity<WageCalculationTypeDTO> {
         if (this.start_date) {
             const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
             if (!dateRegex.test(this.start_date)) {
-                throw new Error('시작일은 yyyy-MM-dd 형식이어야 합니다.');
+                throw new BadRequestException('시작일은 yyyy-MM-dd 형식이어야 합니다.');
             }
         }
     }
@@ -89,7 +90,7 @@ export class WageCalculationType extends BaseEntity<WageCalculationTypeDTO> {
         // 임금 계산 유형 검증
         if (this.calculation_type) {
             if (!Object.values(CalculationType).includes(this.calculation_type)) {
-                throw new Error(`임금 계산 유형은 ${Object.values(CalculationType).join(', ')} 중 하나여야 합니다.`);
+                throw new BadRequestException(`임금 계산 유형은 ${Object.values(CalculationType).join(', ')} 중 하나여야 합니다.`);
             }
         }
     }
@@ -105,7 +106,7 @@ export class WageCalculationType extends BaseEntity<WageCalculationTypeDTO> {
 
             // 시작일이 변경일시보다 이후일 수는 없음 (일반적으로 변경일시가 시작일과 같거나 이후)
             if (startDate > changedAtDate) {
-                throw new Error('시작일은 변경일시보다 이전이거나 같아야 합니다.');
+                throw new BadRequestException('시작일은 변경일시보다 이전이거나 같아야 합니다.');
             }
         }
     }

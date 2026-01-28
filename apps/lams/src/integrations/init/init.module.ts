@@ -4,8 +4,10 @@ import { InitService } from './init.service';
 import { DomainAttendanceTypeModule } from '../../domain/attendance-type/attendance-type.module';
 import { DomainHolidayInfoModule } from '../../domain/holiday-info/holiday-info.module';
 import { DomainProjectModule } from '../../domain/project/project.module';
+import { DomainFileModule } from '../../domain/file/file.module';
 import { OrganizationMigrationModule } from '../migration/migration.module';
 import { PrvDbMgrModule } from '../prv-db-mgr/prv-db-mgr.module';
+import { FileManagementContextModule } from '../../context/file-management-context/file-management-context.module';
 
 /**
  * 기본 데이터 초기화 모듈
@@ -17,8 +19,10 @@ import { PrvDbMgrModule } from '../prv-db-mgr/prv-db-mgr.module';
         DomainAttendanceTypeModule,
         DomainHolidayInfoModule,
         DomainProjectModule,
+        DomainFileModule,
         OrganizationMigrationModule,
         PrvDbMgrModule,
+        FileManagementContextModule.forRoot(),
     ],
     providers: [InitService],
 })

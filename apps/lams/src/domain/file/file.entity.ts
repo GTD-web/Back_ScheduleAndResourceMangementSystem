@@ -1,4 +1,5 @@
 import { Entity, Column } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { FileDTO, FileType   } from './file.types';
 
@@ -93,11 +94,11 @@ export class File extends BaseEntity<FileDTO> {
         }
 
         if (this.file_name.trim().length === 0) {
-            throw new Error('파일명은 필수입니다.');
+            throw new BadRequestException('파일명은 필수입니다.');
         }
 
         if (this.file_path.trim().length === 0) {
-            throw new Error('파일 경로는 필수입니다.');
+            throw new BadRequestException('파일 경로는 필수입니다.');
         }
     }
 

@@ -114,7 +114,7 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
 
                     // 첫 번째 행의 키를 컬럼명으로 사용
                     const firstRow = rawExcelData[0];
-                    const columnNames = Object.keys(firstRow);
+                    const columnNames = excelResult.headers
 
                     // 필수 컬럼명 검증 및 파일 타입 구분
                     const validationResult = this.validateAndDetermineFileType(columnNames);
@@ -138,7 +138,6 @@ export class UploadFileHandler implements ICommandHandler<UploadFileCommand, IUp
                             : this.koreanToEnglish.attendance;
 
                     const reconstructedData = this.reconstructDataWithEnglishKeys(rawExcelData, mapping);
-
                     // 직원별로 구분 (employeeNumber가 있는 경우만)
                     excelData = this.groupByEmployee(reconstructedData);
 

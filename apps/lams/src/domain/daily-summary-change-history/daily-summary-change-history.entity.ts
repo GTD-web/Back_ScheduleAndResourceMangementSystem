@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { DailyEventSummary } from '../daily-event-summary/daily-event-summary.entity';
 import { DailySummaryChangeHistoryDTO } from './daily-summary-change-history.types';
@@ -117,11 +118,11 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
         }
 
         if (this.content.trim().length === 0) {
-            throw new Error('변경 내역은 필수입니다.');
+            throw new BadRequestException('변경 내역은 필수입니다.');
         }
 
         if (this.changed_by.trim().length === 0) {
-            throw new Error('변경자는 필수입니다.');
+            throw new BadRequestException('변경자는 필수입니다.');
         }
 
         this.validateUuidFormat(this.daily_event_summary_id, 'daily_event_summary_id');
@@ -138,7 +139,7 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
 
         // changed_by 길이 검증
         if (this.changed_by.length > 255) {
-            throw new Error('변경자는 255자 이하여야 합니다.');
+            throw new BadRequestException('변경자는 255자 이하여야 합니다.');
         }
 
         // UUID 형식 검증

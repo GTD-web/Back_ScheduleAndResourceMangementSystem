@@ -10,7 +10,8 @@ import { DomainAttendanceTypeService } from '../../../../../domain/attendance-ty
 import { DailyEventSummary } from '../../../../../domain/daily-event-summary/daily-event-summary.entity';
 import { MonthlyEventSummary } from '../../../../../domain/monthly-event-summary/monthly-event-summary.entity';
 import { UsedAttendance } from '../../../../../domain/used-attendance/used-attendance.entity';
-import { startOfMonth, endOfMonth, format } from 'date-fns';
+import { Employee } from '@libs/modules/employee/employee.entity';
+import { startOfMonth, endOfMonth, format, isBefore, isAfter } from 'date-fns';
 
 /**
  * 월간 요약 생성 핸들러
@@ -124,7 +125,33 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                             { manager }, // EntityManager를 전달
                         );
 
-                        // 6. 일간 요약들의 monthly_event_summary_id 업데이트
+                        // 6. 월간 요약 노트 생성
+                        const employee = dailySummaries[0]?.employee;
+                        if (employee) {
+                            const attendanceResult = {
+                                lateDetails: monthlySummary.lateDetails || [],
+                                absenceDetails: monthlySummary.absenceDetails || [],
+                                earlyLeaveDetails: monthlySummary.earlyLeaveDetails || [],
+                            };
+                            const note = this.월간요약노트를생성한다(
+                                employee,
+                                year,
+                                month,
+                                attendanceResult,
+                            );
+                            if (note) {
+                                // DTO가 아닌 엔티티를 조회하여 수정
+                                const monthlySummaryEntity = await manager.findOne(MonthlyEventSummary, {
+                                    where: { id: monthlySummary.id },
+                                });
+                                if (monthlySummaryEntity) {
+                                    monthlySummaryEntity.additional_note = note;
+                                    await manager.save(MonthlyEventSummary, monthlySummaryEntity);
+                                }
+                            }
+                        }
+
+                        // 7. 일간 요약들의 monthly_event_summary_id 업데이트
                         for (const dailySummary of dailySummaries) {
                             dailySummary.업데이트한다(monthlySummary.id);
                             dailySummary.수정자설정한다(performedBy);
@@ -155,6 +182,59 @@ export class GenerateMonthlySummariesHandler implements ICommandHandler<
                 throw error;
             }
         });
+    }
+
+    /**
+     * 월간 요약 노트를 생성한다
+     *
+     * 입사일, 퇴사일, 지각 횟수, 결근 횟수, 조퇴 횟수를 노트에 추가합니다.
+     */
+    private 월간요약노트를생성한다(
+        employee: Employee,
+        year: string,
+        month: string,
+        attendanceResult: {
+            lateDetails: any[];
+            absenceDetails: any[];
+            earlyLeaveDetails: any[];
+        },
+    ): string {
+        let newNote = ''; // note가 null인 경우 빈 문자열로 초기화
+
+        // 요청 년월에 입사하거나 퇴사한 직원의 월간 근태 요약에 메모 추가
+        const startDate = startOfMonth(new Date(parseInt(year), parseInt(month) - 1));
+        const endDate = endOfMonth(new Date(parseInt(year), parseInt(month) - 1));
+
+        // 입사가 시작과 종료사이 범위에 있는 직원의 월간 근태 요약에 메모 추가
+        if (
+            employee.hireDate &&
+            isBefore(employee.hireDate, endDate) &&
+            isAfter(employee.hireDate, startDate)
+        ) {
+            newNote += `${format(employee.hireDate, 'yyyy-MM-dd')} 입사\n`;
+        }
+
+        if (
+            employee.terminationDate &&
+            isBefore(employee.terminationDate, endDate) &&
+            isAfter(employee.terminationDate, startDate)
+        ) {
+            newNote += `${format(employee.terminationDate, 'yyyy-MM-dd')} 퇴사\n`;
+        }
+
+        if (attendanceResult.lateDetails.length > 0) {
+            newNote += `${attendanceResult.lateDetails.length}회 지각\n`;
+        }
+
+        if (attendanceResult.absenceDetails.length > 0) {
+            newNote += `${attendanceResult.absenceDetails.length}회 결근\n`;
+        }
+
+        if (attendanceResult.earlyLeaveDetails.length > 0) {
+            newNote += `${attendanceResult.earlyLeaveDetails.length}회 조퇴\n`;
+        }
+
+        return newNote.trim();
     }
 
 }

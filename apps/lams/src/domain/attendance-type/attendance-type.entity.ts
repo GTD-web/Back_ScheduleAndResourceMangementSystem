@@ -1,4 +1,5 @@
 import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { AttendanceTypeDTO } from './attendance-type.types';
 
@@ -87,7 +88,7 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
         }
 
         if (this.title.trim().length === 0) {
-            throw new Error('출석 타입 제목은 필수입니다.');
+            throw new BadRequestException('출석 타입 제목은 필수입니다.');
         }
     }
 
@@ -102,12 +103,12 @@ export class AttendanceType extends BaseEntity<AttendanceTypeDTO> {
 
         // work_time은 0 이상이어야 함
         if (this.work_time < 0) {
-            throw new Error('근무 시간은 0 이상이어야 합니다.');
+            throw new BadRequestException('근무 시간은 0 이상이어야 합니다.');
         }
 
         // deducted_annual_leave는 0 이상이어야 함
         if (this.deducted_annual_leave < 0) {
-            throw new Error('차감 연차는 0 이상이어야 합니다.');
+            throw new BadRequestException('차감 연차는 0 이상이어야 합니다.');
         }
     }
 

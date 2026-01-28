@@ -324,7 +324,9 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                 // 5단계: 근무 시간 계산
                 summary.work_time = this.근무시간을계산한다(summary.enter, summary.leave, recognizedAttendances);
                 summary.is_checked = true;
-                summary.note = '';
+
+                // 6단계: 노트 생성
+                this.노트를생성한다(summary);
 
                 // 해당 날짜에 사용된 근태 유형 정보 설정
                 const usedAttendanceInfos = dayAttendances.map((ua) => {
@@ -600,6 +602,33 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
             return hhmmss;
         }
         return `${hhmmss.substring(0, 2)}:${hhmmss.substring(2, 4)}:${hhmmss.substring(4, 6)}`;
+    }
+
+    /**
+     * 일간 요약 노트를 생성한다
+     *
+     * 지각, 조퇴, 결근 정보를 노트에 추가합니다.
+     */
+    private 노트를생성한다(summary: DailyEventSummary): void {
+        let newNote = '';
+
+        if (summary.is_late) {
+            newNote += `출근 시간: ${summary.enter} 지각\n`;
+        }
+
+        if (summary.is_early_leave) {
+            newNote += `퇴근 시간: ${summary.leave} 조퇴\n`;
+        }
+
+        if (summary.is_absent) {
+            newNote += '결근\n';
+        }
+
+        if (newNote) {
+            summary.note = newNote.trim();
+        } else {
+            summary.note = '';
+        }
     }
 
 }

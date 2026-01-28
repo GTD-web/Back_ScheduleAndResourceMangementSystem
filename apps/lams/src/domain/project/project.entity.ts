@@ -1,4 +1,5 @@
 import { Entity, Column, Index } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { ProjectDTO } from './project.types';
 
@@ -98,11 +99,11 @@ export class Project extends BaseEntity<ProjectDTO> {
         }
 
         if (this.project_code.trim().length === 0) {
-            throw new Error('프로젝트 코드는 필수입니다.');
+            throw new BadRequestException('프로젝트 코드는 필수입니다.');
         }
 
         if (this.project_name.trim().length === 0) {
-            throw new Error('프로젝트명은 필수입니다.');
+            throw new BadRequestException('프로젝트명은 필수입니다.');
         }
     }
 
@@ -116,11 +117,11 @@ export class Project extends BaseEntity<ProjectDTO> {
         }
 
         if (this.project_code.length > 100) {
-            throw new Error('프로젝트 코드는 100자 이하여야 합니다.');
+            throw new BadRequestException('프로젝트 코드는 100자 이하여야 합니다.');
         }
 
         if (this.project_name.length > 255) {
-            throw new Error('프로젝트명은 255자 이하여야 합니다.');
+            throw new BadRequestException('프로젝트명은 255자 이하여야 합니다.');
         }
     }
 
@@ -131,7 +132,7 @@ export class Project extends BaseEntity<ProjectDTO> {
         // 시작일과 종료일 검증
         if (this.start_date && this.end_date) {
             if (new Date(this.start_date) > new Date(this.end_date)) {
-                throw new Error('시작일은 종료일보다 이전이어야 합니다.');
+                throw new BadRequestException('시작일은 종료일보다 이전이어야 합니다.');
             }
         }
     }

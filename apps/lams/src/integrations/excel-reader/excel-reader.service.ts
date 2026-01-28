@@ -11,6 +11,56 @@ import {
 } from './dtos/read-excel.dto';
 import { DEFAULT_READ_OPTIONS, MAX_ROWS } from './excel-reader.constants';
 
+/** 저장용 표준 날짜/시간 형식: YYYY-MM-DD HH:mm:ss */
+const STANDARD_DATETIME_FORMAT = /^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/;
+
+/** 날짜/시간 형식으로 보이는 문자열인지 (카드번호·사원번호 등 숫자만 있는 값 제외) */
+function looksLikeDateString(value: string): boolean {
+    return /[-/\s:]/.test(value);
+}
+
+/**
+ * Date 객체를 YYYY-MM-DD HH:mm:ss 형식 문자열로 변환
+ */
+function formatDateToStandard(value: Date): string {
+    const y = value.getFullYear();
+    const m = String(value.getMonth() + 1).padStart(2, '0');
+    const d = String(value.getDate()).padStart(2, '0');
+    const hh = String(value.getHours()).padStart(2, '0');
+    const mm = String(value.getMinutes()).padStart(2, '0');
+    const ss = String(value.getSeconds()).padStart(2, '0');
+    return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+}
+
+/**
+ * 레코드 배열 내 날짜 값을 YYYY-MM-DD HH:mm:ss 형식으로 정규화 (엑셀 로케일 형식 방지)
+ */
+function normalizeDateValuesInRecords(records: Record<string, any>[]): void {
+    for (const record of records) {
+        for (const key of Object.keys(record)) {
+            const value = record[key];
+            if (value instanceof Date) {
+                record[key] = formatDateToStandard(value);
+            } else if (
+                typeof value === 'string' &&
+                looksLikeDateString(value) &&
+                !STANDARD_DATETIME_FORMAT.test(value) &&
+                !Number.isNaN(Date.parse(value))
+            ) {
+                // 날짜처럼 보이는 문자열만 표준 형식으로 변환 (d/m/yy h:mm 등). 숫자만 있는 값(카드번호·사원번호)은 제외
+                try {
+                    const parsed = new Date(value);
+                    if (!Number.isNaN(parsed.getTime())) {
+                        record[key] = formatDateToStandard(parsed);
+                    }
+                } catch {
+                    // 파싱 실패 시 그대로 유지
+                }
+            }
+        }
+    }
+}
+
 /**
  * 엑셀 리더 서비스
  *
@@ -30,7 +80,10 @@ export class ExcelReaderService {
         try {
             this.logger.log(`워크북 로드 시작, 버퍼 크기: ${buffer.length} bytes`);
 
-            const workbook = XLSX.read(buffer, { type: 'buffer' });
+            const workbook = XLSX.read(buffer, {
+                type: 'buffer',
+                cellDates: true, // 날짜 셀을 Date 객체로 파싱 (d/m/yy 등 로케일 형식 방지)
+            });
 
             this.logger.log(`워크북 로드 완료, 워크시트 수: ${workbook.SheetNames.length}`);
 
@@ -137,17 +190,16 @@ export class ExcelReaderService {
             endRow = startRow + MAX_ROWS;
         }
 
-        // 데이터를 JSON으로 변환
+        // 데이터를 JSON으로 변환 (raw: true로 Date 객체 수신 후 정규화)
         const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
             header: readOptions.hasHeader ? undefined : 1,
             range: startRow,
             defval: readOptions.includeEmpty ? null : undefined,
-            raw: false, // 날짜 등을 문자열로 변환
+            raw: true, // 날짜 셀은 cellDates로 Date 객체가 됨 → 정규화 단계에서 YYYY-MM-DD HH:mm:ss로 변환
         });
 
         // 요청된 범위만큼 데이터 자르기
         const limitedData = jsonData.slice(0, Math.min(jsonData.length, endRow - startRow + 1));
-
         // 헤더 추출 및 데이터 구조화
         let headers: string[] | undefined;
         let rows: any[][];
@@ -157,6 +209,9 @@ export class ExcelReaderService {
             // 헤더가 있는 경우
             headers = Object.keys(limitedData[0]);
             records = limitedData;
+            console.log(records);
+            // 엑셀 로케일 형식(d/m/yy h:mm 등) 방지: Date·날짜 문자열을 YYYY-MM-DD HH:mm:ss로 정규화
+            normalizeDateValuesInRecords(records);
             rows = records.map((record) => headers!.map((header) => record[header]));
         } else {
             // 헤더가 없는 경우 (배열의 배열)

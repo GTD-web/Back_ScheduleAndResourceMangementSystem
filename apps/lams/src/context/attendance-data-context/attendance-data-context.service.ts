@@ -4,7 +4,9 @@ import {
     GenerateDailySummariesCommand,
     GenerateMonthlySummariesCommand,
     UpdateDailySummaryCommand,
+    UpdateMonthlySummaryNoteCommand,
     GetMonthlySummariesQuery,
+    GetMonthlySummaryNoteQuery,
     GetDailySummaryHistoryQuery,
     GetDailySummaryDetailQuery,
     SoftDeleteDailySummariesCommand,
@@ -18,12 +20,16 @@ import {
     IGenerateMonthlySummariesResponse,
     IGetMonthlySummariesResponse,
     IGetMonthlySummariesQuery,
+    IGetMonthlySummaryNoteQuery,
+    IGetMonthlySummaryNoteResponse,
     IGetDailySummaryHistoryQuery,
     IGetDailySummaryHistoryResponse,
     IGetDailySummaryDetailQuery,
     IGetDailySummaryDetailResponse,
     IUpdateDailySummaryCommand,
     IUpdateDailySummaryResponse,
+    IUpdateMonthlySummaryNoteCommand,
+    IUpdateMonthlySummaryNoteResponse,
     IGenerateDailySummariesCommand,
     IRestoreDailySummariesFromSnapshotCommand,
     IRestoreMonthlySummariesFromSnapshotCommand,
@@ -214,5 +220,31 @@ export class AttendanceDataContextService {
     async 일간요약상세를조회한다(query: IGetDailySummaryDetailQuery): Promise<IGetDailySummaryDetailResponse> {
         const queryInstance = new GetDailySummaryDetailQuery(query);
         return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 월간 요약 노트를 조회한다
+     *
+     * 월간 요약 ID를 기준으로 해당 월간 요약의 노트를 조회합니다.
+     *
+     * @param query 조회 조건
+     * @returns 월간 요약 노트 조회 결과
+     */
+    async 월간요약노트를조회한다(query: IGetMonthlySummaryNoteQuery): Promise<IGetMonthlySummaryNoteResponse> {
+        const queryInstance = new GetMonthlySummaryNoteQuery(query);
+        return await this.queryBus.execute(queryInstance);
+    }
+
+    /**
+     * 월간 요약 노트를 수정한다
+     *
+     * 월간 요약의 노트를 수정합니다.
+     *
+     * @param command 수정 명령
+     * @returns 월간 요약 노트 수정 결과
+     */
+    async 월간요약노트를수정한다(command: IUpdateMonthlySummaryNoteCommand): Promise<IUpdateMonthlySummaryNoteResponse> {
+        const commandInstance = new UpdateMonthlySummaryNoteCommand(command);
+        return await this.commandBus.execute(commandInstance);
     }
 }

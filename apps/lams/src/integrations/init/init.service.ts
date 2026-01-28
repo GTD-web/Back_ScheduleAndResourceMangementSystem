@@ -4,11 +4,16 @@ import { DomainAttendanceTypeService } from '../../domain/attendance-type/attend
 import { DomainHolidayInfoService } from '../../domain/holiday-info/holiday-info.service';
 import { DomainProjectService } from '../../domain/project/project.service';
 import { OrganizationMigrationService } from '../migration/migration.service';
+import { UploadFileHandler } from '../../context/file-management-context/handlers/file-upload/commands/upload-file.handler';
+import { UploadFileCommand } from '../../context/file-management-context/handlers/file-upload/commands/upload-file.command';
+import { DomainFileService } from '../../domain/file/file.service';
 import { AttendanceType } from '../../domain/attendance-type/attendance-type.entity';
 import { HolidayInfo } from '../../domain/holiday-info/holiday-info.entity';
 import { Project } from '../../domain/project/project.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { IsNull } from 'typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * 기본 데이터 초기화 서비스
@@ -27,6 +32,8 @@ export class InitService implements OnApplicationBootstrap {
         private readonly holidayInfoService: DomainHolidayInfoService,
         private readonly projectService: DomainProjectService,
         private readonly organizationMigrationService: OrganizationMigrationService,
+        private readonly uploadFileHandler: UploadFileHandler,
+        private readonly fileService: DomainFileService,
     ) {}
 
     async onApplicationBootstrap(): Promise<void> {
@@ -49,6 +56,9 @@ export class InitService implements OnApplicationBootstrap {
 
             // 4. 조직 데이터 마이그레이션 (직원 데이터가 없으면 실행)
             await this.조직데이터마이그레이션();
+
+            // 5. 초기 파일 업로드 (2026년 1월 더미 데이터)
+            await this.초기파일업로드();
 
             this.logger.log('✅ 기본 데이터 초기화 완료');
         } catch (error) {
@@ -492,6 +502,103 @@ export class InitService implements OnApplicationBootstrap {
         } catch (error) {
             this.logger.error(`조직 데이터 마이그레이션 실패: ${error.message}`, error.stack);
             // 마이그레이션 실패는 애플리케이션 시작을 막지 않습니다
+        }
+    }
+
+    /**
+     * 초기 파일을 업로드한다
+     *
+     * 2026년 1월 더미 데이터 파일들을 업로드합니다.
+     * - 출입내역_2026년1월.xlsx
+     * - 근태신청내역_2026년1월.xlsx
+     */
+    private async 초기파일업로드(): Promise<void> {
+        this.logger.log('초기 파일 업로드 확인 중...');
+
+        try {
+            // 2026년 1월 초기 파일이 이미 업로드되어 있으면 실행하지 않음
+            const INITIAL_YEAR = '2026';
+            const INITIAL_MONTH = '01';
+            const INITIAL_FILE_NAMES = ['출입내역_2026년1월.xlsx', '근태신청내역_2026년1월.xlsx'] as const;
+
+            const existingFiles = await this.fileService.연도월별목록조회한다(INITIAL_YEAR, INITIAL_MONTH);
+            const existingNames = new Set(
+                existingFiles.map((f) => f.fileOriginalName ?? f.fileName).filter(Boolean),
+            );
+            const allUploaded = INITIAL_FILE_NAMES.every((name) => existingNames.has(name));
+            if (allUploaded) {
+                this.logger.log(
+                    `초기 파일이 이미 업로드되어 있습니다 (${INITIAL_YEAR}-${INITIAL_MONTH}). 업로드를 건너뜁니다.`,
+                );
+                return;
+            }
+
+            // 프로젝트 루트 경로 (빌드 환경과 소스 환경 모두 지원)
+            // __dirname이 dist 폴더에 있을 수도 있으므로 process.cwd() 사용
+            const projectRoot = process.cwd();
+            const storagePath = path.join(projectRoot, 'storage', 'local-files');
+
+            // 업로드할 파일 목록
+            const filesToUpload = [
+                {
+                    filePath: path.join(storagePath, '출입내역_2026년1월.xlsx'),
+                    fileName: '출입내역_2026년1월.xlsx',
+                    year: '2026',
+                    month: '01',
+                },
+                {
+                    filePath: path.join(storagePath, '근태신청내역_2026년1월.xlsx'),
+                    fileName: '근태신청내역_2026년1월.xlsx',
+                    year: '2026',
+                    month: '01',
+                },
+            ];
+
+            for (const fileInfo of filesToUpload) {
+                // 파일 존재 여부 확인
+                if (!fs.existsSync(fileInfo.filePath)) {
+                    this.logger.warn(`파일이 존재하지 않습니다: ${fileInfo.filePath}`);
+                    continue;
+                }
+
+                try {
+                    // 파일 읽기
+                    const fileBuffer = fs.readFileSync(fileInfo.filePath);
+                    const stats = fs.statSync(fileInfo.filePath);
+
+                    // Express.Multer.File 형태로 변환
+                    const multerFile: Express.Multer.File = {
+                        fieldname: 'file',
+                        originalname: fileInfo.fileName,
+                        encoding: '7bit',
+                        mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        size: stats.size,
+                        buffer: fileBuffer,
+                        destination: '',
+                        filename: fileInfo.fileName,
+                        path: fileInfo.filePath,
+                        stream: null as any,
+                    };
+
+                    // 파일 업로드 (핸들러 직접 실행)
+                    await this.uploadFileHandler.execute(
+                        new UploadFileCommand({
+                            file: multerFile,
+                            uploadBy: 'system',
+                            year: fileInfo.year,
+                            month: fileInfo.month,
+                        }),
+                    );
+
+                    this.logger.log(`✅ 파일 업로드 완료: ${fileInfo.fileName}`);
+                } catch (error) {
+                    this.logger.warn(`파일 업로드 실패 (${fileInfo.fileName}): ${error.message}`);
+                    // 파일 업로드 실패는 애플리케이션 시작을 막지 않습니다
+                }
+            }
+        } catch (error) {
+            this.logger.warn(`초기 파일 업로드 중 오류 발생: ${error.message}`);
+            // 파일 업로드 실패는 애플리케이션 시작을 막지 않습니다
         }
     }
 }

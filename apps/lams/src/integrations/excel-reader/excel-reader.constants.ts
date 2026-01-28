@@ -20,7 +20,7 @@ export const EXCEL_MIME_TYPES = {
  * 기본 워크시트 읽기 옵션
  */
 export const DEFAULT_READ_OPTIONS = {
-    includeEmpty: false, // 빈 셀 포함 여부
+    includeEmpty: true, // 빈 셀 포함 여부
     startRow: 1, // 시작 행 (1부터 시작)
     hasHeader: true, // 첫 행이 헤더인지 여부
 } as const;

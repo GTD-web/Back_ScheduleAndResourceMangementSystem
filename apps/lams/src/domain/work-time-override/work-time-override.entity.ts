@@ -1,4 +1,5 @@
 import { Entity, Column, Index } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { WorkTimeOverrideDTO } from './work-time-override.types';
 
@@ -62,7 +63,7 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
         }
 
         if (this.date.trim().length === 0) {
-            throw new Error('날짜는 필수입니다.');
+            throw new BadRequestException('날짜는 필수입니다.');
         }
     }
 
@@ -74,7 +75,7 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
         if (this.date) {
             const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
             if (!dateRegex.test(this.date)) {
-                throw new Error('날짜는 yyyy-MM-dd 형식이어야 합니다.');
+                throw new BadRequestException('날짜는 yyyy-MM-dd 형식이어야 합니다.');
             }
         }
 
@@ -82,14 +83,14 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
         if (this.start_work_time) {
             const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
             if (!timeRegex.test(this.start_work_time)) {
-                throw new Error('시작 시간은 HH:MM:SS 형식이어야 합니다.');
+                throw new BadRequestException('시작 시간은 HH:MM:SS 형식이어야 합니다.');
             }
         }
 
         if (this.end_work_time) {
             const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
             if (!timeRegex.test(this.end_work_time)) {
-                throw new Error('종료 시간은 HH:MM:SS 형식이어야 합니다.');
+                throw new BadRequestException('종료 시간은 HH:MM:SS 형식이어야 합니다.');
             }
         }
     }
@@ -106,7 +107,7 @@ export class WorkTimeOverride extends BaseEntity<WorkTimeOverrideDTO> {
             const endMinutes = endParts[0] * 60 + endParts[1];
 
             if (startMinutes >= endMinutes) {
-                throw new Error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+                throw new BadRequestException('시작 시간은 종료 시간보다 이전이어야 합니다.');
             }
         }
     }

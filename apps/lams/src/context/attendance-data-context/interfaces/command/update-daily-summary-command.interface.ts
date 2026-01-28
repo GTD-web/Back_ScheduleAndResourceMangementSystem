@@ -9,6 +9,6 @@ export interface IUpdateDailySummaryCommand {
     enter?: string;
     leave?: string;
     attendanceTypeIds?: string[];
-    reason: string;
+    note?: string;
     performedBy: string;
 }

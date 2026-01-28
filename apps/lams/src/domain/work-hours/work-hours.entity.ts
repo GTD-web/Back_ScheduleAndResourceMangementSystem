@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { AssignedProject } from '../assigned-project/assigned-project.entity';
 import { WorkHoursDTO } from './work-hours.types';
@@ -124,16 +125,16 @@ export class WorkHours extends BaseEntity<WorkHoursDTO> {
 
         // work_minutes는 0 이상이어야 함
         if (this.work_minutes < 0) {
-            throw new Error('근무 시간은 0 이상이어야 합니다.');
+            throw new BadRequestException('근무 시간은 0 이상이어야 합니다.');
         }
 
         // start_time과 end_time 길이 검증
         if (this.start_time && this.start_time.length > 50) {
-            throw new Error('근무 시작 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('근무 시작 시간은 50자 이하여야 합니다.');
         }
 
         if (this.end_time && this.end_time.length > 50) {
-            throw new Error('근무 종료 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('근무 종료 시간은 50자 이하여야 합니다.');
         }
     }
 

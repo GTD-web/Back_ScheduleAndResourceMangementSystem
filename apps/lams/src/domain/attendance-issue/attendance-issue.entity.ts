@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { DailyEventSummary } from '../daily-event-summary/daily-event-summary.entity';
@@ -234,16 +235,16 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
     private validateDataFormat(): void {
         // 시간 필드 길이 검증
         if (this.problematic_enter_time && this.problematic_enter_time.length > 50) {
-            throw new Error('문제가 된 출근 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('문제가 된 출근 시간은 50자 이하여야 합니다.');
         }
         if (this.problematic_leave_time && this.problematic_leave_time.length > 50) {
-            throw new Error('문제가 된 퇴근 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('문제가 된 퇴근 시간은 50자 이하여야 합니다.');
         }
         if (this.corrected_enter_time && this.corrected_enter_time.length > 50) {
-            throw new Error('변경할 출근 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('변경할 출근 시간은 50자 이하여야 합니다.');
         }
         if (this.corrected_leave_time && this.corrected_leave_time.length > 50) {
-            throw new Error('변경할 퇴근 시간은 50자 이하여야 합니다.');
+            throw new BadRequestException('변경할 퇴근 시간은 50자 이하여야 합니다.');
         }
 
         // UUID 형식 검증
@@ -253,10 +254,10 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         // 근태 유형 ID 배열 검증 (최대 2개)
         if (this.problematic_attendance_type_ids) {
             if (!Array.isArray(this.problematic_attendance_type_ids)) {
-                throw new Error('문제가 된 근태 유형 ID는 배열이어야 합니다.');
+                throw new BadRequestException('문제가 된 근태 유형 ID는 배열이어야 합니다.');
             }
             if (this.problematic_attendance_type_ids.length > 2) {
-                throw new Error('문제가 된 근태 유형 ID는 최대 2개까지 가능합니다.');
+                throw new BadRequestException('문제가 된 근태 유형 ID는 최대 2개까지 가능합니다.');
             }
             this.problematic_attendance_type_ids.forEach((id, index) => {
                 this.validateUuidFormat(id, `problematic_attendance_type_ids[${index}]`);
@@ -264,10 +265,10 @@ export class AttendanceIssue extends BaseEntity<AttendanceIssueDTO> {
         }
         if (this.corrected_attendance_type_ids) {
             if (!Array.isArray(this.corrected_attendance_type_ids)) {
-                throw new Error('변경할 근태 유형 ID는 배열이어야 합니다.');
+                throw new BadRequestException('변경할 근태 유형 ID는 배열이어야 합니다.');
             }
             if (this.corrected_attendance_type_ids.length > 2) {
-                throw new Error('변경할 근태 유형 ID는 최대 2개까지 가능합니다.');
+                throw new BadRequestException('변경할 근태 유형 ID는 최대 2개까지 가능합니다.');
             }
             this.corrected_attendance_type_ids.forEach((id, index) => {
                 this.validateUuidFormat(id, `corrected_attendance_type_ids[${index}]`);

@@ -143,7 +143,7 @@ export class AttendanceIssueBusinessService {
                 enter: updatedIssue.correctedEnterTime || undefined,
                 leave: updatedIssue.correctedLeaveTime || undefined,
                 attendanceTypeIds: updatedIssue.correctedAttendanceTypeIds || undefined,
-                reason: `근태 이슈 반영: ${updatedIssue.description || '사유 없음'}`,
+                note: `근태 이슈 반영: ${updatedIssue.description || '사유 없음'}`,
                 performedBy: userId,
             });
         }

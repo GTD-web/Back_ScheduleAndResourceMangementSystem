@@ -33,7 +33,7 @@ export class UpdateDailySummaryHandler implements ICommandHandler<
     ) {}
 
     async execute(command: UpdateDailySummaryCommand): Promise<IUpdateDailySummaryResponse> {
-        const { dailySummaryId, enter, leave, attendanceTypeIds, reason, performedBy } = command.data;
+        const { dailySummaryId, enter, leave, attendanceTypeIds, note, performedBy } = command.data;
 
         this.logger.log(`일간 요약 수정 시작: dailySummaryId=${dailySummaryId}`);
 
@@ -146,7 +146,7 @@ export class UpdateDailySummaryHandler implements ICommandHandler<
                     판정결과.hasAttendanceConflict, // has_attendance_conflict
                     판정결과.hasAttendanceOverlap, // has_attendance_overlap
                     workTime,
-                    undefined, // note
+                    note ?? undefined, // note: 요청에서 받은 메모
                     undefined, // used_attendances (기존 값 유지)
                 );
             }
@@ -252,7 +252,7 @@ export class UpdateDailySummaryHandler implements ICommandHandler<
                     판정결과.hasAttendanceConflict, // has_attendance_conflict
                     판정결과.hasAttendanceOverlap, // has_attendance_overlap
                     workTime,
-                    undefined, // note
+                    note ?? undefined, // note: 요청에서 받은 메모
                     usedAttendances,
                 );
             }
@@ -262,14 +262,14 @@ export class UpdateDailySummaryHandler implements ICommandHandler<
 
             const updatedSummary = await manager.save(dailySummary);
 
-            // 3. 수정이력 생성
+            // 3. 수정이력 생성 (reason에는 note 값을 넣음)
             await this.dailySummaryChangeHistoryService.생성한다(
                 {
                     dailyEventSummaryId: dailySummaryId,
                     date: dailySummary.date,
                     content: changeContent,
                     changedBy: performedBy,
-                    reason: reason,
+                    reason: note ?? undefined,
                 },
                 manager,
             );

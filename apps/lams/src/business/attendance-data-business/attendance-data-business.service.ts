@@ -4,12 +4,16 @@ import { DataSnapshotContextService } from '../../context/data-snapshot-context/
 import {
     IGetMonthlySummariesResponse,
     IGetMonthlySummariesQuery,
+    IGetMonthlySummaryNoteQuery,
+    IGetMonthlySummaryNoteResponse,
     IGetDailySummaryHistoryQuery,
     IGetDailySummaryHistoryResponse,
     IGetDailySummaryDetailQuery,
     IGetDailySummaryDetailResponse,
     IUpdateDailySummaryCommand,
     IUpdateDailySummaryResponse,
+    IUpdateMonthlySummaryNoteCommand,
+    IUpdateMonthlySummaryNoteResponse,
 } from '../../context/attendance-data-context/interfaces';
 import {
     ISaveCompanyMonthlySnapshotCommand,
@@ -203,5 +207,31 @@ export class AttendanceDataBusinessService {
     async 일간요약상세를조회한다(query: IGetDailySummaryDetailQuery): Promise<IGetDailySummaryDetailResponse> {
         this.logger.log(`일간 요약 상세 조회: dailySummaryId=${query.dailySummaryId}`);
         return await this.attendanceDataContextService.일간요약상세를조회한다(query);
+    }
+
+    /**
+     * 월간 요약 노트를 조회한다
+     *
+     * 월간 요약 ID를 기준으로 해당 월간 요약의 노트를 조회합니다.
+     *
+     * @param query 조회 조건
+     * @returns 월간 요약 노트 조회 결과
+     */
+    async 월간요약노트를조회한다(query: IGetMonthlySummaryNoteQuery): Promise<IGetMonthlySummaryNoteResponse> {
+        this.logger.log(`월간 요약 노트 조회: monthlySummaryId=${query.monthlySummaryId}`);
+        return await this.attendanceDataContextService.월간요약노트를조회한다(query);
+    }
+
+    /**
+     * 월간 요약 노트를 수정한다
+     *
+     * 월간 요약의 노트를 수정합니다.
+     *
+     * @param command 수정 명령
+     * @returns 월간 요약 노트 수정 결과
+     */
+    async 월간요약노트를수정한다(command: IUpdateMonthlySummaryNoteCommand): Promise<IUpdateMonthlySummaryNoteResponse> {
+        this.logger.log(`월간 요약 노트 수정: monthlySummaryId=${command.monthlySummaryId}`);
+        return await this.attendanceDataContextService.월간요약노트를수정한다(command);
     }
 }

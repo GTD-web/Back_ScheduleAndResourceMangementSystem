@@ -1,4 +1,5 @@
 import { Entity, Column } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { HolidayInfoDTO } from './holiday-info.types';
 
@@ -40,11 +41,11 @@ export class HolidayInfo extends BaseEntity<HolidayInfoDTO> {
         }
 
         if (this.holiday_name.trim().length === 0) {
-            throw new Error('휴일명은 필수입니다.');
+            throw new BadRequestException('휴일명은 필수입니다.');
         }
 
         if (this.holiday_date.trim().length === 0) {
-            throw new Error('휴일 날짜는 필수입니다.');
+            throw new BadRequestException('휴일 날짜는 필수입니다.');
         }
     }
 

@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { DailyEventSummary } from '../daily-event-summary/daily-event-summary.entity';
@@ -150,11 +151,11 @@ export class MonthlyEventSummary extends BaseEntity<MonthlyEventSummaryDTO> {
         }
 
         if (this.employee_number.trim().length === 0) {
-            throw new Error('사원 번호는 필수입니다.');
+            throw new BadRequestException('사원 번호는 필수입니다.');
         }
 
         if (this.yyyymm.trim().length === 0) {
-            throw new Error('연월은 필수입니다.');
+            throw new BadRequestException('연월은 필수입니다.');
         }
 
         this.validateUuidFormat(this.employee_id, 'employee_id');
@@ -171,12 +172,12 @@ export class MonthlyEventSummary extends BaseEntity<MonthlyEventSummaryDTO> {
 
         // work_days_count는 0 이상이어야 함
         if (this.work_days_count < 0) {
-            throw new Error('근무 일수는 0 이상이어야 합니다.');
+            throw new BadRequestException('근무 일수는 0 이상이어야 합니다.');
         }
 
         // total_work_time은 0 이상이어야 함
         if (this.total_work_time < 0) {
-            throw new Error('총 근무 시간은 0 이상이어야 합니다.');
+            throw new BadRequestException('총 근무 시간은 0 이상이어야 합니다.');
         }
 
         // total_workable_time은 0 이상이어야 함
@@ -185,7 +186,7 @@ export class MonthlyEventSummary extends BaseEntity<MonthlyEventSummaryDTO> {
             this.total_workable_time !== undefined &&
             this.total_workable_time < 0
         ) {
-            throw new Error('총 업무 가능 시간은 0 이상이어야 합니다.');
+            throw new BadRequestException('총 업무 가능 시간은 0 이상이어야 합니다.');
         }
     }
 

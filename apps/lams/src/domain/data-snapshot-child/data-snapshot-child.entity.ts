@@ -1,4 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, AfterLoad } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { DataSnapshotInfo } from '../data-snapshot-info/data-snapshot-info.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
@@ -81,19 +82,19 @@ export class DataSnapshotChild extends BaseEntity<DataSnapshotChildDTO> {
         }
 
         if (this.employee_name.trim().length === 0) {
-            throw new Error('직원명은 필수입니다.');
+            throw new BadRequestException('직원명은 필수입니다.');
         }
 
         if (this.employee_number.trim().length === 0) {
-            throw new Error('직원번호는 필수입니다.');
+            throw new BadRequestException('직원번호는 필수입니다.');
         }
 
         if (this.yyyy.trim().length === 0) {
-            throw new Error('연도는 필수입니다.');
+            throw new BadRequestException('연도는 필수입니다.');
         }
 
         if (this.mm.trim().length === 0) {
-            throw new Error('월은 필수입니다.');
+            throw new BadRequestException('월은 필수입니다.');
         }
 
         this.validateUuidFormat(this.employee_id, 'employee_id');

@@ -1,4 +1,5 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { BadRequestException } from '@nestjs/common';
 import { BaseEntity } from '@libs/database/base/base.entity';
 import { Employee } from '@libs/modules/employee/employee.entity';
 import { Project } from '../project/project.entity';
@@ -118,7 +119,7 @@ export class AssignedProject extends BaseEntity<AssignedProjectDTO> {
         // 시작일과 종료일 검증
         if (this.start_date && this.end_date) {
             if (new Date(this.start_date) > new Date(this.end_date)) {
-                throw new Error('할당 시작일은 종료일보다 이전이어야 합니다.');
+                throw new BadRequestException('할당 시작일은 종료일보다 이전이어야 합니다.');
             }
         }
     }
