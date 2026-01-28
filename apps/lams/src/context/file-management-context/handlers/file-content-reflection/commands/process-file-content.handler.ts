@@ -84,23 +84,18 @@ export class ProcessFileContentHandler implements ICommandHandler<
                 }
 
                 // 2. 파일 엔티티의 data 컬럼에서 데이터 가져오기
-                if (!file.data || !file.data.excelData) {
+                if (!file.data) {
                     throw new BadRequestException(
                         '파일 엔티티에 저장된 데이터가 없습니다. 파일을 먼저 업로드하고 검증해야 합니다.',
                     );
                 }
 
-                const excelData = file.data.excelData as Record<string, Record<string, any>[]>;
-                const fileType = file.data.fileType as string;
+                const excelData = file.data;
+                const fileType = file.fileType;
 
                 if (!excelData || typeof excelData !== 'object' || Object.keys(excelData).length === 0) {
                     throw new BadRequestException('파일에 데이터가 없습니다.');
                 }
-
-                const totalRows = Object.values(excelData).reduce((sum, rows) => sum + rows.length, 0);
-                this.logger.log(
-                    `파일 데이터 읽기 완료: ${Object.keys(excelData).length}명의 직원, 총 ${totalRows}행, 파일 타입: ${fileType}`,
-                );
 
                 // 3. 직원 정보 조회 (employeeIds로 조회하여 employeeNumber 매핑)
                 const employees = await manager.find(Employee, {
