@@ -178,6 +178,9 @@ export class ProcessFileContentHandler implements ICommandHandler<
         const eventInfos: Partial<EventInfo>[] = [];
         const usedAttendances: Partial<UsedAttendance>[] = [];
         const processedEmployeeIds: string[] = [];
+        
+        // 중복 체크를 위한 Set (employee_id, used_at, attendance_type_id 조합)
+        const usedAttendanceKeySet = new Set<string>();
 
         if (fileType === FileType.EVENT_HISTORY) {
             // 출입 이벤트 데이터 처리
@@ -355,12 +358,22 @@ export class ProcessFileContentHandler implements ICommandHandler<
                             return;
                         }
 
+                        // 중복 체크: employee_id, used_at, attendance_type_id 조합이 이미 있는지 확인
+                        const attendanceKey = `${employeeId}|${dateStr}|${attendanceTypeId}`;
+                        if (usedAttendanceKeySet.has(attendanceKey)) {
+                            // 이미 존재하는 조합이면 넘어감
+                            return;
+                        }
+
                         // UsedAttendance 엔티티 형식으로 변환 (YYYY-MM-DD 형식 유지)
                         usedAttendances.push({
                             used_at: dateStr, // YYYY-MM-DD 형식
                             employee_id: employeeId,
                             attendance_type_id: attendanceTypeId,
                         });
+                        
+                        // Set에 추가하여 중복 방지
+                        usedAttendanceKeySet.add(attendanceKey);
                     });
 
                     if (!processedEmployeeIds.includes(employeeNumber)) {
