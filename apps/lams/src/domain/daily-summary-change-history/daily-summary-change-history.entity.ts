@@ -58,9 +58,10 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
     @Column({
         name: 'changed_by',
         type: 'uuid',
+        nullable: true,
         comment: '변경자',
     })
-    changed_by: string;
+    changed_by: string | null;
 
     /**
      * 변경 시간
