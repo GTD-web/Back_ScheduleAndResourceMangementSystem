@@ -5,4 +5,6 @@ export interface ISaveReflectionHistoryCommand {
     fileId: string;
     dataSnapshotInfoId?: string;
     info?: string;
+    /** 수행자 ID (선택 상태 설정 시 사용, 없으면 'system') */
+    performedBy?: string;
 }

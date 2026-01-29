@@ -53,13 +53,11 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
     content: string;
 
     /**
-     * 변경자
-     * 변경을 수행한 사용자 ID 또는 이름
+     * 변경자 (사용자 UUID)
      */
     @Column({
         name: 'changed_by',
-        type: 'varchar',
-        length: 255,
+        type: 'uuid',
         comment: '변경자',
     })
     changed_by: string;
@@ -121,11 +119,12 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
             throw new BadRequestException('변경 내역은 필수입니다.');
         }
 
-        if (this.changed_by.trim().length === 0) {
-            throw new BadRequestException('변경자는 필수입니다.');
+        if (!this.changed_by) {
+            return;
         }
 
         this.validateUuidFormat(this.daily_event_summary_id, 'daily_event_summary_id');
+        this.validateUuidFormat(this.changed_by, 'changed_by');
     }
 
     /**
@@ -133,16 +132,6 @@ export class DailySummaryChangeHistory extends BaseEntity<DailySummaryChangeHist
      */
     private validateDataFormat(): void {
         // TypeORM 메타데이터 검증 단계에서는 검증을 건너뜀
-        if (!this.changed_by) {
-            return;
-        }
-
-        // changed_by 길이 검증
-        if (this.changed_by.length > 255) {
-            throw new BadRequestException('변경자는 255자 이하여야 합니다.');
-        }
-
-        // UUID 형식 검증
         if (this.snapshot_id) {
             this.validateUuidFormat(this.snapshot_id, 'snapshot_id');
         }

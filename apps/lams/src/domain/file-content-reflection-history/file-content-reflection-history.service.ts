@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, IsNull, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Repository } from 'typeorm';
 import { FileContentReflectionHistory } from './file-content-reflection-history.entity';
 import {
     CreateFileContentReflectionHistoryData,
@@ -41,6 +41,8 @@ export class DomainFileContentReflectionHistoryService {
             data.fileId,
             data.dataSnapshotInfoId || null,
             data.info || null,
+            data.selectedAt ?? null,
+            data.isSelected ?? false,
         );
 
         const saved = await repository.save(history);
@@ -59,6 +61,81 @@ export class DomainFileContentReflectionHistoryService {
             throw new NotFoundException(`파일 내용 반영 이력을 찾을 수 없습니다. (id: ${id})`);
         }
         return history.DTO변환한다();
+    }
+
+    /**
+     * ID로 엔티티를 조회한다 (핸들러에서 연관 데이터 활용용)
+     */
+    async ID로엔티티조회한다(
+        id: string,
+        relations: string[] = [],
+        manager?: EntityManager,
+    ): Promise<FileContentReflectionHistory | null> {
+        const repository = this.getRepository(manager);
+        return repository.findOne({
+            where: { id },
+            relations: relations.length > 0 ? relations : undefined,
+        });
+    }
+
+    /**
+     * 동일 파일유형·연월의 반영이력 ID 목록을 조회한다
+     */
+    async 같은연월유형이력ID목록조회한다(
+        fileType: string,
+        year: string,
+        month: string,
+        manager?: EntityManager,
+    ): Promise<string[]> {
+        const repository = this.getRepository(manager);
+        const monthPadded = String(month).padStart(2, '0');
+        const list = await repository
+            .createQueryBuilder('h')
+            .innerJoin('h.file', 'f')
+            .where('f.file_type = :fileType', { fileType })
+            .andWhere('f.year = :year', { year })
+            .andWhere('f.month = :month', { month: monthPadded })
+            .andWhere('h.deleted_at IS NULL')
+            .select('h.id')
+            .getMany();
+        return list.map((h) => h.id);
+    }
+
+    /**
+     * 지정한 이력들의 선택 상태를 해제한다 (is_selected false, selected_at null)
+     */
+    async 이력선택해제한다(
+        ids: string[],
+        performedBy: string,
+        manager?: EntityManager,
+    ): Promise<void> {
+        if (ids.length === 0) return;
+        const repository = this.getRepository(manager);
+        const now = new Date();
+        await repository.update(
+            { id: In(ids) },
+            { is_selected: false, updated_by: performedBy },
+        );
+    }
+
+    /**
+     * 지정한 이력만 선택 상태로 설정한다 (is_selected true, selected_at 갱신)
+     */
+    async 이력선택설정한다(
+        id: string,
+        performedBy: string,
+        manager?: EntityManager,
+    ): Promise<void> {
+        const repository = this.getRepository(manager);
+        const history = await repository.findOne({ where: { id } });
+        if (!history) {
+            throw new NotFoundException(`파일 내용 반영 이력을 찾을 수 없습니다. (id: ${id})`);
+        }
+        const now = new Date();
+        history.업데이트한다(undefined, undefined, now, true);
+        history.수정자설정한다(performedBy);
+        history.메타데이터업데이트한다(performedBy);
+        await repository.save(history);
     }
 
     /**
@@ -131,8 +208,10 @@ export class DomainFileContentReflectionHistoryService {
         }
 
         history.업데이트한다(
-            data.dataSnapshotInfoId || null,
-            data.info || null,
+            data.dataSnapshotInfoId,
+            data.info,
+            data.selectedAt,
+            data.isSelected,
         );
         if (data.reflectedAt !== undefined) {
             history.reflected_at = data.reflectedAt;
@@ -197,4 +276,5 @@ export class DomainFileContentReflectionHistoryService {
         // Hard Delete: 데이터베이스에서 완전히 삭제
         await repository.remove(history);
     }
+
 }

@@ -4,6 +4,7 @@ export * from './command/restore-from-history-command.interface';
 export * from './command/delete-existing-data-for-reflection-command.interface';
 export * from './command/save-reflected-data-command.interface';
 export * from './command/save-reflection-history-command.interface';
+export * from './command/set-reflection-history-selected-command.interface';
 export * from './query/get-file-list-with-history-query.interface';
 export * from './query/get-file-list-query.interface';
 export * from './query/get-reflection-history-query.interface';

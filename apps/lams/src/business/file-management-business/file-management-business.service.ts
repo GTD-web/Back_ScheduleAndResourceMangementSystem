@@ -143,11 +143,12 @@ export class FileManagementBusinessService {
 
         this.logger.log(`회사 전체 월간 요약 스냅샷 저장 완료: year=${year}, month=${month}`);
 
-        // 5. 파일 내용 반영 이력 저장 (스냅샷 ID 포함)
+        // 5. 파일 내용 반영 이력 저장 (스냅샷 ID 포함, 선택 상태 설정용 performedBy 전달)
         const historyResult = await this.fileManagementContextService.반영이력을저장한다({
             fileId: reflectionResult.fileId,
             dataSnapshotInfoId: snapshotResult.snapshot?.id,
             info: info,
+            performedBy,
         });
 
         this.logger.log(`파일 내용 반영 이력 저장 완료: reflectionHistoryId=${historyResult.id}`);
@@ -221,6 +222,14 @@ export class FileManagementBusinessService {
         });
 
         this.logger.log(`월간요약 복원 완료`);
+
+        // 5. 되돌린 반영이력을 선택 상태로 설정 (is_selected true, selected_at 갱신)
+        await this.fileManagementContextService.반영이력선택상태로설정한다(
+            reflectionHistoryId,
+            performedBy,
+        );
+
+        this.logger.log(`반영이력 선택 상태 설정 완료`);
 
         return {
             reflectionHistoryId: reflectionHistoryId,

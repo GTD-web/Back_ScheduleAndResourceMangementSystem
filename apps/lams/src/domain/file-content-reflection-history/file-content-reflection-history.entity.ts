@@ -71,6 +71,29 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
     reflected_at: Date | null;
 
     /**
+     * 선택날짜
+     * 해당 이력을 선택한 시점
+     */
+    @Column({
+        name: 'selected_at',
+        type: 'timestamp',
+        nullable: true,
+        comment: '선택날짜',
+    })
+    selected_at: Date | null;
+
+    /**
+     * 선택여부
+     */
+    @Column({
+        name: 'is_selected',
+        type: 'boolean',
+        default: false,
+        comment: '선택여부',
+    })
+    is_selected: boolean;
+
+    /**
      * 파일 내용 반영 이력 불변성 검증
      */
     private validateInvariants(): void {
@@ -110,15 +133,18 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
      */
     constructor(
         file_id: string,
-        
         data_snapshot_info_id?: string | null,
         info?: string | null,
+        selected_at?: Date | null,
+        is_selected?: boolean,
     ) {
         super();
         this.file_id = file_id;
         this.reflected_at = new Date(); // 반영일자는 생성 시점으로 설정
         this.data_snapshot_info_id = data_snapshot_info_id || null;
         this.info = info || null;
+        this.selected_at = selected_at ?? null;
+        this.is_selected = is_selected ?? false;
         this.validateInvariants();
     }
 
@@ -128,12 +154,20 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
     업데이트한다(
         data_snapshot_info_id?: string | null,
         info?: string | null,
+        selected_at?: Date | null,
+        is_selected?: boolean,
     ): void {
         if (data_snapshot_info_id !== undefined) {
             this.data_snapshot_info_id = data_snapshot_info_id;
         }
         if (info !== undefined) {
             this.info = info;
+        }
+        if (selected_at !== undefined) {
+            this.selected_at = selected_at;
+        }
+        if (is_selected !== undefined) {
+            this.is_selected = is_selected;
         }
         this.validateInvariants();
     }
@@ -158,12 +192,13 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
             info: this.info,
             createdAt: this.created_at,
             reflectedAt: this.reflected_at,
+            selectedAt: this.selected_at,
+            isSelected: this.is_selected,
             updatedAt: this.updated_at,
             deletedAt: this.deleted_at,
             createdBy: this.created_by,
             updatedBy: this.updated_by,
             version: this.version,
-            dataSnapshotInfo: this.data_snapshot_info?.DTO변환한다(),
         };
     }
 }

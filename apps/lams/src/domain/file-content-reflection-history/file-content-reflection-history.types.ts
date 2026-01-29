@@ -9,6 +9,8 @@ export interface CreateFileContentReflectionHistoryData {
     fileId: string;
     dataSnapshotInfoId?: string;
     info?: string;
+    selectedAt?: Date | null;
+    isSelected?: boolean;
 }
 
 /**
@@ -18,6 +20,8 @@ export interface UpdateFileContentReflectionHistoryData {
     dataSnapshotInfoId?: string | null;
     info?: string | null;
     reflectedAt?: Date | null;
+    selectedAt?: Date | null;
+    isSelected?: boolean;
 }
 
 /**
@@ -38,6 +42,8 @@ export interface FileContentReflectionHistoryDTO {
     info: string | null;
     createdAt: Date;
     reflectedAt: Date | null;
+    selectedAt: Date | null;
+    isSelected: boolean;
     updatedAt: Date;
     deletedAt?: Date;
     createdBy?: string;

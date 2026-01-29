@@ -3,6 +3,7 @@ import {
     DeleteExistingDataForReflectionHandler,
     SaveReflectedDataHandler,
     SaveReflectionHistoryHandler,
+    SetReflectionHistorySelectedHandler,
 } from './commands';
 import { GetSnapshotDataFromHistoryHandler } from './queries';
 
@@ -11,6 +12,7 @@ export const FILE_CONTENT_REFLECTION_HANDLERS = [
     DeleteExistingDataForReflectionHandler,
     SaveReflectedDataHandler,
     SaveReflectionHistoryHandler,
+    SetReflectionHistorySelectedHandler,
     GetSnapshotDataFromHistoryHandler,
 ];
 

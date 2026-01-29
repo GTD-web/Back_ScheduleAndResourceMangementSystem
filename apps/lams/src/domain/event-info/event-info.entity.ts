@@ -84,7 +84,19 @@ export class EventInfo extends BaseEntity<EventInfoDTO> {
      * 데이터 형식 검증
      */
     private validateDataFormat(): void {
+        if (!this.event_time || !this.yyyymmdd || !this.hhmmss) {
+            return;
+        }
         // 추가적인 형식 검증이 필요한 경우 여기에 구현
+        if (!/^\d{4}-\d{2}-\d{2}$ \d{2}:\d{2}:\d{2}$/.test(this.event_time)) {
+            throw new BadRequestException('이벤트 시간은 YYYY-MM-DD HH:MM:SS 형식이어야 합니다.');
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(this.yyyymmdd)) {       
+            throw new BadRequestException('날짜는 YYYY-MM-DD 형식이어야 합니다.');
+        }
+        if (!/^\d{2}:\d{2}:\d{2}$/.test(this.hhmmss)) {
+            throw new BadRequestException('시간은 HH:MM:SS 형식이어야 합니다.');
+        }
     }
 
     /**

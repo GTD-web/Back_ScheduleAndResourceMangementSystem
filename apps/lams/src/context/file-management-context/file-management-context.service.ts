@@ -7,6 +7,7 @@ import {
     DeleteExistingDataForReflectionCommand,
     SaveReflectedDataCommand,
     SaveReflectionHistoryCommand,
+    SetReflectionHistorySelectedCommand,
 } from './handlers/file-content-reflection/commands';
 import { GetSnapshotDataFromHistoryQuery } from './handlers/file-content-reflection/queries';
 import {
@@ -28,6 +29,7 @@ import {
     IGetFileOrgDataQuery,
     IGetFileOrgDataResponse,
     ISaveReflectionHistoryCommand,
+    ISetReflectionHistorySelectedCommand,
     IGetSnapshotDataFromHistoryQuery,
     IGetSnapshotDataFromHistoryResponse,
 } from './interfaces';
@@ -180,6 +182,24 @@ export class FileManagementContextService {
      */
     async 이력을조회한다(reflectionHistoryId: string) {
         return await this.fileContentReflectionHistoryService.ID로조회한다(reflectionHistoryId);
+    }
+
+    /**
+     * 동일 파일유형·연월에서 해당 반영이력만 선택 상태로 설정한다 (is_selected true 1건, selected_at 갱신)
+     *
+     * @param reflectionHistoryId 반영 이력 ID
+     * @param performedBy 수행자 ID
+     */
+    async 반영이력선택상태로설정한다(
+        reflectionHistoryId: string,
+        performedBy: string,
+    ): Promise<void> {
+        await this.commandBus.execute(
+            new SetReflectionHistorySelectedCommand({
+                reflectionHistoryId,
+                performedBy,
+            }),
+        );
     }
 
     /**
