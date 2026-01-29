@@ -4,7 +4,9 @@ import { DataSource } from 'typeorm';
 import { GetReflectionHistoryQuery } from './get-reflection-history.query';
 import { IGetReflectionHistoryResponse } from '../../../interfaces/response/get-reflection-history-response.interface';
 import { DomainFileContentReflectionHistoryService } from '../../../../../domain/file-content-reflection-history/file-content-reflection-history.service';
+import { FileContentReflectionHistory } from '../../../../../domain/file-content-reflection-history/file-content-reflection-history.entity';
 import { DomainFileService } from '../../../../../domain/file/file.service';
+import { FileContentReflectionHistoryDTO } from '../../../../../domain/file-content-reflection-history/file-content-reflection-history.types';
 
 /**
  * 반영이력 조회 Query Handler
@@ -43,22 +45,30 @@ export class GetReflectionHistoryHandler
                 manager,
             );
 
-            // 3. 파일 ID로 반영이력 조회
-            const reflectionHistories =
-                await this.fileContentReflectionHistoryService.파일ID로목록조회한다(fileId);
+            // 3. 파일 ID로 반영이력 엔티티 조회 (스냅샷 연관 포함)
+            const historyEntities: FileContentReflectionHistory[] =
+                await this.fileContentReflectionHistoryService.파일ID로엔티티목록조회한다(fileId);
 
-            // 4. 각 반영이력에 대해 최신 여부 판별
-            const reflectionHistoriesWithLatest = reflectionHistories.map((history) => {
-                const isLatest =
-                    latestReflectedAt !== null &&
-                    history.reflectedAt !== null &&
-                    history.reflectedAt.getTime() === latestReflectedAt.getTime();
+            // 4. 각 반영이력에 대해 최신 여부 판별 + 연결된 스냅샷 정보 가공 (id, is_current)
+            const reflectionHistoriesWithLatest: FileContentReflectionHistoryDTO[] =
+                historyEntities.map((history) => {
+                    const dto = history.DTO변환한다();
+                    const isLatest =
+                        latestReflectedAt !== null &&
+                        history.reflected_at !== null &&
+                        history.reflected_at.getTime() === latestReflectedAt.getTime();
+                    const snapshot = history.data_snapshot_info;
+                    const dataSnapshotInfo =
+                        snapshot != null
+                            ? { id: snapshot.id, isCurrent: snapshot.is_current }
+                            : undefined;
 
-                return {
-                    ...history,
-                    isLatest,
-                };
-            });
+                    return {
+                        ...dto,
+                        isLatest,
+                        dataSnapshotInfo,
+                    };
+                });
 
             this.logger.log(
                 `반영이력 조회 완료: histories=${reflectionHistoriesWithLatest.length}건, latestReflectedAt=${latestReflectedAt}`,

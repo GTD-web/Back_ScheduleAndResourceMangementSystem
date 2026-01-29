@@ -74,6 +74,17 @@ export class DomainFileContentReflectionHistoryService {
     }
 
     /**
+     * 파일 ID로 반영 이력 엔티티 목록을 조회한다 (스냅샷 연관 포함, 핸들러에서 가공용)
+     */
+    async 파일ID로엔티티목록조회한다(fileId: string): Promise<FileContentReflectionHistory[]> {
+        return this.repository.find({
+            where: { file_id: fileId, deleted_at: IsNull() },
+            relations: ['file', 'data_snapshot_info'],
+            order: { created_at: 'DESC' },
+        });
+    }
+
+    /**
      * 같은 연월, 같은 유형의 파일들의 반영이력 중 최신 reflect_at 조회
      */
     async 같은연월유형최신반영일시조회한다(

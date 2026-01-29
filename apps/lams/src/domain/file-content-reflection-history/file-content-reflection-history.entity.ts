@@ -163,6 +163,7 @@ export class FileContentReflectionHistory extends BaseEntity<FileContentReflecti
             createdBy: this.created_by,
             updatedBy: this.updated_by,
             version: this.version,
+            dataSnapshotInfo: this.data_snapshot_info?.DTO변환한다(),
         };
     }
 }
