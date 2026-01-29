@@ -54,9 +54,9 @@ export class DeleteExistingDataForReflectionHandler
         // 날짜 범위 계산
         const yearNum = parseInt(year);
         const monthNum = parseInt(month);
-        const startDate = `${year}${month.padStart(2, '0')}01`;
+        const startDate = `${year}-${month.padStart(2, '0')}-01`;
         const lastDay = new Date(yearNum, monthNum, 0).getDate();
-        const endDate = `${year}${month.padStart(2, '0')}${lastDay.toString().padStart(2, '0')}`;
+        const endDate = `${year}-${month.padStart(2, '0')}-${lastDay.toString().padStart(2, '0')}`;
 
         if (fileType === FileType.EVENT_HISTORY) {
             if (!deleteAll && employeeNumbers.length === 0) {
