@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
+import { ConflictException, Logger } from '@nestjs/common';
 import { DataSource, IsNull } from 'typeorm';
 import { SaveCompanyMonthlySnapshotCommand } from './save-company-monthly-snapshot.command';
 import { ISaveAttendanceSnapshotResponse } from '../../../interfaces';
@@ -287,7 +287,7 @@ export class SaveCompanyMonthlySnapshotHandler implements ICommandHandler<
 
         const highestVersionCode = existingVersions[existingVersions.length - 1];
         if (highestVersionCode >= 'Z'.charCodeAt(0)) {
-            throw new Error('스냅샷 버전이 Z에 도달했습니다. 더 이상 버전을 생성할 수 없습니다.');
+            throw new ConflictException('스냅샷 버전이 Z에 도달했습니다. 더 이상 버전을 생성할 수 없습니다.');
         }
 
         return String.fromCharCode(highestVersionCode + 1);

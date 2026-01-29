@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AttendanceDataContextService } from '../../context/attendance-data-context/attendance-data-context.service';
 import { DataSnapshotContextService } from '../../context/data-snapshot-context/data-snapshot-context.service';
 import {
@@ -101,7 +101,7 @@ export class AttendanceDataBusinessService {
 
         // 2. children의 rawData를 수집하여 전체 eventInfo와 usedAttendance 재구성
         if (!snapshotData.snapshot.children || snapshotData.snapshot.children.length === 0) {
-            throw new Error('스냅샷에 저장된 자식 데이터가 없습니다.');
+            throw new NotFoundException('스냅샷에 저장된 자식 데이터가 없습니다.');
         }
 
         const allEventInfos: any[] = [];

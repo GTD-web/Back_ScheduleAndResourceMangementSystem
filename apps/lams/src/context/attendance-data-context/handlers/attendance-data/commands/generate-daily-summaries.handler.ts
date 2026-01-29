@@ -77,6 +77,7 @@ export class GenerateDailySummariesHandler implements ICommandHandler<
                     endDateStr,
                     manager,
                 );
+
                 // 2. 조회된 데이터에서 직원 정보 추출 및 조회
                 const { employees, employeeNumberMap } = await this.직원정보를추출한다(
                     events,

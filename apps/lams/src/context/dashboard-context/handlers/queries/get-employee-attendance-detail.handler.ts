@@ -1,5 +1,5 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { GetEmployeeAttendanceDetailQuery } from './get-employee-attendance-detail.query';
 import { IGetEmployeeAttendanceDetailResponse } from '../../interfaces';
 import { DomainDataSnapshotInfoService } from '../../../../domain/data-snapshot-info/data-snapshot-info.service';
@@ -51,7 +51,7 @@ export class GetEmployeeAttendanceDetailHandler
             const monthlySummary = await this.monthlyEventSummaryService.일일요약포함조회한다(employeeId, yyyymm);
 
             if (!monthlySummary) {
-                throw new Error('해당 기간의 근태 데이터를 찾을 수 없습니다.');
+                throw new NotFoundException('해당 기간의 근태 데이터를 찾을 수 없습니다.');
             }
 
             // 월간 요약 데이터를 스냅샷 형식으로 변환

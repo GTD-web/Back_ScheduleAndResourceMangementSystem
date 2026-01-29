@@ -225,10 +225,10 @@ export class ProcessFileContentHandler implements ICommandHandler<
                     }
 
                     // EventInfo 엔티티 형식으로 변환
-                    const yyyymmdd = `${eventYear}${eventMonth}${eventDay}`;
+                    const yyyymmdd = `${eventYear}-${eventMonth}-${eventDay}`;
                     const timeMatch = eventTime.match(/(\d{2}):?(\d{2}):?(\d{2})/);
-                    const hhmmss = timeMatch ? `${timeMatch[1]}${timeMatch[2]}${timeMatch[3]}` : '000000';
-                    const timeValue = parseInt(hhmmss, 10); // 시간 비교를 위한 숫자 값
+                    const hhmmss = timeMatch ? `${timeMatch[1]}:${timeMatch[2]}:${timeMatch[3]}` : '00:00:00';
+                    const timeValue = parseInt(`${hhmmss.replace(':', '')}`, 10); // 시간 비교를 위한 숫자 값
 
                     // 날짜별로 그룹화
                     if (!dateGroupedRows.has(yyyymmdd)) {
